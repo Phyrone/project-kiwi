@@ -1,3 +1,5 @@
-import {RequestEvent} from "./$types"
+<script lang="ts">
+	import { page } from '$app/stores';
+</script>
 
-//error handling
+<h1>{$page.error}</h1>

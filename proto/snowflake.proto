@@ -1,0 +1,14 @@
+syntax = "proto3";
+package de.phyrone.kiwi.snowflake;
+
+message SnowflakeRequest{
+  uint32 count = 1;
+}
+
+message SnowflakeResponse{
+  repeated sfixed64 snowflakes = 1;
+}
+
+service SnowflakeService{
+  rpc GetSnowflakes(SnowflakeRequest) returns (SnowflakeResponse);
+}

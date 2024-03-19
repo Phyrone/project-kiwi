@@ -1,0 +1,21 @@
+[package]
+name = "database"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "0.4.35"
+migration = { path = "migration" }
+sea-orm = { version = "0.12.10", default-features = false, features = [
+    "sqlx-postgres",
+    "runtime-tokio-rustls",
+    "postgres-array",
+    "macros",
+    "with-json",
+    "with-chrono",
+    "with-uuid",
+    "with-bigdecimal"
+] }
+serde = { version = "1.0.197", features = ["derive"] }

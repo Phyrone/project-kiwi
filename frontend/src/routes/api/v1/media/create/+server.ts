@@ -1,7 +1,8 @@
-import type {RequestHandler} from "./$types"
-import {json} from "@sveltejs/kit";
+import type { RequestHandler } from './$types';
+import { json } from '@sveltejs/kit';
 
-export const POST: RequestHandler = async ({fetch}) => {
+export const POST: RequestHandler = async ({ fetch, request }) => {
+	let request_data = await request.json();
 
-    return json({})
-}
+	return json({});
+};

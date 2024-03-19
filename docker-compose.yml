@@ -1,0 +1,19 @@
+version: "3.2"
+services:
+  frontend:
+    build:
+      dockerfile: frontend/Dockerfile
+      context: .
+
+
+  # Databases etc.
+  meilisearch:
+    image: getmeili/meilisearch
+    environment:
+      MEILI_ENV: development
+  rethinkdb:
+    image: rethinkdb
+  postgres:
+    image: postgres
+  minio:
+    image: quay.io/minio/minio

@@ -1,7 +1,12 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+    import type {PageData} from './$types';
 
-	export let data: PageData;
+    export let data: PageData;
 </script>
 
-{JSON.stringify(data, null, 2)}
+
+
+
+<div class="mx-auto h-full bg-green-50 rounded-md w-full max-w-screen-md">
+    ABC
+</div>

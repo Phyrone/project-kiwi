@@ -37,3 +37,12 @@ export type GetRequestSearchParams = {
 	users?: string[];
 	watch?: boolean;
 };
+
+export type RegisterRequest = {
+	user: string;
+	password?: string;
+};
+
+export type LiveSearchParams = {
+	intents?: string[];
+};

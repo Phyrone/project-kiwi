@@ -1,7 +1,7 @@
 import Joi, { type ValidationError } from 'joi';
 import { standardizedError } from '$lib/RFC9457';
 import { DOCUMENTATION_API_ERRORS_URL } from '$lib/consts';
-import type { GetRequestSearchParams } from '$lib/request_types';
+import type { GetRequestSearchParams, RegisterRequest } from '$lib/request_types';
 
 export function schemaError(error: ValidationError) {
 	return standardizedError({
@@ -33,4 +33,13 @@ export const GetRequestSearchParamsSchema = Joi.object<GetRequestSearchParams>({
 	ids: Joi.array().items(Joi.string()).optional(),
 	users: Joi.array().items(Joi.string()).optional(),
 	watch: Joi.boolean().optional()
+});
+
+export const RegisterRequestSchema = Joi.object<RegisterRequest>({
+	user: Joi.string().email({ allowUnicode: true }).required(),
+	password: Joi.string().min(1).optional()
+});
+
+export const LiveSearchParamsSchema = Joi.object({
+	intents: Joi.array().items(Joi.string()).optional()
 });

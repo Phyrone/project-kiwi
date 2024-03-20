@@ -3,8 +3,6 @@
 'use strict';
 var grpc = require('@grpc/grpc-js');
 var auth_pb = require('./auth_pb.js');
-var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
-var google_protobuf_api_pb = require('google-protobuf/google/protobuf/api_pb.js');
 
 function serialize_de_phyrone_kiwi_auth_ValidateSessionRequest(arg) {
 	if (!(arg instanceof auth_pb.ValidateSessionRequest)) {

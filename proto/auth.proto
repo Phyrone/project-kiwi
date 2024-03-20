@@ -2,10 +2,6 @@ syntax = "proto3";
 
 package de.phyrone.kiwi.auth;
 
-import "google/protobuf/timestamp.proto";
-import "google/protobuf/api.proto";
-
-
 message ValidateSessionRequest{
   string token = 1;
 }

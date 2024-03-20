@@ -37,5 +37,5 @@
     ```
 - Check the status of all migrations
     ```sh
-    cargo run -- status
+    cargo run -- session
     ```

@@ -5,13 +5,13 @@ export type ErrorDescription = {
 	type: string;
 	title: string;
 	detail: string;
-
 	instance?: string;
 	status?: number;
 	additional?: Record<string, unknown>;
 };
 
 export type RFC9457Error = {
+	status: number;
 	type: string;
 	title: string;
 	detail: string;
@@ -35,12 +35,12 @@ export function standardizedError(description: ErrorDescription): Response {
 			title: description.title,
 			detail: description.detail,
 			instance: description.instance,
+			status: description.status ?? 500,
 			...description.additional
 		} satisfies ExtendedRFC9457Error,
 		{
 			headers: {
 				'Content-Type': 'application/problem+json',
-				Accept: 'application/json, application/problem+json',
 				'Content-Language': 'en'
 			},
 			status: description.status ?? 500
@@ -58,7 +58,7 @@ export function respond_known_errors(error: unknown): Response {
 			case 'ValidationError':
 				description = {
 					type: `${DOCUMENTATION_API_ERRORS_URL}common#request-schema`,
-					title: 'Invalid Schema',
+					title: 'Invalid Request Schema',
 					detail: error.message,
 					status: 400,
 					additional: {

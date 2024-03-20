@@ -23,6 +23,7 @@
 		}
 	}
 </script>
+
 <div class="flex-auto">
-    <button class="btn btn-primary" on:click|preventDefault={aFunction}>Test</button>
+	<button class="btn btn-primary" on:click|preventDefault={aFunction}>Test</button>
 </div>

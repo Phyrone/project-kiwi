@@ -63,8 +63,10 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key(),
                     )
+                    .col(ColumnDef::new(User::CreatedAt).timestamp_with_time_zone().not_null())
                     .col(ColumnDef::new(User::Email).string_len(320).not_null())
                     .col(ColumnDef::new(User::Password).text().null())
+                    .col(ColumnDef::new(User::SessionSecret).binary_len(512).null())
                     .index(
                         Index::create()
                             .table(User::Table)
@@ -409,8 +411,10 @@ enum AssetVariant {
 enum User {
     Table,
     Id,
+    CreatedAt,
     Email,
     Password,
+    SessionSecret,
 }
 
 #[derive(DeriveIden)]

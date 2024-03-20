@@ -18,7 +18,7 @@ fn main() {
         .build_client(true)
         .build_server(true)
         .build_transport(true)
-        .compile_well_known_types(true)
+        .compile_well_known_types(false)
         .use_arc_self(false)
         .include_file("_all.rs")
         .out_dir("src")

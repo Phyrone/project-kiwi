@@ -2,8 +2,6 @@
 // file: auth.proto
 
 import * as jspb from 'google-protobuf';
-import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
-import * as google_protobuf_api_pb from 'google-protobuf/google/protobuf/api_pb';
 
 export class ValidateSessionRequest extends jspb.Message {
 	getToken(): string;
@@ -102,5 +100,95 @@ export namespace ValidateSessionResponse {
 		RESPONSE_NOT_SET = 0,
 		SESSION = 1,
 		INVALIDSESSION = 2
+	}
+}
+
+export class LoginRequest extends jspb.Message {
+	hasUserpassword(): boolean;
+	clearUserpassword(): void;
+	getUserpassword(): LoginRequest.UserPassword | undefined;
+	setUserpassword(value?: LoginRequest.UserPassword): void;
+
+	getLoginCase(): LoginRequest.LoginCase;
+	serializeBinary(): Uint8Array;
+	toObject(includeInstance?: boolean): LoginRequest.AsObject;
+	static toObject(includeInstance: boolean, msg: LoginRequest): LoginRequest.AsObject;
+	static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
+	static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
+	static serializeBinaryToWriter(message: LoginRequest, writer: jspb.BinaryWriter): void;
+	static deserializeBinary(bytes: Uint8Array): LoginRequest;
+	static deserializeBinaryFromReader(
+		message: LoginRequest,
+		reader: jspb.BinaryReader
+	): LoginRequest;
+}
+
+export namespace LoginRequest {
+	export type AsObject = {
+		userpassword?: LoginRequest.UserPassword.AsObject;
+	};
+
+	export class UserPassword extends jspb.Message {
+		getUsername(): string;
+		setUsername(value: string): void;
+
+		getPassword(): string;
+		setPassword(value: string): void;
+
+		getOtp(): string;
+		setOtp(value: string): void;
+
+		serializeBinary(): Uint8Array;
+		toObject(includeInstance?: boolean): UserPassword.AsObject;
+		static toObject(includeInstance: boolean, msg: UserPassword): UserPassword.AsObject;
+		static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
+		static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
+		static serializeBinaryToWriter(message: UserPassword, writer: jspb.BinaryWriter): void;
+		static deserializeBinary(bytes: Uint8Array): UserPassword;
+		static deserializeBinaryFromReader(
+			message: UserPassword,
+			reader: jspb.BinaryReader
+		): UserPassword;
+	}
+
+	export namespace UserPassword {
+		export type AsObject = {
+			username: string;
+			password: string;
+			otp: string;
+		};
+	}
+
+	export class WebAuthn extends jspb.Message {
+		getUsername(): string;
+		setUsername(value: string): void;
+
+		getChallenge(): string;
+		setChallenge(value: string): void;
+
+		getOrigin(): string;
+		setOrigin(value: string): void;
+
+		serializeBinary(): Uint8Array;
+		toObject(includeInstance?: boolean): WebAuthn.AsObject;
+		static toObject(includeInstance: boolean, msg: WebAuthn): WebAuthn.AsObject;
+		static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
+		static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
+		static serializeBinaryToWriter(message: WebAuthn, writer: jspb.BinaryWriter): void;
+		static deserializeBinary(bytes: Uint8Array): WebAuthn;
+		static deserializeBinaryFromReader(message: WebAuthn, reader: jspb.BinaryReader): WebAuthn;
+	}
+
+	export namespace WebAuthn {
+		export type AsObject = {
+			username: string;
+			challenge: string;
+			origin: string;
+		};
+	}
+
+	export enum LoginCase {
+		LOGIN_NOT_SET = 0,
+		USERPASSWORD = 1
 	}
 }

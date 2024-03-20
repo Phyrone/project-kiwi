@@ -4,8 +4,16 @@ services:
     build:
       dockerfile: frontend/Dockerfile
       context: .
+    depends_on:
+      - rethinkdb
+      - postgres
+    ports:
+      - 3000:3000
 
-
+  snowflake:
+    build:
+      dockerfile: snowflake/Dockerfile
+      context: .
   # Databases etc.
   meilisearch:
     image: getmeili/meilisearch
@@ -13,7 +21,12 @@ services:
       MEILI_ENV: development
   rethinkdb:
     image: rethinkdb
+
   postgres:
     image: postgres
+    env_file:
+      - .env
   minio:
     image: quay.io/minio/minio
+    volumes:
+      - ./data/minio:/data

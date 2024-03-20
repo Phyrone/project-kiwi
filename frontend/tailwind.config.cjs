@@ -5,13 +5,13 @@ const container = require('@tailwindcss/container-queries');
 
 /** @type {import('tailwindcss').Config}*/
 const config = {
-    content: ['./src/**/*.{html,js,svelte,ts}'],
+	content: ['./src/**/*.{html,js,svelte,ts}'],
 
-    theme: {
-        extend: {}
-    },
+	theme: {
+		extend: {}
+	},
 
-    plugins: [forms, typography, daisyui, container]
+	plugins: [forms, typography, daisyui, container]
 };
 
 module.exports = config;

@@ -7,7 +7,7 @@
 	<Sidebar />
 	<div class="ml-0 mr-2 flex flex-auto flex-col">
 		<TopNavbar />
-		<div class="mb-2 flex flex-auto">
+		<div class="mb-2 flex flex-auto max-h-full overflow-hidden">
 			<slot />
 		</div>
 	</div>

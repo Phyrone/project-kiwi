@@ -46,3 +46,14 @@ export type RegisterRequest = {
 export type LiveSearchParams = {
 	intents?: string[];
 };
+
+export type UploadLinkRequest = {
+	file_name: string;
+	ttl?: string | number;
+}
+
+export type GatewayDataResponse = {
+	link: string;
+	token?: string;
+
+}

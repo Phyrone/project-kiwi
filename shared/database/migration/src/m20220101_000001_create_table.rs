@@ -276,6 +276,8 @@ impl MigrationTrait for Migration {
                             .timestamp_with_time_zone()
                             .not_null(),
                     )
+                    .col(ColumnDef::new(Post::Draft).boolean().not_null().default(true)
+                        .comment("Drafts are only visible to its author until it is published."))
                     .col(ColumnDef::new(Post::Title).string().not_null())
                     .col(ColumnDef::new(Post::Body).json_binary().null())
                     .col(ColumnDef::new(Post::Metadata).json_binary().null())
@@ -505,6 +507,7 @@ enum Post {
     AuthorId,
     CreatedAt,
     UpdatedAt,
+    Draft,
     Title,
     Body,
     Tags,

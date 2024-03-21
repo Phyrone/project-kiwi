@@ -13,7 +13,7 @@ pub struct AuthService {}
 #[tonic::async_trait]
 impl proto::de::phyrone::kiwi::auth::auth_service_server::AuthService for AuthService {
     async fn validate_session(&self, request: Request<ValidateSessionRequest>) -> Result<Response<ValidateSessionResponse>, Status> {
-
+        
         todo!()
     }
 }

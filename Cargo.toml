@@ -10,8 +10,7 @@ edition = "2021"
 
 [workspace]
 members = [
-    "auth",
-    "communication",
+    "audio",
     "snowflake",
     "shared/proto",
     "shared/common",

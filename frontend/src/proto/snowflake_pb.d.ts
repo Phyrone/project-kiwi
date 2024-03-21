@@ -1,5 +1,5 @@
 // package: de.phyrone.kiwi.snowflake
-// file: snowflake.proto
+// asset: snowflake.proto
 
 import * as jspb from 'google-protobuf';
 

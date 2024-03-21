@@ -1,5 +1,5 @@
 // package: de.phyrone.kiwi.auth
-// file: auth.proto
+// asset: auth.proto
 
 import * as jspb from 'google-protobuf';
 

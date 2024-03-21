@@ -3,4 +3,4 @@ plugins {
 }
 rootProject.name = "project-kiwi-c2"
 
-include(":media")
+include(":gateway")

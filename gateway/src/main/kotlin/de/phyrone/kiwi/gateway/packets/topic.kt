@@ -2,6 +2,7 @@ package de.phyrone.kiwi.gateway.packets
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonTypeName
+import de.phyrone.kiwi.gateway.documents.JsonDocument
 
 
 @JsonTypeInfo(

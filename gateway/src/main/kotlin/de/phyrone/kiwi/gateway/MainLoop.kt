@@ -17,6 +17,8 @@ object MainLoop : MainCoroutineDispatcher(), Executor {
             val task = taskQueue.take()
             try {
                 task.run()
+            } catch (e: InterruptedException) {
+                throw e
             } catch (e: Exception) {
                 logger.atWarning()
                     .withCause(e)

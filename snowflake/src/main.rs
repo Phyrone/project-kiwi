@@ -1,16 +1,16 @@
 use std::net::SocketAddr;
 
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, ParseResult, Utc};
 use clap::Parser;
 use clap_num::number_range;
 use error_stack::ResultExt;
 use hexafreeze::{Generator, HexaFreezeError};
 use log::{error, info, LevelFilter};
-use tonic::transport::Server;
 use tonic::{Request, Response, Status};
+use tonic::transport::Server;
 
-use proto::de::phyrone::kiwi::snowflake::snowflake_service_server::SnowflakeServiceServer;
 use proto::de::phyrone::kiwi::snowflake::{SnowflakeRequest, SnowflakeResponse};
+use proto::de::phyrone::kiwi::snowflake::snowflake_service_server::SnowflakeServiceServer;
 
 #[tokio::main]
 async fn main() -> error_stack::Result<(), ApplicationError> {
@@ -25,11 +25,18 @@ async fn main() -> error_stack::Result<(), ApplicationError> {
 
 async fn main_inner(startup_params: StartupParams) -> error_stack::Result<(), ApplicationError> {
     info!("NodeID is {}", startup_params.node_id);
-    let date_time: DateTime<Utc> = DateTime::parse_from_rfc3339(startup_params.epoch.as_str())
-        .change_context(ApplicationError)?
-        .into();
+    let epoch = DateTime::parse_from_rfc3339(startup_params.epoch.as_str());
+    let epoch = match epoch {
+        Ok(ok) => ok,
+        Err(_) => {
+            DateTime::parse_from_rfc2822(startup_params.epoch.as_str())
+                .change_context(ApplicationError)
+                .attach_printable_lazy(|| format!("specified epoch start '{}' is not a valid rfc2822 nor a valid rfc3339 format", &startup_params.epoch))?
+        }
+    };
+    let epoch: DateTime<Utc> = epoch.into();
 
-    let snowflake = Generator::new(startup_params.node_id as i64, date_time)
+    let snowflake = Generator::new(startup_params.node_id as i64, epoch)
         .change_context(ApplicationError)?;
 
     let snowflake = SnowflakeServiceImpl::new(snowflake);
@@ -57,7 +64,7 @@ struct StartupParams {
     epoch: String,
     #[clap(short, long, env, default_value = "info")]
     log_level: LevelFilter,
-    #[clap(short, long, env, default_value = "0.0.0.0:8443")]
+    #[clap(short, long, env, default_value = "0.0.0.0:50152")]
     bind: SocketAddr,
 }
 
@@ -84,7 +91,7 @@ impl SnowflakeServiceImpl {
 
 #[tonic::async_trait]
 impl proto::de::phyrone::kiwi::snowflake::snowflake_service_server::SnowflakeService
-    for SnowflakeServiceImpl
+for SnowflakeServiceImpl
 {
     async fn get_snowflakes(
         &self,

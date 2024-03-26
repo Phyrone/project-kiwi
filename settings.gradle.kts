@@ -3,4 +3,9 @@ plugins {
 }
 rootProject.name = "project-kiwi-c2"
 
-include(":gateway")
+include(
+    ":gateway",
+    ":shared:common",
+    ":shared:proto",
+    ":shared:database"
+)

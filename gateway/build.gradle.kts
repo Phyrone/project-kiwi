@@ -88,6 +88,7 @@ dependencies {
     //implementation("io.insert-koin:koin-ktor:3.6.0-wasm-alpha2")
     implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
     implementation("com.sksamuel.aedile:aedile-core:1.3.1")
+    implementation("org.casbin:jcasbin:1.54.0")
 
     /* Json, MessagePack, etc. */
     implementation("com.fasterxml.jackson.core:jackson-core:2.17.0")

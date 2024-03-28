@@ -43,3 +43,7 @@ dependencies {
 
 
 }
+
+ksp{
+    this.arg("KOIN_DEFAULT_MODULE","false")
+}

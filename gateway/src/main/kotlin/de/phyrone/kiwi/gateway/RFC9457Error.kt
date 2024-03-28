@@ -11,10 +11,12 @@ import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import io.ktor.http.HttpStatusCode
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL, content = JsonInclude.Include.NON_NULL)
+@JacksonXmlRootElement(localName = "error-report")
 open class RFC9457Error(
     @field:JsonSerialize(using = StatusCodeSerializer::class)
     @JsonDeserialize(using = StatusCodeDeserializer::class)

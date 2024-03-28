@@ -3,29 +3,17 @@ package de.phyrone.kiwi.database
 import com.typesafe.config.Config
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import de.phyrone.kiwi.common.CommonModule
-import de.phyrone.kiwi.common.systems.ShutdownHook
-import de.phyrone.kiwi.common.systems.StartupRunner
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration
 import io.r2dbc.postgresql.PostgresqlConnectionFactory
 import org.flywaydb.core.Flyway
+import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 import javax.sql.DataSource
 
-@Module(includes = [CommonModule::class])
+@Module
+@ComponentScan
 class DatabaseModule {
-
-    @Single(binds = [ShutdownHook::class])
-    fun databaseShutdown(
-        dataSource: DataSource,
-    ): DatabaseShutdown = DatabaseShutdown(dataSource)
-
-    @Single(binds = [DatabaseMigrator::class, StartupRunner::class])
-    fun migrator(
-        flyway: Flyway,
-        startupParams: DatabaseStartupParams
-    ): DatabaseMigrator = DatabaseMigrator(startupParams, flyway)
 
     @Single
     fun postgresConfiguration(

@@ -27,7 +27,14 @@ class StartupParams : Runnable, ConfigStartupParams, DatabaseStartupParams {
 
     @Option(
         names = ["--danger--fresh-database"],
-        description = ["If set the database will be wiped and recreated"],
+        description = [
+            "If set the database will be wiped and recreated",
+            "",
+            "WARNING: This will delete ALL data in the database",
+            "it drops ALL TABLES (including unrelated) in the selected database and recreates them based on the schema",
+            "",
+            "it is intended for development and should not be used in production for the mentioned reason!",
+        ],
         required = false,
         defaultValue = "false",
     )

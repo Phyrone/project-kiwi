@@ -7,5 +7,6 @@ include(
     ":gateway",
     ":shared:common",
     ":shared:proto",
-    ":shared:database"
+    ":shared:database",
+    ":shared:permission"
 )

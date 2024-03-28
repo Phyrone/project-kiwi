@@ -43,12 +43,11 @@ object Argon2Raw {
     }
 
 
-
     fun create(
         password: String,
         length: Int = 64,
         saltLength: Int = 32,
-        memory: Int = 1024*4,
+        memory: Int = 1024 * 4,
         iterations: Int = 3,
         parallelism: Int = Runtime.getRuntime().availableProcessors().coerceAtLeast(1) * 2
     ): HashedPassword {
@@ -68,7 +67,7 @@ object Argon2Raw {
         )
         generator.generateBytes(password.toByteArray(Charsets.UTF_8), hash)
 
-        return HashedPassword(hash, salt, memory, iterations, parallelism)
+        return HashedPassword(hash, salt, iterations, memory, parallelism)
     }
 
     fun verify(password: String, argon2Raw: HashedPassword): Boolean {

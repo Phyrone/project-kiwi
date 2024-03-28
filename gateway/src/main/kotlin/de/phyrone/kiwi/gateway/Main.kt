@@ -8,7 +8,6 @@ import de.phyrone.kiwi.common.executeOrdered
 import de.phyrone.kiwi.common.setLoggerLevel
 import de.phyrone.kiwi.common.systems.StartupRunner
 import de.phyrone.kiwi.database.DatabaseStartupParams
-import io.ktor.server.engine.ApplicationEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.core.Koin
@@ -18,7 +17,6 @@ import org.koin.core.extension.coroutinesEngine
 import org.koin.dsl.bind
 import org.koin.dsl.binds
 import org.koin.dsl.module
-import org.koin.ksp.generated.defaultModule
 import org.koin.ksp.generated.module
 import picocli.CommandLine
 import java.lang.management.ManagementFactory
@@ -37,6 +35,7 @@ object Main {
         exitProcess(commandLine.execute(*args))
     }
 
+
     fun runApplication(params: StartupParams) {
         setLoggerLevel(params.logLevel)
 
@@ -46,7 +45,6 @@ object Main {
                 coroutinesEngine()
                 logger(Slf4jKoinLogger)
                 modules(
-                    defaultModule,
                     ModuleBundle.module,
                     module(true) {
                         single { params } binds arrayOf(
@@ -61,7 +59,6 @@ object Main {
         koinApplication.createEagerInstances()
         logger.atInfo().log("Koin started %s", koinStartupDuration)
         val koin = koinApplication.koin
-        koin.get<ApplicationEngine>().start(false)
         CoroutineScope(MainLoop).launch {
             runApplicationPostLoop(koin)
         }

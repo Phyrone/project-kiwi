@@ -5,6 +5,7 @@ import de.phyrone.kiwi.common.crypto.Argon2Raw
 import de.phyrone.kiwi.database.connection
 import de.phyrone.kiwi.gateway.WebApplication
 import de.phyrone.kiwi.gateway.addTiming
+import de.phyrone.kiwi.gateway.documents.AuthCheckResponse
 import de.phyrone.kiwi.gateway.documents.LoginRequest
 import de.phyrone.kiwi.gateway.documents.LoginResponse
 import de.phyrone.kiwi.gateway.documents.RegisterRequest
@@ -53,9 +54,12 @@ class Api1Auth(
                         get("/check") {
                             val user = call.principal<UserPrincipal>()
                             if (user == null) {
-                                call.respond(HttpStatusCode.Unauthorized)
+                                call.respond(HttpStatusCode.OK, AuthCheckResponse.Unauthenticated as AuthCheckResponse)
                             } else {
-                                call.respond(HttpStatusCode.OK, user)
+                                call.respond(
+                                    HttpStatusCode.OK,
+                                    AuthCheckResponse.Authenticated(user.id) as AuthCheckResponse
+                                )
                             }
                         }
                     }
@@ -115,7 +119,7 @@ class Api1Auth(
                                 val id = snowflakeServiceCoroutineStub.getSnowflakes(
                                     SnowflakeRequest.newBuilder().setCount(1).build()
                                 ).snowflakesList.first()
-                                connection.createStatement("INSERT INTO account(email,password,id,session_secret) VALUES ($1,ROW($2,$3,$4,$5,$6),$7,$8) ON CONFLICT ON CONSTRAINT uniq_account_email DO NOTHING  RETURNING id")
+                                connection.createStatement("INSERT INTO account(email,password,id,session_secret) VALUES ($1,ROW($2,$3,$4,$5,$6),$7,$8) ON CONFLICT ON CONSTRAINT uniq_account_email DO NOTHING RETURNING id")
                                     .bind(0, lowercasedUsername)
                                     .bind(1, hashed.hash)
                                     .bind(2, hashed.salt)

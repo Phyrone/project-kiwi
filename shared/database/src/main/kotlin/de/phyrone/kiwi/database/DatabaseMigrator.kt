@@ -3,8 +3,10 @@ package de.phyrone.kiwi.database
 import de.phyrone.kiwi.common.logger
 import de.phyrone.kiwi.common.systems.StartupRunner
 import org.flywaydb.core.Flyway
+import org.koin.core.annotation.Single
 import kotlin.time.measureTime
 
+@Single
 class DatabaseMigrator(
     private val params: DatabaseStartupParams,
     private val flyway: Flyway

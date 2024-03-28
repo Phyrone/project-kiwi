@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import de.phyrone.kiwi.gateway.documents.JsonDocument
 import io.ktor.http.ContentType
 import io.ktor.serialization.Configuration
 import io.ktor.serialization.jackson.JacksonConverter
@@ -11,6 +12,7 @@ import io.ktor.server.application.ApplicationCall
 import io.ktor.server.request.accept
 import io.ktor.server.request.contentType
 import io.ktor.server.response.respondOutputStream
+import org.atteo.classindex.ClassIndex
 import org.koin.mp.KoinPlatform
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
@@ -34,6 +36,9 @@ public fun <T : ObjectMapper> T.setup(): T {
         enable(KotlinFeature.NullToEmptyCollection)
     }
     findAndRegisterModules()
+    registerSubtypes(
+        *ClassIndex.getSubclasses(JsonDocument::class.java).toSet().toTypedArray()
+    )
 
     return this
 }

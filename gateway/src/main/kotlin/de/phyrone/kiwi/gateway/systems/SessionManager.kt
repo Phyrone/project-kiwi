@@ -4,10 +4,8 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.stats.ConcurrentStatsCounter
 import com.google.common.io.BaseEncoding
-import com.sksamuel.aedile.core.Builder
 import com.sksamuel.aedile.core.cacheBuilder
 import de.phyrone.kiwi.common.lazyArg
 import de.phyrone.kiwi.common.logger
@@ -17,10 +15,7 @@ import de.phyrone.kiwi.gateway.addTiming
 import de.phyrone.kiwi.gateway.documents.SessionData
 import io.ktor.server.application.ApplicationCall
 import io.r2dbc.postgresql.PostgresqlConnectionFactory
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.toSet
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
@@ -71,8 +66,9 @@ class SessionManager(
             jsonMapper.readValue<SessionData>(payloadJson)
         }.getOrNull() ?: return Optional.empty()
 
-        val secret = sessionSecretCache.get(payload.account)
+        val secret: Algorithm = sessionSecretCache.get(payload.account)
             .getOrNull() ?: return Optional.empty()
+
         val verified = runCatching {
             JWT.require(secret)
                 .build()
@@ -99,6 +95,11 @@ class SessionManager(
                     val secretData = row.get("session_secret", ByteArray::class.java)
                     id to Optional.ofNullable(Algorithm.HMAC512(secretData))
                 }.asFlow().toSet().toMap()
+                .let { map ->
+                    val addEmpty = users - map.keys
+                    val emptyUsersMap = addEmpty.associateWith { Optional.empty<Algorithm>() }
+                    map + emptyUsersMap
+                }
         }
     }
 

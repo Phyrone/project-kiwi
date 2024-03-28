@@ -10,22 +10,36 @@ services:
     ports:
       - 3000:3000
 
+  gateway:
+    image: reg.phyrone.de/project-kiwi/gateway
+    ports:
+      - 7080:7080
+    environment:
+      GATEWAY_HTTP: "7080"
+
   snowflake:
+    image: reg.phyrone.de/project-kiwi/snowflake
     build:
       dockerfile: snowflake/Dockerfile
       context: .
+    environment:
+      NODE_ID: "1"
+    command: "/usr/bin/snowflake"
+
   # Databases etc.
   meilisearch:
     image: getmeili/meilisearch
     environment:
       MEILI_ENV: development
+
   rethinkdb:
     image: rethinkdb
+    environment:
+      RETHINKDB_AUTH_KEY: "123456"
 
   postgres:
     image: postgres
-    env_file:
-      - .env
+
   minio:
     image: quay.io/minio/minio
     volumes:

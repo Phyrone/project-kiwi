@@ -4,6 +4,7 @@ import io.r2dbc.postgresql.PostgresqlConnectionFactory
 import io.r2dbc.postgresql.api.PostgresqlConnection
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactor.awaitSingleOrNull
+import org.jetbrains.exposed.sql.Database
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -22,4 +23,8 @@ suspend inline fun <T> PostgresqlConnectionFactory.connection(
         connection.close()
             .awaitSingleOrNull()
     }
+}
+
+fun a(){
+    Database.connect("")
 }

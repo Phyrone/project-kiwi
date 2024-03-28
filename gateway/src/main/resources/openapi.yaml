@@ -5,7 +5,7 @@ info:
   description: Gateway API
 
 paths:
-  '/v1/health':
+  '/health':
     get:
       summary: Health check
       operationId: healthCheck

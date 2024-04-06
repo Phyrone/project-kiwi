@@ -1808,7 +1808,7 @@
     "@docusaurus/theme-search-algolia" "3.2.1"
     "@docusaurus/types" "3.2.1"
 
-"@docusaurus/react-loadable@*", "@docusaurus/react-loadable@5.5.2", "@docusaurus/react-loadable@npm:@docusaurus/react-loadable", "@docusaurus/react-loadable@npm:@docusaurus/react-loadable@5.5.2":
+"@docusaurus/react-loadable@*", "@docusaurus/react-loadable@5.5.2", "@docusaurus/react-loadable@^5.5.2", "@docusaurus/react-loadable@npm:@docusaurus/react-loadable@5.5.2":
   version "5.5.2"
   resolved "https://registry.npmjs.org/@docusaurus/react-loadable/-/react-loadable-5.5.2.tgz"
   integrity sha512-A3dYjdBGuy0IGT+wyLIGIKLRE+sAk1iNk0f1HjNDysO7u8lhL4N3VEm+FAubmJbAztn94F7MxBTPmnixbiyFdQ==
@@ -9664,13 +9664,14 @@ page@page:
     "@docusaurus/core" "^3.2.1"
     "@docusaurus/plugin-ideal-image" "^3.2.1"
     "@docusaurus/preset-classic" "^3.2.1"
+    "@docusaurus/react-loadable" "^5.5.2"
     "@docusaurus/theme-mermaid" "^3.2.1"
     "@mdx-js/react" "^3.0.0"
     clsx "^2.0.0"
     prism-react-renderer "^2.3.0"
     react "^18.0.0"
     react-dom "^18.0.0"
-    react-loadable "npm:@docusaurus/react-loadable"
+    react-loadable "npm:@docusaurus/react-loadable@5.5.2"
     rehype-katex "7"
     remark-math "6"
 

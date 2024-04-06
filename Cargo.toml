@@ -1,5 +1,5 @@
 [package]
-name = "project-kiwi-c2"
+name = "project-kiwi"
 version = "0.0.1-INDEV"
 edition = "2021"
 

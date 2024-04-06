@@ -10,11 +10,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # TODO windows?
         target:
           - os: ubuntu-latest
             build_target: x86_64-unknown-linux-gnu
           - os: ubuntu-latest
             build_target: aarch64-unknown-linux-gnu
+            install: |
+              sudo apt install -y gcc-aarch64-linux-gnu
           - os: macos-latest
             build_target: x86_64-apple-darwin
           - os: macos-latest

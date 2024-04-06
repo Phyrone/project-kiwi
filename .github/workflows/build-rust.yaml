@@ -42,7 +42,7 @@ jobs:
         run: ${{ matrix.target.install }}
       - name: Cache
         uses: Swatinem/rust-cache@v2
-      - name: Link
+      - name: Check Fmt
         run: cargo fmt --all --check --verbose -- --color=always
       - name: Lint
         run: cargo clippy --target ${{ matrix.target.build_target }} --workspace --all-features

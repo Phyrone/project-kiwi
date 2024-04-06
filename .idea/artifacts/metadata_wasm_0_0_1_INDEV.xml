@@ -1,8 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="metadata-wasm-0.0.1-INDEV">
     <output-path>$PROJECT_DIR$/shared/metadata/build/libs</output-path>
-    <root id="archive" name="metadata-wasm-0.0.1-INDEV.jar">
-      <element id="module-output" name="project-kiwi-c2.shared.metadata.wasmMain" />
-    </root>
+    <root id="archive" name="metadata-wasm-0.0.1-INDEV.jar" />
   </artifact>
 </component>

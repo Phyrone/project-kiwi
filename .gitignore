@@ -41,7 +41,8 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-# Added by cargo
-
+### Cargo ###
 /target
+
+### Node.js/BUN ###
 /node_modules

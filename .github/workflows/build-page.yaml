@@ -1,0 +1,62 @@
+on:
+  push:
+    paths:
+      - 'page/**'
+      - '.github/workflows/build-page.yaml'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'bun.lockdb'
+  pull_request:
+    branches-ignore:
+      - renovate/*
+      - dependabot/*
+    paths:
+      - 'page/**'
+      - '.github/workflows/build-page.yaml'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'bun.lockdb'
+name: Page
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+            bun-version: latest
+      - name: Install dependencies
+        working-directory: page
+        run: bun install --from-lockfile
+      - name: Build
+        working-directory: page
+        run: bun run build --output-dir=dist
+      - name: Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: page
+          path: page/dist
+          if-no-files-found: error
+  deploy:
+    needs:
+      - build
+    permissions:
+      pages: write
+      id-token: write
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    concurrency:
+      cancel-in-progress: true
+      group: "${{ github.workflow }}-${{ github.ref }}"
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        id: 'deployment'
+        with:
+          artifact_name: page

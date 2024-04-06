@@ -5,8 +5,12 @@ rootProject.name = "project-kiwi-c2"
 
 include(
     ":gateway",
+    ":audio",
+    ":frontend",
+    ":shared",
     ":shared:common",
     ":shared:proto",
     ":shared:database",
-    ":shared:permission"
+    ":shared:permission",
+    ":shared:metadata",
 )

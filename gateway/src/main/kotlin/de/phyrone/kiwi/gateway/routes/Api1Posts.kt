@@ -11,8 +11,10 @@ import io.ktor.server.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.locations.Location
 import io.ktor.server.locations.delete
 import io.ktor.server.locations.get
+import io.ktor.server.locations.head
 import io.ktor.server.response.respond
 import io.ktor.server.routing.post
+import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import org.koin.core.annotation.Single
@@ -40,9 +42,25 @@ class Api1Posts : WebApplication {
                     post {
                         call.respond(HttpStatusCode.NotImplemented)
                     }
+                    get<AllPosts> { route ->
+                        call.respond(HttpStatusCode.NotImplemented)
+                    }
+
+                    //update post
+                    put<PostRoute> { route ->
+
+                        call.respond(HttpStatusCode.NotImplemented, route)
+                    }
+                    //delete post
                     delete<PostRoute> { route ->
                         call.respond(HttpStatusCode.NotImplemented, route)
                     }
+
+                    //post headers
+                    head<PostRoute> { route ->
+                        call.respond(HttpStatusCode.NotImplemented, route)
+                    }
+                    //get post
                     get<PostRoute> { route ->
                         call.respond(HttpStatusCode.NotImplemented, route)
                     }

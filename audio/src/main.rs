@@ -6,14 +6,15 @@ fn main() {
     println!("Hello, world!");
 }
 
-
 #[derive(Debug, Default, Clone)]
 pub struct AuthService {}
 
 #[tonic::async_trait]
 impl proto::de::phyrone::kiwi::auth::auth_service_server::AuthService for AuthService {
-    async fn validate_session(&self, request: Request<ValidateSessionRequest>) -> Result<Response<ValidateSessionResponse>, Status> {
-        
+    async fn validate_session(
+        &self,
+        request: Request<ValidateSessionRequest>,
+    ) -> Result<Response<ValidateSessionResponse>, Status> {
         todo!()
     }
 }

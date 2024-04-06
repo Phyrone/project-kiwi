@@ -6,11 +6,11 @@ use clap_num::number_range;
 use error_stack::ResultExt;
 use hexafreeze::{Generator, HexaFreezeError};
 use log::{error, info, LevelFilter};
-use tonic::{Request, Response, Status};
 use tonic::transport::Server;
+use tonic::{Request, Response, Status};
 
-use proto::de::phyrone::kiwi::snowflake::{SnowflakeRequest, SnowflakeResponse};
 use proto::de::phyrone::kiwi::snowflake::snowflake_service_server::SnowflakeServiceServer;
+use proto::de::phyrone::kiwi::snowflake::{SnowflakeRequest, SnowflakeResponse};
 
 #[tokio::main]
 async fn main() -> error_stack::Result<(), ApplicationError> {
@@ -28,16 +28,19 @@ async fn main_inner(startup_params: StartupParams) -> error_stack::Result<(), Ap
     let epoch = DateTime::parse_from_rfc3339(startup_params.epoch.as_str());
     let epoch = match epoch {
         Ok(ok) => ok,
-        Err(_) => {
-            DateTime::parse_from_rfc2822(startup_params.epoch.as_str())
-                .change_context(ApplicationError)
-                .attach_printable_lazy(|| format!("specified epoch start '{}' is not a valid rfc2822 nor a valid rfc3339 format", &startup_params.epoch))?
-        }
+        Err(_) => DateTime::parse_from_rfc2822(startup_params.epoch.as_str())
+            .change_context(ApplicationError)
+            .attach_printable_lazy(|| {
+                format!(
+                    "specified epoch start '{}' is not a valid rfc2822 nor a valid rfc3339 format",
+                    &startup_params.epoch
+                )
+            })?,
     };
     let epoch: DateTime<Utc> = epoch.into();
 
-    let snowflake = Generator::new(startup_params.node_id as i64, epoch)
-        .change_context(ApplicationError)?;
+    let snowflake =
+        Generator::new(startup_params.node_id as i64, epoch).change_context(ApplicationError)?;
 
     let snowflake = SnowflakeServiceImpl::new(snowflake);
     let snowflake = SnowflakeServiceServer::new(snowflake);
@@ -91,7 +94,7 @@ impl SnowflakeServiceImpl {
 
 #[tonic::async_trait]
 impl proto::de::phyrone::kiwi::snowflake::snowflake_service_server::SnowflakeService
-for SnowflakeServiceImpl
+    for SnowflakeServiceImpl
 {
     async fn get_snowflakes(
         &self,

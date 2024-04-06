@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="metadata-jvm">
+    <output-path>$PROJECT_DIR$/shared/metadata/build/libs</output-path>
+    <root id="archive" name="metadata-jvm.jar">
+      <element id="module-output" name="project-kiwi-c2.shared.metadata.jvmMain" />
+    </root>
+  </artifact>
+</component>

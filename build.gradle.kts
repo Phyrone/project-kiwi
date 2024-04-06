@@ -7,10 +7,13 @@ buildscript {
 }
 plugins {
     idea
+    base
     id("com.github.ben-manes.versions") version "0.51.0"
 
     // Used in Subprojects
     kotlin("jvm") version "1.9.23" apply false
+    kotlin("kapt") version "1.9.23" apply false
+    kotlin("multiplatform") version "1.9.23" apply false
     id("org.flywaydb.flyway") version "10.10.0" apply false
     id("com.google.cloud.tools.jib") version "3.4.1" apply false
     id("com.google.devtools.ksp") version "1.9.23-1.0.19" apply false
@@ -25,6 +28,10 @@ tasks {
     wrapper {
         gradleVersion = "8.6"
         distributionType = Wrapper.DistributionType.ALL
+    }
+    clean{
+        this.setDelete("target")
+        this.setDelete("build")
     }
 
 }

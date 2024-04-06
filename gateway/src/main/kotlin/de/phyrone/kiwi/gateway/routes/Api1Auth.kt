@@ -54,11 +54,12 @@ class Api1Auth(
                         get("/check") {
                             val user = call.principal<UserPrincipal>()
                             if (user == null) {
-                                call.respond(HttpStatusCode.OK, AuthCheckResponse.Unauthenticated as AuthCheckResponse)
+                                call.respond(
+                                    HttpStatusCode.OK, AuthCheckResponse.Unauthenticated as AuthCheckResponse
+                                )
                             } else {
                                 call.respond(
-                                    HttpStatusCode.OK,
-                                    AuthCheckResponse.Authenticated(user.id) as AuthCheckResponse
+                                    HttpStatusCode.OK, AuthCheckResponse.Authenticated(user.id) as AuthCheckResponse
                                 )
                             }
                         }
@@ -69,28 +70,22 @@ class Api1Auth(
 
                         postgres.connection { connection ->
                             connection.transactionIsolationLevel = IsolationLevel.READ_COMMITTED
-                            val databaseSelected =
-                                connection.createStatement(
-                                    """
+                            val databaseSelected = connection.createStatement(
+                                """
                                     SELECT id,(password).hash AS hash, (password).salt AS salt,(password).iterations AS iterations,(password).memory AS memory,(password).parallelism AS parallelism,session_secret 
                                     FROM account WHERE email = $1 LIMIT 1
                                     """.trimIndent()
-                                )
-                                    .bind(0, username).fetchSize(1).execute().awaitSingle().map { row ->
-                                        val accountID = row.get("id") as Long
-                                        val hash = row.get("hash", ByteArray::class.java) ?: return@map null
-                                        val salt = row.get("salt", ByteArray::class.java) ?: return@map null
-                                        val iterations = row.get("iterations") as? Int ?: return@map null
-                                        val memory = row.get("memory") as? Int ?: return@map null
-                                        val parallelism = row.get("parallelism") as? Int ?: return@map null
-                                        return@map accountID to Argon2Raw.HashedPassword(
-                                            hash,
-                                            salt,
-                                            iterations,
-                                            memory,
-                                            parallelism
-                                        )
-                                    }.awaitFirstOrNull()
+                            ).bind(0, username).fetchSize(1).execute().awaitSingle().map { row ->
+                                    val accountID = row.get("id") as Long
+                                    val hash = row.get("hash", ByteArray::class.java) ?: return@map null
+                                    val salt = row.get("salt", ByteArray::class.java) ?: return@map null
+                                    val iterations = row.get("iterations") as? Int ?: return@map null
+                                    val memory = row.get("memory") as? Int ?: return@map null
+                                    val parallelism = row.get("parallelism") as? Int ?: return@map null
+                                    return@map accountID to Argon2Raw.HashedPassword(
+                                        hash, salt, iterations, memory, parallelism
+                                    )
+                                }.awaitFirstOrNull()
 
                             if (databaseSelected == null) {
                                 call.respondError(LoginResponse.InvalidCredentials)
@@ -120,12 +115,8 @@ class Api1Auth(
                                     SnowflakeRequest.newBuilder().setCount(1).build()
                                 ).snowflakesList.first()
                                 connection.createStatement("INSERT INTO account(email,password,id,session_secret) VALUES ($1,ROW($2,$3,$4,$5,$6),$7,$8) ON CONFLICT ON CONSTRAINT uniq_account_email DO NOTHING RETURNING id")
-                                    .bind(0, lowercasedUsername)
-                                    .bind(1, hashed.hash)
-                                    .bind(2, hashed.salt)
-                                    .bind(3, hashed.iterations)
-                                    .bind(4, hashed.memory)
-                                    .bind(5, hashed.parallelism)
+                                    .bind(0, lowercasedUsername).bind(1, hashed.hash).bind(2, hashed.salt)
+                                    .bind(3, hashed.iterations).bind(4, hashed.memory).bind(5, hashed.parallelism)
                                     .bind(6, id).bind(7, sessionSecret).fetchSize(1).execute().awaitFirst()
                                     .map { row -> row.get("id") as Long }.awaitFirstOrNull()
                             }

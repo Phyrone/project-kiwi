@@ -42,7 +42,10 @@ jobs:
             bun-${{ runner.os }}-page-
       - name: Install dependencies
         working-directory: page
-        run: bun install --from-lockfile
+        #run: bun install --from-lockfile
+        # Temporary use yarn instead of bun
+        #  https://github.com/oven-sh/bun/issues/2257
+        run: yarn install --immutable
       - name: Build
         working-directory: page
         run: bun run build --out-dir=dist

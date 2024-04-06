@@ -19,9 +19,9 @@ jobs:
             install: |
               sudo apt install -y gcc-aarch64-linux-gnu
           - os: macos-latest
-            build_target: x86_64-apple-darwin
-          - os: macos-latest
-            build_target: aarch64-apple-darwin
+            build_target:
+              - x86_64-apple-darwin
+              - aarch64-apple-darwin
 
     runs-on: ${{ matrix.target.os }}
     steps:

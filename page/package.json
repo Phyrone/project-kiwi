@@ -32,6 +32,7 @@
     "@docusaurus/module-type-aliases": "^3.2.1",
     "@docusaurus/tsconfig": "^3.2.1",
     "@docusaurus/types": "^3.2.1",
+    "sharp": "^0.33.3",
     "typescript": "~5.2.2"
   },
   "browserslist": {
@@ -53,6 +54,7 @@
     "@fortawesome/fontawesome-free",
     "core-js",
     "core-js-pure",
-    "protobufjs"
+    "protobufjs",
+    "sharp"
   ]
 }

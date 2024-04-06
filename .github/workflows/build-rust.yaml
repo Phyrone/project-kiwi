@@ -14,18 +14,18 @@ jobs:
         target:
           - os: ubuntu-latest
             build_target: x86_64-unknown-linux-gnu
-          - os: ubuntu-latest
-            build_target: aarch64-unknown-linux-gnu
-            # At the moment there is no runner with arm architecture so we skip this for now
-            compile_only: true
-            install: |
-              sudo apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+          #- os: ubuntu-latest
+          #  build_target: aarch64-unknown-linux-gnu
+          #  # At the moment there is no runner with arm architecture so we skip this for now
+          #  compile_only: true
+          #  install: |
+          #    sudo apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
           - os: macos-latest
             build_target: x86_64-apple-darwin
-          - os: macos-latest
-            build_target: aarch64-apple-darwin
-            # At the moment there is no runner with arm architecture so we skip this for now
-            compile_only: true
+          #- os: macos-latest
+          #  build_target: aarch64-apple-darwin
+          #  # At the moment there is no runner with arm architecture so we skip this for now
+          #  compile_only: true
 
     runs-on: ${{ matrix.target.os }}
     steps:

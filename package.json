@@ -1,9 +1,7 @@
 {
   "name": "project-kiwi",
-  "type": "module",
   "workspaces": [
     "frontend",
     "page"
-  ],
-  "devDependencies": {}
+  ]
 }

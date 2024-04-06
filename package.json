@@ -3,7 +3,7 @@
   "type": "module",
   "workspaces": [
     "frontend",
-    "docs"
+    "page"
   ],
   "devDependencies": {}
 }

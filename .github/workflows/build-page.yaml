@@ -32,7 +32,7 @@ jobs:
         run: bun install --from-lockfile
       - name: Build
         working-directory: page
-        run: bun run build --output-dir=dist
+        run: bun run build --out-dir=dist
       - name: Artifact
         uses: actions/upload-artifact@v4
         with:

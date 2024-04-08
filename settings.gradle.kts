@@ -5,7 +5,7 @@ rootProject.name = "project-kiwi"
 
 include(
     ":gateway",
-    ":audio",
+    ":relay",
     ":frontend",
     ":shared",
     ":shared:common",

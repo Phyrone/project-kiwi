@@ -1,21 +1,7 @@
-import type { Options } from 'sockjs-client';
-import SockJS from 'sockjs-client/dist/sockjs';
-
 
 export async function createWebsocket(address: string, protocols?: string[]): Promise<WrappedWebSocket> {
 	return await new Promise((resolve, reject) => {
 		const websocket = new WebSocket(address, protocols);
-		const wrapped_websocket = new WrappedWebSocket(websocket);
-
-		websocket.onopen = () => resolve(wrapped_websocket);
-		websocket.onerror = reject;
-	});
-}
-
-export async function createSockJs(address: string): Promise<WrappedWebSocket> {
-	const sock_js_options: Options = {};
-	return await new Promise((resolve, reject) => {
-		const websocket = new SockJS(address, undefined, sock_js_options);
 		const wrapped_websocket = new WrappedWebSocket(websocket);
 
 		websocket.onopen = () => resolve(wrapped_websocket);

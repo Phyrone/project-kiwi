@@ -1,12 +1,11 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
-import type { SessionData } from '$lib/server/auth';
 
 declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			session: SessionData | undefined;
+			session: string | undefined;
 			json?: boolean;
 		}
 

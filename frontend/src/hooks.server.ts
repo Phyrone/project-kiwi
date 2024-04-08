@@ -1,17 +1,29 @@
 import type { Handle } from '@sveltejs/kit';
-
+import { env } from '$env/dynamic/private';
 import { type ExtendedRFC9457Error } from '$lib/RFC9457';
-import { get_session_from_request } from '$lib/server/session';
 
-export const handle: Handle = async ({ event, event: { locals, request, cookies }, resolve }) => {
-	locals.session = await get_session_from_request(cookies, request);
+const SESSION_COOKIE_NAME = env.SESSION_COOKIE_NAME || 'session';
+
+export const handle: Handle = async ({ event, event: { cookies, locals }, resolve }) => {
+	//locals.session = await get_session_from_request(cookies, request);
 	//console.log('locals.session', locals.session);
-
-	return resolve(event);
+	locals.session = cookies.get(SESSION_COOKIE_NAME);
+	const result = resolve(event);
+	if (locals.session && locals.session !== cookies.get(SESSION_COOKIE_NAME)) {
+		cookies.set(SESSION_COOKIE_NAME, locals.session, {
+			path: '/',
+			httpOnly: true,
+			secure: true,
+			priority: 'high',
+			sameSite: 'strict',
+			partitioned: true,
+		});
+	}
+	return result;
 };
 
 export const handleError = async ({ status, message, error, event }) => {
-	if (event.url.pathname.startsWith('/api') || event.locals.json) {
+	if (event.url.pathname.startsWith('/_data') || event.locals.json) {
 		const response = errorMessageByCode(status, message, event.url.pathname);
 		if (response) {
 			console.error('unhandled error', error);

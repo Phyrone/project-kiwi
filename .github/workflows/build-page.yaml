@@ -7,9 +7,6 @@ on:
       - 'yarn.lock'
       - 'bun.lockdb'
   pull_request:
-    branches-ignore:
-      - renovate/*
-      - dependabot/*
     paths:
       - 'page/**'
       - '.github/workflows/build-page.yaml'

@@ -45,7 +45,7 @@ const config: Config = {
 					sidebarPath: './sidebars.ts',
 					breadcrumbs: true,
 					editUrl:
-						'https://github.com/Phyrone/project-kiwi/tree/main/page/docs',
+						'https://github.com/Phyrone/project-kiwi/tree/main/page/',
 					remarkPlugins: [remarkMath],
 					rehypePlugins: [rehypeKatex]
 				},
@@ -55,7 +55,7 @@ const config: Config = {
 						type: 'all'
 					},
 					editUrl:
-						'https://github.com/Phyrone/project-kiwi/tree/main/page/blog',
+						'https://github.com/Phyrone/project-kiwi/tree/main/page/',
 					remarkPlugins: [remarkMath],
 					rehypePlugins: [rehypeKatex]
 				},

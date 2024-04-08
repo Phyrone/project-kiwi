@@ -1,14 +1,10 @@
 use clap::Parser;
 
-
-enum Module{
+enum Module {
     Session,
     Forwarder,
 }
 
-#[derive(Debug, Clone)]
-#[derive(Parser)]
+#[derive(Debug, Clone, Parser)]
 #[clap(version)]
-pub struct StartupParams {
-    
-}
+pub struct StartupParams {}

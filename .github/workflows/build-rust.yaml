@@ -47,6 +47,8 @@ jobs:
           targets: ${{ matrix.target.build_target }}
       - name: Install Protoc
         uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Install Dependencies
         if: ${{ matrix.target.install }}
         run: ${{ matrix.target.install }}

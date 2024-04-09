@@ -12,7 +12,6 @@ export function is_alphanumeric(str) {
 	return /^[a-zA-Z0-9]+$/.test(str);
 }
 
-
 export function test_array(length: number): number[] {
 	return Array.from({ length }, (_, i) => i);
 }

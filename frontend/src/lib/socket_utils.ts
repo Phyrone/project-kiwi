@@ -1,5 +1,7 @@
-
-export async function createWebsocket(address: string, protocols?: string[]): Promise<WrappedWebSocket> {
+export async function createWebsocket(
+	address: string,
+	protocols?: string[]
+): Promise<WrappedWebSocket> {
 	return await new Promise((resolve, reject) => {
 		const websocket = new WebSocket(address, protocols);
 		const wrapped_websocket = new WrappedWebSocket(websocket);
@@ -10,9 +12,11 @@ export async function createWebsocket(address: string, protocols?: string[]): Pr
 }
 
 export class WrappedWebSocket {
-
 	readonly message_buffer: any[] = [];
-	readonly request_buffer: { resolve: (any: MessageEvent<any>) => void, reject: (error: Error) => void }[] = [];
+	readonly request_buffer: {
+		resolve: (any: MessageEvent<any>) => void;
+		reject: (error: Error) => void;
+	}[] = [];
 	closed: CloseEvent | undefined = undefined;
 
 	private _on_close(event: CloseEvent) {
@@ -46,16 +50,13 @@ export class WrappedWebSocket {
 
 	public async receive(): Promise<MessageEvent<any>> {
 		const buffered = this.message_buffer.shift();
-		if (buffered)
-			return buffered;
+		if (buffered) return buffered;
 		else {
-			if (this.closed)
-				throw new Error('Connection closed');
+			if (this.closed) throw new Error('Connection closed');
 
 			return new Promise((resolve, reject) => {
 				this.request_buffer.push({ resolve, reject });
 			});
 		}
 	}
-
 }

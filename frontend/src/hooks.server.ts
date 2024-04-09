@@ -16,7 +16,7 @@ export const handle: Handle = async ({ event, event: { cookies, locals }, resolv
 			secure: true,
 			priority: 'high',
 			sameSite: 'strict',
-			partitioned: true,
+			partitioned: true
 		});
 	}
 	return result;

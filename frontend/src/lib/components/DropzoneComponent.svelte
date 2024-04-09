@@ -14,19 +14,17 @@
 			uploadMultiple: false,
 			chunking: false,
 			parallelChunkUploads: false,
-			paramName: 'file',
-
+			paramName: 'file'
 		});
 	}
-
 
 	onDestroy(() => {
 		if (dropzone) {
 			dropzone.destroy();
 		}
 	});
-
 </script>
-<div class="w-full h-full">
-	<div class="h-full dropzone" use:setup_dropzone />
+
+<div class="h-full w-full">
+	<div class="dropzone h-full" use:setup_dropzone />
 </div>

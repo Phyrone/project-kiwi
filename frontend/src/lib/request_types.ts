@@ -50,10 +50,9 @@ export type LiveSearchParams = {
 export type UploadLinkRequest = {
 	file_name: string;
 	ttl?: string | number;
-}
+};
 
 export type GatewayDataResponse = {
 	link: string;
 	token?: string;
-
-}
+};

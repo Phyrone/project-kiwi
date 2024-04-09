@@ -1,12 +1,8 @@
 import type { LayoutLoad } from './$types';
 
-export const load: LayoutLoad = async ({ fetch, params, params: { guild } }) => {
-	const guild_data = fetch(`/api/v1/guilds/${guild}`)
-		.then((res) => res.json())
-		.catch(() => undefined);
-
+export const load: LayoutLoad = async ({ params }) => {
 	return {
-		guild: await guild_data,
+		//guild: await guild_data,
 		params
 	};
 };

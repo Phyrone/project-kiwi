@@ -1,7 +1,1 @@
-
-
-export function open_gateway(
-
-){
-
-}
+export function open_gateway() {}

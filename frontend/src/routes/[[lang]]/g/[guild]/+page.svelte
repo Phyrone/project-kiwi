@@ -8,4 +8,3 @@
 	<h1>{JSON.stringify(data)}</h1>
 	ABC
 </div>
-

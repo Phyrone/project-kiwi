@@ -1,17 +1,18 @@
+import com.github.gradle.node.yarn.task.YarnTask
+
 plugins {
     base
+    id("com.github.node-gradle.node")
 }
 
 tasks {
-
-    val buildBun = create("buildBun", Exec::class) {
+    val buildBun = create<YarnTask>("build-bun") {
         group = "build"
-        environment(
-            mapOf(
-                "BUILD_TARGET" to "bun",
-            )
+        this.environment = mapOf(
+            "NODE_ENV" to "production",
+            "BUILD_TARGET" to "bun"
         )
-        commandLine("bun", "run", "build")
+        this.args = listOf("run", "build")
     }
 
     build {

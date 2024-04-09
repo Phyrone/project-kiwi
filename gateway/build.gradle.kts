@@ -56,7 +56,7 @@ dependencies {
     implementation("io.ktor:ktor-server-metrics-micrometer:2.3.9")
     implementation("io.ktor:ktor-server-rate-limit:2.3.9")
     implementation("io.ktor:ktor-server-request-validation:2.3.9")
-    implementation("io.ktor:ktor-server-resources:2.3.9")
+    implementation("io.ktor:ktor-server-resources:2.3.10")
     implementation("io.ktor:ktor-server-locations:2.3.9")
     implementation("io.ktor:ktor-server-swagger:2.3.9")
     //implementation("io.ktor:ktor-server-openapi:2.3.9")

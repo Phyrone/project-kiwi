@@ -61,7 +61,7 @@ dependencies {
     implementation("io.ktor:ktor-server-swagger:2.3.9")
     //implementation("io.ktor:ktor-server-openapi:2.3.9")
     implementation("io.ktor:ktor-server-auto-head-response:2.3.9")
-    implementation("io.ktor:ktor-server-default-headers:2.3.9")
+    implementation("io.ktor:ktor-server-default-headers:2.3.10")
     implementation("io.ktor:ktor-server-compression:2.3.9")
     implementation("io.ktor:ktor-server-caching-headers:2.3.9")
     implementation("io.ktor:ktor-server-conditional-headers:2.3.9")

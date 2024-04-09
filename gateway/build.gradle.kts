@@ -45,7 +45,7 @@ dependencies {
     //implementation("io.vertx:vertx-lang-kotlin")
 
     /* Ktor */
-    implementation("io.ktor:ktor-server-netty-jvm:2.3.9")
+    implementation("io.ktor:ktor-server-netty-jvm:2.3.10")
     implementation("io.ktor:ktor-server-websockets-jvm:2.3.9")
     implementation("io.ktor:ktor-network-tls-certificates:2.3.10")
     implementation("io.ktor:ktor-server-auth:2.3.9")

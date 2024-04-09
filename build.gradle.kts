@@ -27,7 +27,7 @@ version = "0.0.1-INDEV"
 tasks {
 
     wrapper {
-        gradleVersion = "8.6"
+        gradleVersion = "8.7"
         distributionType = Wrapper.DistributionType.ALL
     }
     clean{

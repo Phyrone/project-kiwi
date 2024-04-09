@@ -13,8 +13,7 @@ on:
       - '.github/workflows/build-rust.yaml'
       - '**/Cargo.toml'
       - '**/Cargo.lock'
-      -
-name: Build Rust
+name: Cargo Build
 jobs:
   build:
     name: Build ${{ matrix.target.build_target }}

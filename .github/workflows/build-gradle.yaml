@@ -1,0 +1,22 @@
+on:
+  push: { }
+  pull_request: { }
+name: Build Gradle
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validate Gradlew
+        uses: gradle/wrapper-validation-action@v2
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          cache: 'gradle'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@v3

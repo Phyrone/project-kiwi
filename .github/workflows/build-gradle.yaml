@@ -28,9 +28,9 @@ jobs:
         with:
           gradle-version: 'wrapper'
       - name: Build
-        run: gradle build
+        run: gradle build --stacktrace --debug
       - name: Run Tests
-        run: gradle test
+        run: gradle test --stacktrace --debug
       - name: Stop Gradle Daemon
         if: always()
         run: gradle --stop

@@ -32,11 +32,14 @@ kotlin {
         binaries.library()
         generateTypeScriptDefinitions()
     }
+    /*
     wasmJs("wasm") {
         browser()
+        nodejs()
         binaries.library()
         generateTypeScriptDefinitions()
     }
+     */
 
     sourceSets {
         val commonMain by getting {
@@ -55,11 +58,13 @@ kotlin {
                 implementation(kotlin("stdlib-js"))
             }
         }
+        /*
         val wasmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-wasm-js"))
             }
         }
+         */
     }
 }
 

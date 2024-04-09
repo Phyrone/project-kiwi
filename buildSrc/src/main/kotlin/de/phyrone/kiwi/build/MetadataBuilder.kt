@@ -24,7 +24,7 @@ object MetadataBuilder {
             .addData(data)
             .build()
 
-        val fileSpec = FileSpec.builder("de.phyrone.minecraftcloud.metadata", "BuildMetadata")
+        val fileSpec = FileSpec.builder("de.phyrone.kiwi.metadata", "BuildMetadata")
             .addType(typeSpec)
             .build()
 
@@ -61,7 +61,6 @@ object MetadataBuilder {
             is Boolean, is Number -> builder.initializer("%L", value)
             else -> error("Unsupported type: $type")
         }
-
         return builder.build()
     }
 

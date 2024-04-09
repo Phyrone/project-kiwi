@@ -6,7 +6,9 @@ plugins {
 }
 
 tasks {
+
     val buildBun = create<YarnTask>("build-bun") {
+        dependsOn(yarn)
         group = "build"
         this.environment = mapOf(
             "NODE_ENV" to "production",

@@ -52,7 +52,7 @@ dependencies {
     implementation("io.ktor:ktor-server-call-id:2.3.9")
     implementation("io.ktor:ktor-server-status-pages:2.3.9")
     implementation("io.ktor:ktor-server-content-negotiation:2.3.9")
-    implementation("io.ktor:ktor-serialization-jackson:2.3.9")
+    implementation("io.ktor:ktor-serialization-jackson:2.3.10")
     implementation("io.ktor:ktor-server-metrics-micrometer:2.3.9")
     implementation("io.ktor:ktor-server-rate-limit:2.3.9")
     implementation("io.ktor:ktor-server-request-validation:2.3.9")

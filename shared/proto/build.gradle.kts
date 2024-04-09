@@ -11,7 +11,7 @@ dependencies {
     runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1-Beta")
 
     /* Protobuf */
-    api("com.google.protobuf:protobuf-java:4.26.0")
+    api("com.google.protobuf:protobuf-java:4.26.1")
     api("com.google.protobuf:protobuf-java-util:4.26.1")
     api("com.google.protobuf:protobuf-kotlin:4.26.1")
 

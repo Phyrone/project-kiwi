@@ -7,7 +7,7 @@
     "renovate",
     "dependencies"
   ],
-  "rebaseWhen": "auto",
+  "rebaseWhen": "behind-base-branch",
   "enabled": true,
   "automerge": true,
   "platformAutomerge": true,

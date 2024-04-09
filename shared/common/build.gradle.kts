@@ -38,7 +38,7 @@ dependencies {
     api("io.github.config4k:config4k:0.6.0")
 
     /* Crypto */
-    implementation("org.bouncycastle:bcprov-jdk18on:1.77")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.78")
     implementation("org.springframework.security:spring-security-crypto:6.2.3")
 
 

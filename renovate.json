@@ -7,8 +7,10 @@
     "renovate",
     "dependencies"
   ],
-  "rebaseWhen": "behind-base-branch",
+  "rebaseWhen": "auto",
   "enabled": true,
   "automerge": true,
-  "autoApprove": true
+  "platformAutomerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "rebase"
 }

@@ -5,8 +5,6 @@ rootProject.name = "project-kiwi"
 
 include(
     ":gateway",
-    ":relay",
-    ":frontend",
     ":shared",
     ":shared:common",
     ":shared:proto",
@@ -14,3 +12,10 @@ include(
     ":shared:permission",
     ":shared:metadata",
 )
+
+if(System.getProperty("monorepo.cargo")?.toBooleanStrictOrNull() != false){
+    include(":relay")
+}
+if(System.getProperty("monorepo.node")?.toBooleanStrictOrNull() != false){
+    include(":frontend")
+}

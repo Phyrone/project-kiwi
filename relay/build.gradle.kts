@@ -8,7 +8,6 @@ tasks {
     }
     build {
         dependsOn(cargoBuild)
-
     }
 
 }

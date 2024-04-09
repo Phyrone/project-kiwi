@@ -19,7 +19,6 @@ tasks {
 
     build {
         dependsOn(buildBun)
-
     }
 
     clean {

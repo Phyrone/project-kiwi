@@ -28,9 +28,9 @@ jobs:
         with:
           gradle-version: 'wrapper'
       - name: Build
-        run: gradle build --stacktrace
+        run: gradle build --stacktrace -Dmonorepo.cargo=false
       - name: Run Tests
-        run: gradle test --stacktrace
+        run: gradle test --stacktrace -Dmonorepo.cargo=false
       - name: Stop Gradle Daemon
         if: always()
         run: gradle --stop

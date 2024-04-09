@@ -54,7 +54,7 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation:2.3.9")
     implementation("io.ktor:ktor-serialization-jackson:2.3.10")
     implementation("io.ktor:ktor-server-metrics-micrometer:2.3.9")
-    implementation("io.ktor:ktor-server-rate-limit:2.3.9")
+    implementation("io.ktor:ktor-server-rate-limit:2.3.10")
     implementation("io.ktor:ktor-server-request-validation:2.3.9")
     implementation("io.ktor:ktor-server-resources:2.3.9")
     implementation("io.ktor:ktor-server-locations:2.3.9")
@@ -67,7 +67,7 @@ dependencies {
     implementation("io.ktor:ktor-server-conditional-headers:2.3.9")
     implementation("io.ktor:ktor-server-cors:2.3.9")
     implementation("io.ktor:ktor-server-forwarded-header:2.3.9")
-    implementation("io.ktor:ktor-server-rate-limit:2.3.9")
+    implementation("io.ktor:ktor-server-rate-limit:2.3.10")
 
     /* Dependency Injection, EventBus, Modules etc. */
     implementation("io.insert-koin:koin-core:3.6.0-wasm-alpha2")

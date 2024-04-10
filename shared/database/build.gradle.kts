@@ -23,7 +23,7 @@ dependencies {
 
 
     /* Reactive Driver */
-    api("org.postgresql:r2dbc-postgresql:1.0.4.RELEASE")
+    api("org.postgresql:r2dbc-postgresql:1.0.5.RELEASE")
 
     /* JDBC Based (Blocking) */
     implementation("org.flywaydb:flyway-core:10.11.0")

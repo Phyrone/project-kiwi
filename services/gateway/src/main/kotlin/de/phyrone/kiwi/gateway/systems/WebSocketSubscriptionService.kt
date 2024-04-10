@@ -16,7 +16,7 @@ class WebSocketSubscriptionService(
     override fun getKoin(): Koin = koin
     override fun Application.apply() {
         routing {
-            route("/v1/events") {
+            route("/v1/ws") {
                 webSocket {
 
                 }

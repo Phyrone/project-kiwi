@@ -13,6 +13,9 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
+
+    testImplementation(kotlin("test"))
+
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1-Beta")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.8.1-Beta")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.1-Beta")
@@ -42,6 +45,16 @@ dependencies {
     implementation("org.springframework.security:spring-security-crypto:6.2.3")
 
 
+}
+
+tasks{
+    test{
+        useJUnitPlatform()
+    }
+}
+
+kotlin{
+    jvmToolchain(17)
 }
 
 ksp{

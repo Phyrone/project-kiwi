@@ -21,10 +21,10 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/buildSrc" />
-            <option value="$PROJECT_DIR$/frontend" />
-            <option value="$PROJECT_DIR$/gateway" />
-            <option value="$PROJECT_DIR$/media" />
-            <option value="$PROJECT_DIR$/relay" />
+            <option value="$PROJECT_DIR$/services" />
+            <option value="$PROJECT_DIR$/services/frontend" />
+            <option value="$PROJECT_DIR$/services/gateway" />
+            <option value="$PROJECT_DIR$/services/relay" />
             <option value="$PROJECT_DIR$/shared" />
             <option value="$PROJECT_DIR$/shared/common" />
             <option value="$PROJECT_DIR$/shared/database" />

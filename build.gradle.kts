@@ -16,7 +16,7 @@ plugins {
     kotlin("multiplatform") version "1.9.23" apply false
     id("org.flywaydb.flyway") version "10.10.0" apply false
     id("com.google.cloud.tools.jib") version "3.4.2" apply false
-    id("com.google.devtools.ksp") version "1.9.23-1.0.19" apply false
+    id("com.google.devtools.ksp") version "1.9.23-1.0.20" apply false
     id("com.github.node-gradle.node") version "7.0.2" apply false
 
 }

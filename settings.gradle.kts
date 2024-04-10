@@ -11,6 +11,7 @@ include(
     ":shared:database",
     ":shared:permission",
     ":shared:metadata",
+    ":media",
 )
 
 if(System.getProperty("monorepo.cargo")?.toBooleanStrictOrNull() != false){

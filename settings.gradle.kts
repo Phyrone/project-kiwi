@@ -4,19 +4,21 @@ plugins {
 rootProject.name = "project-kiwi"
 
 include(
-    ":gateway",
     ":shared",
     ":shared:common",
     ":shared:proto",
     ":shared:database",
     ":shared:permission",
     ":shared:metadata",
-    ":media",
+
+    // Services
+    ":services:gateway",
+    ":services:media",
 )
 
 if(System.getProperty("monorepo.cargo")?.toBooleanStrictOrNull() != false){
-    include(":relay")
+    include(":services:relay")
 }
 if(System.getProperty("monorepo.node")?.toBooleanStrictOrNull() != false){
-    include(":frontend")
+    include(":services:frontend")
 }

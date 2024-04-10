@@ -10,9 +10,10 @@ edition = "2021"
 
 [workspace]
 members = [
-    "relay",
-    "snowflake",
     "shared/proto",
     "shared/common",
-    "shared/database"
+    "shared/database",
+    # Services
+    "services/relay",
+    "services/snowflake",
 ]

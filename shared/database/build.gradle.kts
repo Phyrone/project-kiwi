@@ -4,7 +4,7 @@ import org.flywaydb.gradle.task.FlywayMigrateTask
 buildscript {
     dependencies {
         classpath("org.postgresql:postgresql:42.7.3")
-        classpath("org.flywaydb:flyway-core:10.10.0")
+        classpath("org.flywaydb:flyway-core:10.11.0")
         classpath("org.flywaydb:flyway-database-postgresql:10.4.1")
     }
 }
@@ -26,7 +26,7 @@ dependencies {
     api("org.postgresql:r2dbc-postgresql:1.0.4.RELEASE")
 
     /* JDBC Based (Blocking) */
-    implementation("org.flywaydb:flyway-core:10.10.0")
+    implementation("org.flywaydb:flyway-core:10.11.0")
     implementation("org.flywaydb:flyway-database-postgresql:10.4.1")
 
     /* JDBC Driver */

@@ -96,7 +96,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.17.0")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.0")
     implementation("org.msgpack:jackson-dataformat-msgpack:0.9.8")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.0")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.17.0")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-protobuf:2.17.0")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.17.0")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.0")

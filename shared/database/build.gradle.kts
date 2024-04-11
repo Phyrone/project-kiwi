@@ -42,7 +42,7 @@ dependencies {
 
     /* Exposed */
     implementation("org.jetbrains.exposed:exposed-core:0.49.0")
-    implementation("org.jetbrains.exposed:exposed-dao:0.48.0")
+    implementation("org.jetbrains.exposed:exposed-dao:0.49.0")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.48.0")
 
 

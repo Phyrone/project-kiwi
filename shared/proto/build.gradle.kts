@@ -16,11 +16,11 @@ dependencies {
     api("com.google.protobuf:protobuf-kotlin:4.26.1")
 
     /* gRPC */
-    api("io.grpc:grpc-protobuf:1.62.2")
-    api("io.grpc:grpc-netty:1.62.2")
-    api("io.grpc:grpc-all:1.62.2")
+    api("io.grpc:grpc-protobuf:1.63.0")
+    api("io.grpc:grpc-netty:1.63.0")
+    api("io.grpc:grpc-all:1.63.0")
 
-    api("io.grpc:grpc-stub:1.62.2")
+    api("io.grpc:grpc-stub:1.63.0")
     api("io.grpc:grpc-kotlin-stub:1.4.1")
 
 
@@ -41,7 +41,7 @@ protobuf {
 
     plugins {
         create("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.62.2"
+            artifact = "io.grpc:protoc-gen-grpc-java:1.63.0"
         }
         create("grpckt") {
             artifact = "io.grpc:protoc-gen-grpc-kotlin:1.4.1:jdk8@jar"

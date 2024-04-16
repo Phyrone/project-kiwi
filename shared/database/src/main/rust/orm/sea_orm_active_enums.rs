@@ -4,6 +4,24 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Copy, Serialize, Deserialize)]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "channel_type")]
+pub enum ChannelType {
+    #[sea_orm(string_value = "announcement")]
+    Announcement,
+    #[sea_orm(string_value = "dummy")]
+    Dummy,
+    #[sea_orm(string_value = "feed")]
+    Feed,
+    #[sea_orm(string_value = "forum")]
+    Forum,
+    #[sea_orm(string_value = "stage")]
+    Stage,
+    #[sea_orm(string_value = "text")]
+    Text,
+    #[sea_orm(string_value = "voice")]
+    Voice,
+}
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Copy, Serialize, Deserialize)]
 #[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "content_flag")]
 pub enum ContentFlag {
     #[sea_orm(string_value = "ai")]

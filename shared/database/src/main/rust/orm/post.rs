@@ -16,13 +16,13 @@ impl EntityName for Entity {
 pub struct Model {
     pub id: i64,
     pub channel_id: Option<i64>,
-    pub author_id: Option<i64>,
-    pub created_at: DateTimeWithTimeZone,
-    pub updated_at: DateTimeWithTimeZone,
+    pub author_id: i64,
+    pub created_at: DateTime,
+    pub updated_at: DateTime,
     pub draft: bool,
     pub title: String,
     pub body: Option<Json>,
-    pub metadata: Option<Json>,
+    pub metadata: Json,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -65,13 +65,13 @@ impl ColumnTrait for Column {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
             Self::ChannelId => ColumnType::BigInteger.def().null(),
-            Self::AuthorId => ColumnType::BigInteger.def().null(),
-            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
-            Self::UpdatedAt => ColumnType::TimestampWithTimeZone.def(),
+            Self::AuthorId => ColumnType::BigInteger.def(),
+            Self::CreatedAt => ColumnType::DateTime.def(),
+            Self::UpdatedAt => ColumnType::DateTime.def(),
             Self::Draft => ColumnType::Boolean.def(),
             Self::Title => ColumnType::String(None).def(),
             Self::Body => ColumnType::JsonBinary.def().null(),
-            Self::Metadata => ColumnType::JsonBinary.def().null(),
+            Self::Metadata => ColumnType::JsonBinary.def(),
         }
     }
 }
@@ -124,9 +124,9 @@ impl Related<super::profile::Entity> for Entity {
     }
 }
 
-impl Related<super::asset::Entity> for Entity {
+impl Related<super::content::Entity> for Entity {
     fn to() -> RelationDef {
-        super::post_attachment::Relation::Asset.def()
+        super::post_attachment::Relation::Content.def()
     }
     fn via() -> Option<RelationDef> {
         Some(super::post_attachment::Relation::Post.def().rev())

@@ -2,9 +2,8 @@
 
 pub use super::account::Entity as Account;
 pub use super::account_key::Entity as AccountKey;
-pub use super::asset::Entity as Asset;
-pub use super::asset_variant::Entity as AssetVariant;
 pub use super::channel::Entity as Channel;
+pub use super::content::Entity as Content;
 pub use super::flyway_schema_history::Entity as FlywaySchemaHistory;
 pub use super::guild::Entity as Guild;
 pub use super::post::Entity as Post;

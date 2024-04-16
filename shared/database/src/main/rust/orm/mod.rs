@@ -4,9 +4,8 @@ pub mod prelude;
 
 pub mod account;
 pub mod account_key;
-pub mod asset;
-pub mod asset_variant;
 pub mod channel;
+pub mod content;
 pub mod flyway_schema_history;
 pub mod guild;
 pub mod post;

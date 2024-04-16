@@ -15,7 +15,7 @@ impl EntityName for Entity {
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
     pub id: i64,
-    pub created_at: DateTimeWithTimeZone,
+    pub created_at: DateTime,
     pub name: String,
     pub owner_id: i64,
 }
@@ -51,7 +51,7 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
-            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
+            Self::CreatedAt => ColumnType::DateTime.def(),
             Self::Name => ColumnType::String(Some(128u32)).def(),
             Self::OwnerId => ColumnType::BigInteger.def(),
         }

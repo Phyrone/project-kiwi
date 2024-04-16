@@ -15,7 +15,7 @@ impl EntityName for Entity {
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
     pub id: i64,
-    pub created_at: DateTimeWithTimeZone,
+    pub created_at: DateTime,
     pub email: String,
     pub password: Option<String>,
     pub session_secret: Option<Vec<u8>>,
@@ -54,9 +54,9 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
-            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
+            Self::CreatedAt => ColumnType::DateTime.def(),
             Self::Email => ColumnType::String(Some(320u32)).def().unique(),
-            Self::Password => ColumnType::Text.def().null(),
+            Self::Password => ColumnType::custom("password").def().null(),
             Self::SessionSecret => ColumnType::Binary(BlobSize::Blob(None)).def().null(),
         }
     }

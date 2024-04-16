@@ -41,7 +41,7 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Asset,
+    Content,
     Post,
 }
 
@@ -59,9 +59,9 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Asset => Entity::belongs_to(super::asset::Entity)
+            Self::Content => Entity::belongs_to(super::content::Entity)
                 .from(Column::AssetId)
-                .to(super::asset::Column::Id)
+                .to(super::content::Column::Id)
                 .into(),
             Self::Post => Entity::belongs_to(super::post::Entity)
                 .from(Column::PostId)
@@ -71,9 +71,9 @@ impl RelationTrait for Relation {
     }
 }
 
-impl Related<super::asset::Entity> for Entity {
+impl Related<super::content::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Asset.def()
+        Relation::Content.def()
     }
 }
 

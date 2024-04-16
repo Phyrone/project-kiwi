@@ -16,6 +16,7 @@ impl EntityName for Entity {
 pub struct Model {
     pub id: i64,
     pub owning_user_id: Option<i64>,
+    pub remote: Option<String>,
     pub name: String,
     pub discriminator: Option<i16>,
     pub display_name: String,
@@ -28,6 +29,7 @@ pub struct Model {
 pub enum Column {
     Id,
     OwningUserId,
+    Remote,
     Name,
     Discriminator,
     DisplayName,
@@ -51,8 +53,8 @@ impl PrimaryKeyTrait for PrimaryKey {
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
     Account,
-    Asset2,
-    Asset1,
+    Content2,
+    Content1,
     Post,
 }
 
@@ -62,6 +64,7 @@ impl ColumnTrait for Column {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
             Self::OwningUserId => ColumnType::BigInteger.def().null(),
+            Self::Remote => ColumnType::custom("remote").def().null(),
             Self::Name => ColumnType::String(Some(64u32)).def(),
             Self::Discriminator => ColumnType::SmallInteger.def().null(),
             Self::DisplayName => ColumnType::String(Some(64u32)).def(),
@@ -79,13 +82,13 @@ impl RelationTrait for Relation {
                 .from(Column::OwningUserId)
                 .to(super::account::Column::Id)
                 .into(),
-            Self::Asset2 => Entity::belongs_to(super::asset::Entity)
+            Self::Content2 => Entity::belongs_to(super::content::Entity)
                 .from(Column::Banner)
-                .to(super::asset::Column::Id)
+                .to(super::content::Column::Id)
                 .into(),
-            Self::Asset1 => Entity::belongs_to(super::asset::Entity)
+            Self::Content1 => Entity::belongs_to(super::content::Entity)
                 .from(Column::Picture)
-                .to(super::asset::Column::Id)
+                .to(super::content::Column::Id)
                 .into(),
             Self::Post => Entity::has_many(super::post::Entity).into(),
         }

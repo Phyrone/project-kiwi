@@ -16,7 +16,7 @@ impl EntityName for Entity {
 pub struct Model {
     pub id: i64,
     pub user_id: i64,
-    pub created_at: DateTimeWithTimeZone,
+    pub created_at: DateTime,
     pub key: Json,
     pub metadata: Json,
 }
@@ -53,7 +53,7 @@ impl ColumnTrait for Column {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
             Self::UserId => ColumnType::BigInteger.def(),
-            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
+            Self::CreatedAt => ColumnType::DateTime.def(),
             Self::Key => ColumnType::JsonBinary.def(),
             Self::Metadata => ColumnType::Json.def(),
         }

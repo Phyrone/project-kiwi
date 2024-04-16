@@ -31,6 +31,12 @@ services:
     image: getmeili/meilisearch
     environment:
       MEILI_ENV: development
+  keydb:
+    image: eqalpha/keydb
+    command:
+      - '--maxmemory 512mb'
+      - '--maxmemory-policy allkeys-lfu'
+
 
   rethinkdb:
     image: rethinkdb

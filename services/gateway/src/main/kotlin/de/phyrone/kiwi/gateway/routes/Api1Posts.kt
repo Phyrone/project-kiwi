@@ -3,6 +3,7 @@
 package de.phyrone.kiwi.gateway.routes
 
 import de.phyrone.kiwi.gateway.WebApplication
+import io.ktor.client.request.forms.FormDataContent
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -12,6 +13,7 @@ import io.ktor.server.locations.Location
 import io.ktor.server.locations.delete
 import io.ktor.server.locations.get
 import io.ktor.server.locations.head
+import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
@@ -26,7 +28,6 @@ class Api1Posts : WebApplication {
     @Location("/posts/{id}")
     data class PostRoute(
         val id: Long,
-        val user: Long? = null,
     )
 
     @Location("/posts")

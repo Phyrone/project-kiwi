@@ -18,7 +18,6 @@ import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.bearer
-import io.ktor.server.config.tryGetStringList
 import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.ApplicationEngineEnvironment
 import io.ktor.server.engine.applicationEngineEnvironment
@@ -79,6 +78,7 @@ fun setupWebApp(
                 port = httpBind.toInt()
             }
         }
+
         is List<*> -> {
             connector {
                 this.host = httpBind.first().toString().split(":").first()
@@ -101,13 +101,16 @@ fun setupWebApp(
         install(ContentNegotiation) {
             this.checkAcceptHeaderCompliance = true
             jackson(ContentType.Application.Json, true, objectMapper)
+            jackson(ContentType.Application.ProblemJson, true, objectMapper)
             jackson(ContentType.Application.Xml, true, xmlFactory)
+            jackson(ContentType.Application.ProblemXml, true, xmlFactory)
             jackson(ContentType.Text.Xml, true, xmlFactory)
             jackson(ContentType.Application.Cbor, true, cborFactory)
             jackson(ContentType.parse("text/yaml"), true, yamlMapper)
             jackson(ContentType.parse("text/x-yaml"), true, yamlMapper)
-            jackson(ContentType.parse("application/x-msgpack"), true, msgpackMapper)
-            jackson(ContentType.parse("application/msgpack"), true, msgpackMapper)
+            jackson(CONTENT_TYPE_MSGPACK, true, msgpackMapper)
+            jackson(CONTENT_TYPE_X_MSGPACK, true, msgpackMapper)
+            jackson(CONTENT_TYPE_PROBLEM_MSGPACK, true, msgpackMapper)
 
         }
         //install(RateLimit) { global { rateLimiter(500, 10.seconds) };hooks.forEach { app -> with(app) { apply() } } }

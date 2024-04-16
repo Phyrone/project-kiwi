@@ -14,6 +14,7 @@ import io.ktor.server.request.contentType
 import io.ktor.server.response.respondOutputStream
 import org.atteo.classindex.ClassIndex
 import org.koin.mp.KoinPlatform
+import org.msgpack.jackson.dataformat.MessagePackMapper
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 
@@ -53,6 +54,13 @@ public fun ApplicationCall.acceptsContent(): List<ContentType> {
     return contentType
 }
 
+val CONTENT_TYPE_MSGPACK = ContentType.parse("application/msgpack")
+val CONTENT_TYPE_X_MSGPACK = ContentType.parse("application/x-msgpack")
+val CONTENT_TYPE_PROBLEM_MSGPACK = ContentType.parse("application/problem+msgpack")
+
+fun ContentType.anyMsgPack() =
+    this == CONTENT_TYPE_MSGPACK || this == CONTENT_TYPE_X_MSGPACK || this == CONTENT_TYPE_PROBLEM_MSGPACK
+
 fun ContentType.anyXml() =
     this == ContentType.Application.Xml || this == ContentType.Text.Xml || this == ContentType.Application.ProblemXml
 
@@ -68,6 +76,10 @@ public suspend fun ApplicationCall.respondError(
 
     val accepts = acceptsContent()
     val respondType = when {
+        (accepts.any { it.anyMsgPack() } || sendContentType.match(CONTENT_TYPE_MSGPACK) || sendContentType.match(CONTENT_TYPE_X_MSGPACK))
+                && !accepts.any { it.anyJson() }
+        -> CONTENT_TYPE_PROBLEM_MSGPACK
+
         (accepts.any { it.anyXml() } || sendContentType.match(ContentType.Application.Xml))
                 && !accepts.any { it.anyJson() }
         -> ContentType.Application.ProblemXml
@@ -79,6 +91,7 @@ public suspend fun ApplicationCall.respondError(
         val koin = KoinPlatform.getKoin()
         val mapper = when (respondType) {
             ContentType.Application.ProblemXml -> koin.get<XmlMapper>()
+            CONTENT_TYPE_PROBLEM_MSGPACK -> koin.get<MessagePackMapper>()
             else -> koin.get<ObjectMapper>()
         }
         mapper.writeValue(this, error)

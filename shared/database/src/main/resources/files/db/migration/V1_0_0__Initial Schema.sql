@@ -20,7 +20,6 @@ CREATE TYPE CONTENT_FLAG AS ENUM (
     );
 
 CREATE TYPE CHANNEL_TYPE AS ENUM ( 'dummy', 'text','voice', 'feed','announcement', 'stage','forum');
-CREATE TYPE MEDIA_TYPE AS ENUM ( 'image', 'video', 'audio', 'document', 'archive', 'other' );
 
 CREATE TYPE PASSWORD AS
 (
@@ -37,19 +36,13 @@ CREATE TYPE REMOTE AS
     id     BIGINT
 );
 
-CREATE TABLE asset
+CREATE TABLE content
 (
-    id BIGSERIAL
-        PRIMARY KEY
-);
-
-CREATE TABLE asset_variant
-(
-    asset_id BIGINT      NOT NULL
-        REFERENCES asset (id),
-    variant  VARCHAR(64) NOT NULL,
-    data     JSONB       NOT NULL DEFAULT '{}'::JSONB,
-    PRIMARY KEY (asset_id, variant)
+    id       BIGSERIAL NOT NULL
+        PRIMARY KEY,
+    checksum BYTEA     NULL     DEFAULT NULL,
+    public   BOOLEAN   NOT NULL DEFAULT TRUE,
+    data     JSONB     NOT NULL DEFAULT '{}'::JSONB
 );
 
 CREATE TABLE account
@@ -59,7 +52,7 @@ CREATE TABLE account
     created_at     TIMESTAMP    NOT NULL DEFAULT NOW(),
     email          VARCHAR(320) NOT NULL
         CONSTRAINT uniq_account_email UNIQUE,
-    CHECK ( email ~ '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$' ),
+    CONSTRAINT check_account_email_valid CHECK ( email ~ '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$' ),
     password       PASSWORD     NULL     DEFAULT NULL,
     session_secret BYTEA        NULL     DEFAULT NULL
 );
@@ -86,9 +79,9 @@ CREATE TABLE profile
     discriminator  SMALLINT    NULL,
     display_name   VARCHAR(64) NOT NULL,
     picture        BIGINT      NULL
-        REFERENCES asset (id),
+        REFERENCES content (id),
     banner         BIGINT      NULL
-        REFERENCES asset (id),
+        REFERENCES content (id),
     metadata       JSONB       NOT NULL DEFAULT '{}'::JSONB,
     CONSTRAINT profile_local_or_remote CHECK ( (remote IS NULL) <> (owning_user_id IS NULL) )
 );
@@ -159,7 +152,7 @@ CREATE TABLE post_attachment
     post_id  BIGINT            NOT NULL
         REFERENCES post (id),
     asset_id BIGINT            NOT NULL
-        REFERENCES asset (id),
+        REFERENCES content (id),
     position INTEGER DEFAULT 0 NOT NULL,
     PRIMARY KEY (post_id, asset_id)
 );

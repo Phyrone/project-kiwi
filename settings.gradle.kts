@@ -12,7 +12,8 @@ include(
     ":shared:metadata",
 
     // Services
-    ":services:gateway"
+    ":services:gateway",
+    ":services:media"
 )
 
 if(System.getProperty("monorepo.cargo")?.toBooleanStrictOrNull() != false){

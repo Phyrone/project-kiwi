@@ -24,6 +24,7 @@
             <option value="$PROJECT_DIR$/services" />
             <option value="$PROJECT_DIR$/services/frontend" />
             <option value="$PROJECT_DIR$/services/gateway" />
+            <option value="$PROJECT_DIR$/services/media" />
             <option value="$PROJECT_DIR$/services/relay" />
             <option value="$PROJECT_DIR$/shared" />
             <option value="$PROJECT_DIR$/shared/common" />

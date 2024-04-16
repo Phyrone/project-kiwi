@@ -80,6 +80,10 @@ dependencies {
     /* Database */
     implementation("com.rethinkdb:rethinkdb-driver:2.4.4")
 
+    /* Minio */
+    implementation("io.minio:minio:8.5.9")
+    implementation("io.minio:minio-admin:8.5.9")
+
 
     /* Other */
     implementation("com.auth0:java-jwt:4.4.0")

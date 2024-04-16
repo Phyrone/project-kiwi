@@ -1,7 +1,7 @@
 package de.phyrone.kiwi.gateway.routes
 
 import com.auth0.jwt.algorithms.Algorithm
-import de.phyrone.kiwi.common.crypto.Argon2Raw
+import de.mkammerer.argon2.Argon2
 import de.phyrone.kiwi.database.connection
 import de.phyrone.kiwi.gateway.WebApplication
 import de.phyrone.kiwi.gateway.addTiming
@@ -42,7 +42,8 @@ import kotlin.time.measureTimedValue
 class Api1Auth(
     private val postgres: PostgresqlConnectionFactory,
     private val sessionManager: SessionManager,
-    public val snowflakeServiceCoroutineStub: SnowflakeServiceGrpcKt.SnowflakeServiceCoroutineStub
+    public val snowflakeServiceCoroutineStub: SnowflakeServiceGrpcKt.SnowflakeServiceCoroutineStub,
+    private val argon2: Argon2
 ) : WebApplication {
 
 
@@ -67,33 +68,36 @@ class Api1Auth(
 
                     post("login") {
                         val (username, password) = call.receive<LoginRequest.PasswordLoginRequest>()
-
                         postgres.connection { connection ->
                             connection.transactionIsolationLevel = IsolationLevel.READ_COMMITTED
                             val databaseSelected = connection.createStatement(
                                 """
-                                    SELECT id,(password).hash AS hash, (password).salt AS salt,(password).iterations AS iterations,(password).memory AS memory,(password).parallelism AS parallelism,session_secret 
+                                    SELECT id,password,session_secret 
                                     FROM account WHERE email = $1 LIMIT 1
                                     """.trimIndent()
                             ).bind(0, username).fetchSize(1).execute().awaitSingle().map { row ->
-                                    val accountID = row.get("id") as Long
-                                    val hash = row.get("hash", ByteArray::class.java) ?: return@map null
-                                    val salt = row.get("salt", ByteArray::class.java) ?: return@map null
-                                    val iterations = row.get("iterations") as? Int ?: return@map null
-                                    val memory = row.get("memory") as? Int ?: return@map null
-                                    val parallelism = row.get("parallelism") as? Int ?: return@map null
-                                    return@map accountID to Argon2Raw.HashedPassword(
-                                        hash, salt, iterations, memory, parallelism
-                                    )
-                                }.awaitFirstOrNull()
+                                val accountID = row.get("id") as Long
+                                val password = row.get("password", String::class.java) ?: return@map null
+                                val sessionSecret = row.get("session_secret", String::class.java)
+                                Triple(accountID, password, sessionSecret)
+                            }.awaitFirstOrNull()
+
 
                             if (databaseSelected == null) {
                                 call.respondError(LoginResponse.InvalidCredentials)
                             } else {
-                                val (accountID, hashedPassword) = databaseSelected
-                                val passwordMatches = Argon2Raw.verify(password, hashedPassword)
+                                val (accountID, hashedPassword, sessionSecret) = databaseSelected
+                                val passwordMatches =
+                                    argon2.verify(hashedPassword, password.toCharArray(), Charsets.UTF_8)
                                 if (passwordMatches) {
-                                    val token = sessionManager.createSession(SessionData(accountID))
+                                    val token = if (sessionSecret == null) {
+                                        sessionManager.createSession(SessionData(accountID))
+                                    } else {
+                                        sessionManager.createSession(
+                                            SessionData(accountID),
+                                            Algorithm.HMAC512(sessionSecret)
+                                        )
+                                    }
                                     call.respond(HttpStatusCode.Accepted, LoginResponse.Success(accountID, token))
                                 } else {
                                     call.respondError(LoginResponse.InvalidCredentials)
@@ -107,17 +111,27 @@ class Api1Auth(
                         postgres.connection { connection ->
                             connection.setAutoCommit(true).awaitSingleOrNull()
 
-                            val (hashed, hashingTime) = measureTimedValue { Argon2Raw.create(password) }
-                            call.addTiming("hash", hashingTime)
+                            val (hashedPassword, passwordHashTiming) = measureTimedValue {
+                                argon2.hash(
+                                    8,
+                                    128 * 1024 * 1024,
+                                    4,
+                                    password.toCharArray(),
+                                    Charsets.UTF_8
+                                )
+                            }
+                            call.addTiming("hash", passwordHashTiming)
                             val sessionSecret = sessionManager.createSessionSecret()
                             val (accountID, insertTime) = measureTimedValue {
                                 val id = snowflakeServiceCoroutineStub.getSnowflakes(
                                     SnowflakeRequest.newBuilder().setCount(1).build()
                                 ).snowflakesList.first()
-                                connection.createStatement("INSERT INTO account(email,password,id,session_secret) VALUES ($1,ROW($2,$3,$4,$5,$6),$7,$8) ON CONFLICT ON CONSTRAINT uniq_account_email DO NOTHING RETURNING id")
-                                    .bind(0, lowercasedUsername).bind(1, hashed.hash).bind(2, hashed.salt)
-                                    .bind(3, hashed.iterations).bind(4, hashed.memory).bind(5, hashed.parallelism)
-                                    .bind(6, id).bind(7, sessionSecret).fetchSize(1).execute().awaitFirst()
+                                connection.createStatement("INSERT INTO account(email,password,id,session_secret) VALUES ($1,$2,$3,$4) ON CONFLICT ON CONSTRAINT uniq_account_email DO NOTHING RETURNING id")
+                                    .bind(0, lowercasedUsername)
+                                    .bind(1, hashedPassword)
+                                    .bind(2, id)
+                                    .bind(3, sessionSecret)
+                                    .fetchSize(1).execute().awaitFirst()
                                     .map { row -> row.get("id") as Long }.awaitFirstOrNull()
                             }
 
@@ -127,7 +141,7 @@ class Api1Auth(
                                 call.respondError(RegisterResponse.UserAlreadyExists(lowercasedUsername))
                             } else {
                                 val token = sessionManager.createSession(
-                                    SessionData(accountID, Instant.now().plusSeconds(600)),
+                                    SessionData(accountID),
                                     Algorithm.HMAC512(sessionSecret)
                                 )
                                 call.respond(

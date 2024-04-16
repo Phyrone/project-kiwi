@@ -21,15 +21,6 @@ CREATE TYPE CONTENT_FLAG AS ENUM (
 
 CREATE TYPE CHANNEL_TYPE AS ENUM ( 'dummy', 'text','voice', 'feed','announcement', 'stage','forum');
 
-CREATE TYPE PASSWORD AS
-(
-    hash        BYTEA,
-    salt        BYTEA,
-    iterations  INTEGER,
-    memory      INTEGER,
-    parallelism INTEGER
-);
-
 CREATE TYPE REMOTE AS
 (
     domain VARCHAR(128),
@@ -53,7 +44,7 @@ CREATE TABLE account
     email          VARCHAR(320) NOT NULL
         CONSTRAINT uniq_account_email UNIQUE,
     CONSTRAINT check_account_email_valid CHECK ( email ~ '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$' ),
-    password       PASSWORD     NULL     DEFAULT NULL,
+    password       TEXT         NULL     DEFAULT NULL,
     session_secret BYTEA        NULL     DEFAULT NULL
 );
 

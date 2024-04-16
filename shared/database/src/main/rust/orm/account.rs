@@ -56,7 +56,7 @@ impl ColumnTrait for Column {
             Self::Id => ColumnType::BigInteger.def(),
             Self::CreatedAt => ColumnType::DateTime.def(),
             Self::Email => ColumnType::String(Some(320u32)).def().unique(),
-            Self::Password => ColumnType::custom("password").def().null(),
+            Self::Password => ColumnType::Text.def().null(),
             Self::SessionSecret => ColumnType::Binary(BlobSize::Blob(None)).def().null(),
         }
     }

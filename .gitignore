@@ -46,3 +46,4 @@ bin/
 
 ### Node.js/BUN ###
 /node_modules
+.env

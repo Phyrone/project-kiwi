@@ -1,0 +1,68 @@
+services:
+  # Databases etc.
+  meilisearch:
+    image: getmeili/meilisearch
+    environment:
+      MEILI_ENV: development
+      MEILI_HTTP_ADDR: 0.0.0.0:9103
+      MEILI_DB_PATH: /data
+    volumes:
+      - ./data/meilisearch:/data
+    command:
+      - '/bin/meilisearch'
+      - '--master-key'
+      - 'NnQptrpWnz18qFi6cnmy_MgPuD2aqEuj26FeQiGQjXs'
+    ports:
+      - "127.0.0.1:9103:9103"
+  keydb:
+    image: eqalpha/keydb
+    command:
+      - '--maxmemory'
+      - '512mb'
+      - '--maxmemory-policy'
+      - 'allkeys-lfu'
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - ./data/keydb:/data
+  rethinkdb:
+    image: rethinkdb:latest
+    volumes:
+      - ./data/rethinkdb:/data
+    environment:
+      RETHINKDB_AUTH_KEY: "123456"
+    ports:
+      - "127.0.0.1:9102:9102"
+      - "127.0.0.1:28015:28015"
+      - "127.0.0.1:29015:29015"
+    command:
+      - "rethinkdb"
+      - "--http-port"
+      - "9102"
+      - "--bind"
+      - "all"
+      - "--directory"
+      - "/data"
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: "kiwi"
+      POSTGRES_PASSWORD: "kiwi"
+      POSTGRES_DB: "kiwi"
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+  minio:
+    image: minio/minio
+    volumes:
+      - ./data/minio:/data
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9101:9101"
+    environment:
+      MINIO_ROOT_USER: "minioadmin"
+      MINIO_ROOT_PASSWORD: "minioadmin"
+      MINIO_COMPRESSION_ENABLE: "on"
+    command: server /data --console-address ":9101"
+

@@ -7,18 +7,19 @@ include(
     ":shared",
     ":shared:common",
     ":shared:proto",
+    ":shared:auth",
     ":shared:database",
     ":shared:permission",
     ":shared:metadata",
 
     // Services
-    ":services:gateway",
+    ":services:core",
     ":services:media"
 )
 
-if(System.getProperty("monorepo.cargo")?.toBooleanStrictOrNull() != false){
+if (System.getProperty("monorepo.cargo")?.toBooleanStrictOrNull() != false) {
     include(":services:relay")
 }
-if(System.getProperty("monorepo.node")?.toBooleanStrictOrNull() != false){
+if (System.getProperty("monorepo.node")?.toBooleanStrictOrNull() != false) {
     include(":services:frontend")
 }

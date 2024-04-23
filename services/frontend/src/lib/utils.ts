@@ -15,3 +15,7 @@ export function is_alphanumeric(str) {
 export function test_array(length: number): number[] {
 	return Array.from({ length }, (_, i) => i);
 }
+
+export function bytes_to_base64(arr: ArrayBuffer | Uint8Array): string {
+	return btoa(String.fromCharCode(...new Uint8Array(arr)));
+}

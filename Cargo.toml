@@ -15,5 +15,5 @@ members = [
     "shared/database",
     # Services
     "services/relay",
-    "services/snowflake",
+    "services/snowflake", "services/gateway",
 ]

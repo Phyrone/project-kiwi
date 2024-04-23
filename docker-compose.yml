@@ -20,11 +20,12 @@ services:
   snowflake:
     image: reg.phyrone.de/project-kiwi/snowflake
     build:
-      dockerfile: snowflake/Dockerfile
+      dockerfile: services/snowflake/Dockerfile
       context: .
     environment:
       NODE_ID: "1"
-    command: "/usr/bin/snowflake"
+    #command: "/usr/bin/snowflake"
+    #command: sleep 1000000
 
   # Databases etc.
   meilisearch:
@@ -37,7 +38,6 @@ services:
       - '--maxmemory 512mb'
       - '--maxmemory-policy allkeys-lfu'
 
-
   rethinkdb:
     image: rethinkdb
     environment:
@@ -45,8 +45,15 @@ services:
 
   postgres:
     image: postgres
+    environment:
+      POSTGRES_USER: "kiwi"
+      POSTGRES_PASSWORD: "kiwi"
+      POSTGRES_DB: "kiwi"
+    ports:
+      - 5432:5432
 
   minio:
     image: quay.io/minio/minio
     volumes:
       - ./data/minio:/data
+    entrypoint:

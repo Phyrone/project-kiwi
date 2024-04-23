@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="metadata-js-project ':shared'">
-    <output-path>$PROJECT_DIR$/shared/metadata/build/libs</output-path>
-    <root id="archive" name="metadata-js-project '_shared'.jar">
-      <element id="module-output" name="project-kiwi-c2.shared.metadata.jsMain" />
-    </root>
-  </artifact>
-</component>

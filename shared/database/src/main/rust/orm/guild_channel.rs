@@ -8,32 +8,39 @@ pub struct Entity;
 
 impl EntityName for Entity {
     fn table_name(&self) -> &str {
-        "asset_variant"
+        "guild_channel"
     }
 }
 
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
-    pub asset_id: i64,
-    pub variant: String,
+    pub id: i64,
+    pub order: i16,
+    pub created_at: DateTimeWithTimeZone,
+    pub guild_id: i64,
+    pub parent_id: Option<i64>,
+    pub name: String,
     pub data: Json,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
-    AssetId,
-    Variant,
+    Id,
+    Order,
+    CreatedAt,
+    GuildId,
+    ParentId,
+    Name,
     Data,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
 pub enum PrimaryKey {
-    AssetId,
-    Variant,
+    Id,
 }
 
 impl PrimaryKeyTrait for PrimaryKey {
-    type ValueType = (i64, String);
+    type ValueType = i64;
     fn auto_increment() -> bool {
         false
     }
@@ -41,15 +48,19 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Asset,
+    Guild,
 }
 
 impl ColumnTrait for Column {
     type EntityName = Entity;
     fn def(&self) -> ColumnDef {
         match self {
-            Self::AssetId => ColumnType::BigInteger.def(),
-            Self::Variant => ColumnType::String(Some(64u32)).def(),
+            Self::Id => ColumnType::BigInteger.def(),
+            Self::Order => ColumnType::SmallInteger.def(),
+            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
+            Self::GuildId => ColumnType::BigInteger.def(),
+            Self::ParentId => ColumnType::BigInteger.def().null(),
+            Self::Name => ColumnType::String(None).def(),
             Self::Data => ColumnType::JsonBinary.def(),
         }
     }
@@ -58,17 +69,17 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Asset => Entity::belongs_to(super::asset::Entity)
-                .from(Column::AssetId)
-                .to(super::asset::Column::Id)
+            Self::Guild => Entity::belongs_to(super::guild::Entity)
+                .from(Column::GuildId)
+                .to(super::guild::Column::Id)
                 .into(),
         }
     }
 }
 
-impl Related<super::asset::Entity> for Entity {
+impl Related<super::guild::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Asset.def()
+        Relation::Guild.def()
     }
 }
 

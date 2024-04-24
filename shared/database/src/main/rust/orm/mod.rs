@@ -4,13 +4,10 @@ pub mod prelude;
 
 pub mod account;
 pub mod account_key;
-pub mod channel;
-pub mod content;
-pub mod flyway_schema_history;
+pub mod actor;
+pub mod asset;
+pub mod configuration;
 pub mod guild;
+pub mod guild_channel;
 pub mod post;
-pub mod post_attachment;
-pub mod post_flag;
-pub mod post_tag;
-pub mod profile;
-pub mod sea_orm_active_enums;
+pub mod post_attatchment;

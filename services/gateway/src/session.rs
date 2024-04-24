@@ -1,4 +1,4 @@
-use std::future::{Future, poll_fn};
+use std::future::{poll_fn, Future};
 use std::task::Poll;
 
 use axum::extract::ws::{Message, WebSocket};
@@ -8,8 +8,8 @@ use tokio::task::JoinError;
 
 use common::error_object;
 
-use crate::Encoding;
 use crate::packets::{WsPacketClientbound, WsPacketServerbound};
+use crate::Encoding;
 
 #[derive(Debug, Clone)]
 pub enum DataMessage {
@@ -34,17 +34,25 @@ pub struct SocketSession {
 }
 
 impl SocketSession {
-    pub async fn send(&mut self, message: &WsPacketServerbound) -> error_stack::Result<(), SendMessageError> {
-        let message = create_message(self.encoding, message)
-            .change_context(SendMessageError)?;
-        self.send.send(message.into()).await
+    pub async fn send(
+        &mut self,
+        message: &WsPacketServerbound,
+    ) -> error_stack::Result<(), SendMessageError> {
+        let message = create_message(self.encoding, message).change_context(SendMessageError)?;
+        self.send
+            .send(message.into())
+            .await
             .change_context(SendMessageError)?;
         Ok(())
     }
     pub async fn receive(&mut self) -> error_stack::Result<WsPacketClientbound, ReadMessageError> {
-        let message = self.receive.recv().await
+        let message = self
+            .receive
+            .recv()
+            .await
             .change_context(ReadMessageError::DeserializeError)?;
-        let decoded = read_message(self.encoding, message).await
+        let decoded = read_message(self.encoding, message)
+            .await
             .change_context(ReadMessageError::DeserializeError)?;
         Ok(decoded)
     }
@@ -65,9 +73,14 @@ impl Clone for SocketSession {
 error_object!(StartSessionError, "Failed to start session");
 error_object!(RunSessionError, "Failed to run session");
 impl SocketSession {
-    pub async fn run<F, Fut>(socket: &mut WebSocket, encoding: Encoding, use_session: F) -> error_stack::Result<(), StartSessionError>
-        where F: FnOnce(SocketSession) -> Fut + Send + 'static,
-              Fut: Future<Output=error_stack::Result<(), RunSessionError>> + Send + 'static,
+    pub async fn run<F, Fut>(
+        socket: &mut WebSocket,
+        encoding: Encoding,
+        use_session: F,
+    ) -> error_stack::Result<(), StartSessionError>
+    where
+        F: FnOnce(SocketSession) -> Fut + Send + 'static,
+        Fut: Future<Output = error_stack::Result<(), RunSessionError>> + Send + 'static,
     {
         let (send_channel, mut send_pipe) = tokio::sync::mpsc::channel(128);
         let (receive_pipe, receive_channel) = tokio::sync::broadcast::channel(128);
@@ -80,31 +93,35 @@ impl SocketSession {
 
         while let Some(received) = socket_loop(socket, &mut send_pipe, &mut task).await {
             match received {
-                LoopResult::Send(send) =>
-                    socket.send(send.into()).await
-                        .change_context(StartSessionError)?,
+                LoopResult::Send(send) => socket
+                    .send(send.into())
+                    .await
+                    .change_context(StartSessionError)?,
 
-                LoopResult::Receive(received) => {
-                    match received {
-                        Message::Text(text) => {
-                            receive_pipe.send(DataMessage::Text(text))
-                                .change_context(StartSessionError)?;
-                        }
-                        Message::Binary(binary) => {
-                            receive_pipe.send(DataMessage::Binary(binary))
-                                .change_context(StartSessionError)?;
-                        }
-                        Message::Ping(ping) => {
-                            socket.send(Message::Pong(ping)).await
-                                .change_context(StartSessionError)?;
-                        }
-                        Message::Pong(pong) => {}
-                        Message::Close(close) => break
+                LoopResult::Receive(received) => match received {
+                    Message::Text(text) => {
+                        receive_pipe
+                            .send(DataMessage::Text(text))
+                            .change_context(StartSessionError)?;
                     }
-                }
+                    Message::Binary(binary) => {
+                        receive_pipe
+                            .send(DataMessage::Binary(binary))
+                            .change_context(StartSessionError)?;
+                    }
+                    Message::Ping(ping) => {
+                        socket
+                            .send(Message::Pong(ping))
+                            .await
+                            .change_context(StartSessionError)?;
+                    }
+                    Message::Pong(pong) => {}
+                    Message::Close(close) => break,
+                },
                 LoopResult::Close => break,
                 LoopResult::TaskComplete(outcome) => {
-                    outcome.change_context(StartSessionError)?
+                    outcome
+                        .change_context(StartSessionError)?
                         .change_context(StartSessionError)?;
                     break;
                 }
@@ -137,7 +154,6 @@ async fn socket_loop(
             return Poll::Ready(Some(LoopResult::TaskComplete(result)));
         }
 
-
         let socket_send_poll = send_pipe.poll_recv(cx);
         if let Poll::Ready(to_send) = socket_send_poll {
             return if let Some(message) = to_send {
@@ -157,40 +173,53 @@ async fn socket_loop(
         }
 
         Poll::Pending
-    }).await
+    })
+    .await
 }
-
-
 
 error_object!(SendMessageError, "Failed to send message");
 
-pub async fn send_message<P, T, E>(encoding: Encoding, sink: &mut P, message: &T) -> error_stack::Result<(), SendMessageError>
-    where P: futures::Sink<Message, Error=E> + Unpin,
-          T: serde::Serialize + ?Sized,
-          E: std::error::Error + Send + Sync + 'static
+pub async fn send_message<P, T, E>(
+    encoding: Encoding,
+    sink: &mut P,
+    message: &T,
+) -> error_stack::Result<(), SendMessageError>
+where
+    P: futures::Sink<Message, Error = E> + Unpin,
+    T: serde::Serialize + ?Sized,
+    E: std::error::Error + Send + Sync + 'static,
 {
-    let message = create_message(encoding, message)
-        .change_context(SendMessageError)?;
-    sink.send(message.into()).await
+    let message = create_message(encoding, message).change_context(SendMessageError)?;
+    sink.send(message.into())
+        .await
         .change_context(SendMessageError)?;
     Ok(())
 }
 
 error_object!(CreateMessageError, "Failed to create message");
-pub fn create_message<T>(encoding: Encoding, message: &T) -> error_stack::Result<DataMessage, CreateMessageError>
-    where T: serde::Serialize + ?Sized
+pub fn create_message<T>(
+    encoding: Encoding,
+    message: &T,
+) -> error_stack::Result<DataMessage, CreateMessageError>
+where
+    T: serde::Serialize + ?Sized,
 {
     let message = match encoding {
-        Encoding::Json => DataMessage::Text(serde_json::to_string(message)
-            .change_context(CreateMessageError)?),
-        Encoding::MessagePack => DataMessage::Binary(rmp_serde::to_vec_named(message)
-            .change_context(CreateMessageError)?),
-        Encoding::MessagePacketPositional => DataMessage::Binary(rmp_serde::to_vec(message)
-            .change_context(CreateMessageError)?),
-        Encoding::Ron => DataMessage::Text(ron::ser::to_string(message)
-            .change_context(CreateMessageError)?),
-        Encoding::Xml => DataMessage::Text(quick_xml::se::to_string(message)
-            .change_context(CreateMessageError)?),
+        Encoding::Json => {
+            DataMessage::Text(serde_json::to_string(message).change_context(CreateMessageError)?)
+        }
+        Encoding::MessagePack => DataMessage::Binary(
+            rmp_serde::to_vec_named(message).change_context(CreateMessageError)?,
+        ),
+        Encoding::MessagePacketPositional => {
+            DataMessage::Binary(rmp_serde::to_vec(message).change_context(CreateMessageError)?)
+        }
+        Encoding::Ron => {
+            DataMessage::Text(ron::ser::to_string(message).change_context(CreateMessageError)?)
+        }
+        Encoding::Xml => {
+            DataMessage::Text(quick_xml::se::to_string(message).change_context(CreateMessageError)?)
+        }
     };
     Ok(message)
 }
@@ -214,27 +243,30 @@ impl std::fmt::Display for ReadMessageError {
 
 impl std::error::Error for ReadMessageError {}
 
-async fn read_message<T>(encoding: Encoding, message: DataMessage) -> error_stack::Result<T, ReadMessageError>
-    where T: serde::de::DeserializeOwned {
+async fn read_message<T>(
+    encoding: Encoding,
+    message: DataMessage,
+) -> error_stack::Result<T, ReadMessageError>
+where
+    T: serde::de::DeserializeOwned,
+{
     let decoded = match message {
-        DataMessage::Text(text) => {
-            match encoding {
-                Encoding::Json => serde_json::from_str::<T>(&text)
-                    .change_context(ReadMessageError::DeserializeError)?,
-                Encoding::Ron => ron::de::from_str::<T>(&text)
-                    .change_context(ReadMessageError::DeserializeError)?,
-                Encoding::Xml => quick_xml::de::from_str::<T>(&text)
-                    .change_context(ReadMessageError::DeserializeError)?,
-                _ => return Err(Report::new(ReadMessageError::ExpectedText)),
+        DataMessage::Text(text) => match encoding {
+            Encoding::Json => serde_json::from_str::<T>(&text)
+                .change_context(ReadMessageError::DeserializeError)?,
+            Encoding::Ron => {
+                ron::de::from_str::<T>(&text).change_context(ReadMessageError::DeserializeError)?
             }
-        }
-        DataMessage::Binary(binary) => {
-            match encoding {
-                Encoding::MessagePack | Encoding::MessagePacketPositional => rmp_serde::from_slice(&binary)
-                    .change_context(ReadMessageError::DeserializeError)?,
-                _ => return Err(Report::new(ReadMessageError::ExpectedBinary)),
+            Encoding::Xml => quick_xml::de::from_str::<T>(&text)
+                .change_context(ReadMessageError::DeserializeError)?,
+            _ => return Err(Report::new(ReadMessageError::ExpectedText)),
+        },
+        DataMessage::Binary(binary) => match encoding {
+            Encoding::MessagePack | Encoding::MessagePacketPositional => {
+                rmp_serde::from_slice(&binary).change_context(ReadMessageError::DeserializeError)?
             }
-        }
+            _ => return Err(Report::new(ReadMessageError::ExpectedBinary)),
+        },
     };
     Ok(decoded)
 }

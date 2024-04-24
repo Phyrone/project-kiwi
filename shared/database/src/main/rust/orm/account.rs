@@ -15,19 +15,19 @@ impl EntityName for Entity {
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
     pub id: i64,
-    pub created_at: DateTime,
+    pub created_at: DateTimeWithTimeZone,
+    pub updated_at: DateTimeWithTimeZone,
+    pub session_secret: Vec<u8>,
     pub email: String,
-    pub password: Option<String>,
-    pub session_secret: Option<Vec<u8>>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     Id,
     CreatedAt,
-    Email,
-    Password,
+    UpdatedAt,
     SessionSecret,
+    Email,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -38,15 +38,13 @@ pub enum PrimaryKey {
 impl PrimaryKeyTrait for PrimaryKey {
     type ValueType = i64;
     fn auto_increment() -> bool {
-        true
+        false
     }
 }
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
     AccountKey,
-    Guild,
-    Profile,
 }
 
 impl ColumnTrait for Column {
@@ -54,10 +52,10 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
-            Self::CreatedAt => ColumnType::DateTime.def(),
-            Self::Email => ColumnType::String(Some(320u32)).def().unique(),
-            Self::Password => ColumnType::Text.def().null(),
-            Self::SessionSecret => ColumnType::Binary(BlobSize::Blob(None)).def().null(),
+            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
+            Self::UpdatedAt => ColumnType::TimestampWithTimeZone.def(),
+            Self::SessionSecret => ColumnType::Binary(BlobSize::Blob(None)).def(),
+            Self::Email => ColumnType::String(None).def(),
         }
     }
 }
@@ -66,8 +64,6 @@ impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
             Self::AccountKey => Entity::has_many(super::account_key::Entity).into(),
-            Self::Guild => Entity::has_many(super::guild::Entity).into(),
-            Self::Profile => Entity::has_many(super::profile::Entity).into(),
         }
     }
 }
@@ -75,18 +71,6 @@ impl RelationTrait for Relation {
 impl Related<super::account_key::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::AccountKey.def()
-    }
-}
-
-impl Related<super::guild::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::Guild.def()
-    }
-}
-
-impl Related<super::profile::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::Profile.def()
     }
 }
 

@@ -1,0 +1,17 @@
+[package]
+name = "new_core"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+common = {path = "../../shared/common"}
+axum = { version = "0.7.5", features = ["http2"] }
+clap = { version = "4.5.4", features = ["env", "string", "cargo", "derive", "unicode"] }
+jwt = "0.16.0"
+webauthn-rs = "0.4.8"
+log = { version = "0.4.21", features = ["serde", "std"] }
+tokio = { version = "1.37.0", features = ["full"] }
+error-stack = { version = "0.4.1", features = ["serde"] }
+sqlx = { version = "0.7.4", features = ["postgres"] }

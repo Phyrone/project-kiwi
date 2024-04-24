@@ -8,7 +8,7 @@ use crate::SocketError;
 pub enum WsPacketServerbound {
     #[serde(rename = "a_hello")]
     Hello(String),
-    ErrorClose(Report<SocketError>),
+    CriticalError(Report<SocketError>),
 }
 
 #[derive(Debug, Deserialize)]

@@ -15,27 +15,23 @@ impl EntityName for Entity {
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
     pub id: i64,
-    pub channel_id: Option<i64>,
+    pub created_at: DateTimeWithTimeZone,
+    pub updated_at: DateTimeWithTimeZone,
     pub author_id: i64,
-    pub created_at: DateTime,
-    pub updated_at: DateTime,
     pub draft: bool,
-    pub title: String,
-    pub body: Option<Json>,
-    pub metadata: Json,
+    pub title: Option<String>,
+    pub content: Json,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     Id,
-    ChannelId,
-    AuthorId,
     CreatedAt,
     UpdatedAt,
+    AuthorId,
     Draft,
     Title,
-    Body,
-    Metadata,
+    Content,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -46,17 +42,14 @@ pub enum PrimaryKey {
 impl PrimaryKeyTrait for PrimaryKey {
     type ValueType = i64;
     fn auto_increment() -> bool {
-        true
+        false
     }
 }
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Channel,
-    PostAttachment,
-    PostFlag,
-    PostTag,
-    Profile,
+    Actor,
+    PostAttatchment,
 }
 
 impl ColumnTrait for Column {
@@ -64,14 +57,12 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
-            Self::ChannelId => ColumnType::BigInteger.def().null(),
+            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
+            Self::UpdatedAt => ColumnType::TimestampWithTimeZone.def(),
             Self::AuthorId => ColumnType::BigInteger.def(),
-            Self::CreatedAt => ColumnType::DateTime.def(),
-            Self::UpdatedAt => ColumnType::DateTime.def(),
             Self::Draft => ColumnType::Boolean.def(),
-            Self::Title => ColumnType::String(None).def(),
-            Self::Body => ColumnType::JsonBinary.def().null(),
-            Self::Metadata => ColumnType::JsonBinary.def(),
+            Self::Title => ColumnType::String(None).def().null(),
+            Self::Content => ColumnType::JsonBinary.def(),
         }
     }
 }
@@ -79,57 +70,33 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Channel => Entity::belongs_to(super::channel::Entity)
-                .from(Column::ChannelId)
-                .to(super::channel::Column::Id)
-                .into(),
-            Self::PostAttachment => Entity::has_many(super::post_attachment::Entity).into(),
-            Self::PostFlag => Entity::has_many(super::post_flag::Entity).into(),
-            Self::PostTag => Entity::has_many(super::post_tag::Entity).into(),
-            Self::Profile => Entity::belongs_to(super::profile::Entity)
+            Self::Actor => Entity::belongs_to(super::actor::Entity)
                 .from(Column::AuthorId)
-                .to(super::profile::Column::Id)
+                .to(super::actor::Column::Id)
                 .into(),
+            Self::PostAttatchment => Entity::has_many(super::post_attatchment::Entity).into(),
         }
     }
 }
 
-impl Related<super::channel::Entity> for Entity {
+impl Related<super::actor::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Channel.def()
+        Relation::Actor.def()
     }
 }
 
-impl Related<super::post_attachment::Entity> for Entity {
+impl Related<super::post_attatchment::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::PostAttachment.def()
+        Relation::PostAttatchment.def()
     }
 }
 
-impl Related<super::post_flag::Entity> for Entity {
+impl Related<super::asset::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::PostFlag.def()
-    }
-}
-
-impl Related<super::post_tag::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::PostTag.def()
-    }
-}
-
-impl Related<super::profile::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::Profile.def()
-    }
-}
-
-impl Related<super::content::Entity> for Entity {
-    fn to() -> RelationDef {
-        super::post_attachment::Relation::Content.def()
+        super::post_attatchment::Relation::Asset.def()
     }
     fn via() -> Option<RelationDef> {
-        Some(super::post_attachment::Relation::Post.def().rev())
+        Some(super::post_attatchment::Relation::Post.def().rev())
     }
 }
 

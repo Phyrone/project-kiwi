@@ -8,7 +8,7 @@ pub struct Entity;
 
 impl EntityName for Entity {
     fn table_name(&self) -> &str {
-        "post_attachment"
+        "post_attatchment"
     }
 }
 
@@ -16,14 +16,14 @@ impl EntityName for Entity {
 pub struct Model {
     pub post_id: i64,
     pub asset_id: i64,
-    pub position: i32,
+    pub order: i16,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     PostId,
     AssetId,
-    Position,
+    Order,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -41,7 +41,7 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Content,
+    Asset,
     Post,
 }
 
@@ -51,7 +51,7 @@ impl ColumnTrait for Column {
         match self {
             Self::PostId => ColumnType::BigInteger.def(),
             Self::AssetId => ColumnType::BigInteger.def(),
-            Self::Position => ColumnType::Integer.def(),
+            Self::Order => ColumnType::SmallInteger.def(),
         }
     }
 }
@@ -59,9 +59,9 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Content => Entity::belongs_to(super::content::Entity)
+            Self::Asset => Entity::belongs_to(super::asset::Entity)
                 .from(Column::AssetId)
-                .to(super::content::Column::Id)
+                .to(super::asset::Column::Id)
                 .into(),
             Self::Post => Entity::belongs_to(super::post::Entity)
                 .from(Column::PostId)
@@ -71,9 +71,9 @@ impl RelationTrait for Relation {
     }
 }
 
-impl Related<super::content::Entity> for Entity {
+impl Related<super::asset::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Content.def()
+        Relation::Asset.def()
     }
 }
 

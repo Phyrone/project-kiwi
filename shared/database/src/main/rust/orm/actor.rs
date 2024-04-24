@@ -8,34 +8,32 @@ pub struct Entity;
 
 impl EntityName for Entity {
     fn table_name(&self) -> &str {
-        "profile"
+        "actor"
     }
 }
 
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
     pub id: i64,
-    pub owning_user_id: Option<i64>,
-    pub remote: Option<String>,
+    pub created_at: DateTimeWithTimeZone,
+    pub updated_at: DateTimeWithTimeZone,
     pub name: String,
     pub discriminator: Option<i16>,
-    pub display_name: String,
-    pub picture: Option<i64>,
+    pub display_name: Option<String>,
+    pub avatar: Option<i64>,
     pub banner: Option<i64>,
-    pub metadata: Json,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     Id,
-    OwningUserId,
-    Remote,
+    CreatedAt,
+    UpdatedAt,
     Name,
     Discriminator,
     DisplayName,
-    Picture,
+    Avatar,
     Banner,
-    Metadata,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -46,15 +44,15 @@ pub enum PrimaryKey {
 impl PrimaryKeyTrait for PrimaryKey {
     type ValueType = i64;
     fn auto_increment() -> bool {
-        true
+        false
     }
 }
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Account,
-    Content2,
-    Content1,
+    Asset2,
+    Asset1,
+    Guild,
     Post,
 }
 
@@ -63,14 +61,13 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
-            Self::OwningUserId => ColumnType::BigInteger.def().null(),
-            Self::Remote => ColumnType::custom("remote").def().null(),
-            Self::Name => ColumnType::String(Some(64u32)).def(),
+            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
+            Self::UpdatedAt => ColumnType::TimestampWithTimeZone.def(),
+            Self::Name => ColumnType::String(None).def(),
             Self::Discriminator => ColumnType::SmallInteger.def().null(),
-            Self::DisplayName => ColumnType::String(Some(64u32)).def(),
-            Self::Picture => ColumnType::BigInteger.def().null(),
+            Self::DisplayName => ColumnType::String(None).def().null(),
+            Self::Avatar => ColumnType::BigInteger.def().null(),
             Self::Banner => ColumnType::BigInteger.def().null(),
-            Self::Metadata => ColumnType::JsonBinary.def(),
         }
     }
 }
@@ -78,26 +75,23 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Account => Entity::belongs_to(super::account::Entity)
-                .from(Column::OwningUserId)
-                .to(super::account::Column::Id)
+            Self::Asset2 => Entity::belongs_to(super::asset::Entity)
+                .from(Column::Avatar)
+                .to(super::asset::Column::Id)
                 .into(),
-            Self::Content2 => Entity::belongs_to(super::content::Entity)
+            Self::Asset1 => Entity::belongs_to(super::asset::Entity)
                 .from(Column::Banner)
-                .to(super::content::Column::Id)
+                .to(super::asset::Column::Id)
                 .into(),
-            Self::Content1 => Entity::belongs_to(super::content::Entity)
-                .from(Column::Picture)
-                .to(super::content::Column::Id)
-                .into(),
+            Self::Guild => Entity::has_many(super::guild::Entity).into(),
             Self::Post => Entity::has_many(super::post::Entity).into(),
         }
     }
 }
 
-impl Related<super::account::Entity> for Entity {
+impl Related<super::guild::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Account.def()
+        Relation::Guild.def()
     }
 }
 

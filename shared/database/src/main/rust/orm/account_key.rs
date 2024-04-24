@@ -15,19 +15,19 @@ impl EntityName for Entity {
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
     pub id: i64,
-    pub user_id: i64,
-    pub created_at: DateTime,
-    pub key: Json,
-    pub metadata: Json,
+    pub created_at: DateTimeWithTimeZone,
+    pub account_id: i64,
+    pub name: String,
+    pub data: Json,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     Id,
-    UserId,
     CreatedAt,
-    Key,
-    Metadata,
+    AccountId,
+    Name,
+    Data,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -38,7 +38,7 @@ pub enum PrimaryKey {
 impl PrimaryKeyTrait for PrimaryKey {
     type ValueType = i64;
     fn auto_increment() -> bool {
-        true
+        false
     }
 }
 
@@ -52,10 +52,10 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
-            Self::UserId => ColumnType::BigInteger.def(),
-            Self::CreatedAt => ColumnType::DateTime.def(),
-            Self::Key => ColumnType::JsonBinary.def(),
-            Self::Metadata => ColumnType::Json.def(),
+            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
+            Self::AccountId => ColumnType::BigInteger.def(),
+            Self::Name => ColumnType::String(None).def(),
+            Self::Data => ColumnType::JsonBinary.def(),
         }
     }
 }
@@ -64,7 +64,7 @@ impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
             Self::Account => Entity::belongs_to(super::account::Entity)
-                .from(Column::UserId)
+                .from(Column::AccountId)
                 .to(super::account::Column::Id)
                 .into(),
         }

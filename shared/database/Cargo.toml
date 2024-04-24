@@ -7,8 +7,10 @@ edition = "2021"
 
 [dependencies]
 chrono = "0.4.37"
+migration={ path = "migration" }
 sea-orm = { version = "0.12.15", default-features = false, features = [
     "sqlx-postgres",
+    "sqlx-mysql",
     "runtime-tokio-rustls",
     "postgres-array",
     "macros",

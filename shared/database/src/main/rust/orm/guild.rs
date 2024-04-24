@@ -15,17 +15,17 @@ impl EntityName for Entity {
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
     pub id: i64,
-    pub created_at: DateTime,
-    pub name: String,
+    pub created_at: DateTimeWithTimeZone,
     pub owner_id: i64,
+    pub name: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     Id,
     CreatedAt,
-    Name,
     OwnerId,
+    Name,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -36,14 +36,14 @@ pub enum PrimaryKey {
 impl PrimaryKeyTrait for PrimaryKey {
     type ValueType = i64;
     fn auto_increment() -> bool {
-        true
+        false
     }
 }
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Account,
-    Channel,
+    Actor,
+    GuildChannel,
 }
 
 impl ColumnTrait for Column {
@@ -51,9 +51,9 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
-            Self::CreatedAt => ColumnType::DateTime.def(),
-            Self::Name => ColumnType::String(Some(128u32)).def(),
+            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
             Self::OwnerId => ColumnType::BigInteger.def(),
+            Self::Name => ColumnType::String(None).def(),
         }
     }
 }
@@ -61,24 +61,24 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Account => Entity::belongs_to(super::account::Entity)
+            Self::Actor => Entity::belongs_to(super::actor::Entity)
                 .from(Column::OwnerId)
-                .to(super::account::Column::Id)
+                .to(super::actor::Column::Id)
                 .into(),
-            Self::Channel => Entity::has_many(super::channel::Entity).into(),
+            Self::GuildChannel => Entity::has_many(super::guild_channel::Entity).into(),
         }
     }
 }
 
-impl Related<super::account::Entity> for Entity {
+impl Related<super::actor::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Account.def()
+        Relation::Actor.def()
     }
 }
 
-impl Related<super::channel::Entity> for Entity {
+impl Related<super::guild_channel::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Channel.def()
+        Relation::GuildChannel.def()
     }
 }
 

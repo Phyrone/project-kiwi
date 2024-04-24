@@ -13,7 +13,10 @@ members = [
     "shared/proto",
     "shared/common",
     "shared/database",
+    "shared/database/migration",
     # Services
     "services/relay",
-    "services/snowflake", "services/gateway",
+    "services/snowflake",
+    "services/gateway",
+    "services/new_core",
 ]

@@ -6,13 +6,13 @@ on:
       - 'package.json'
       - 'yarn.lock'
       - 'bun.lockdb'
-  pull_request:
-    paths:
-      - 'page/**'
-      - '.github/workflows/build-page.yaml'
-      - 'package.json'
-      - 'yarn.lock'
-      - 'bun.lockdb'
+#  pull_request:
+#    paths:
+#      - 'page/**'
+#      - '.github/workflows/build-page.yaml'
+#      - 'package.json'
+#      - 'yarn.lock'
+#      - 'bun.lockdb'
 name: Page
 jobs:
   build:

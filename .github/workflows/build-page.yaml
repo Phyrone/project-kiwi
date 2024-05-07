@@ -4,8 +4,7 @@ on:
       - 'page/**'
       - '.github/workflows/build-page.yaml'
       - 'package.json'
-      - 'yarn.lock'
-      - 'bun.lockdb'
+      - 'pnpm-lock.yaml'
 #  pull_request:
 #    paths:
 #      - 'page/**'

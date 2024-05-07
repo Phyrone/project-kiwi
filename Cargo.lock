@@ -4375,9 +4375,9 @@ dependencies = [
 
 [[package]]
 name = "rustls"
-version = "0.21.10"
+version = "0.21.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f9d5a6813c0759e4609cd494e8e725babae6a2ca7b62a5536a13daaec6fcb7ba"
+checksum = "3f56a14d1f48b391359b22f731fd4bd7e43c97f3c50eee276f3aa09c94784d3e"
 dependencies = [
  "log",
  "ring 0.17.8",
@@ -5075,7 +5075,7 @@ dependencies = [
  "paste",
  "percent-encoding",
  "rust_decimal",
- "rustls 0.21.10",
+ "rustls 0.21.12",
  "rustls-pemfile 1.0.4",
  "serde",
  "serde_json",
@@ -6301,7 +6301,7 @@ dependencies = [
  "ring 0.17.8",
  "rtcp",
  "rtp",
- "rustls 0.21.10",
+ "rustls 0.21.12",
  "sdp",
  "serde",
  "serde_json",
@@ -6361,7 +6361,7 @@ dependencies = [
  "rand_core",
  "rcgen",
  "ring 0.17.8",
- "rustls 0.21.10",
+ "rustls 0.21.12",
  "sec1",
  "serde",
  "sha1",

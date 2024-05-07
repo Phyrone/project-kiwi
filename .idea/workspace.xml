@@ -8,12 +8,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="14b7fb34-0a0f-433e-9d2d-ecd09430e637" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/renovate.json" beforeDir="false" afterPath="$PROJECT_DIR$/renovate.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.node-version" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/+layout.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/NavBar.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/Sidebar.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/[[lang]]/@[user]/+page.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/[[lang]]/~[community]/+page.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/+layout.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/styles/app.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/frontend/src/routes/+page.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/+page.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/frontend/svelte.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/svelte.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/frontend/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/vite.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="+layout" />
+        <option value="Rust File" />
+        <option value="Sidebar" />
+        <option value="NavBar" />
+        <option value="GestureListener" />
+        <option value="+page" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -63,9 +90,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/services/frontend/src/routes/(default)/[[lang]]" />
+      <recent name="$PROJECT_DIR$/services/frontend/src" />
+      <recent name="$PROJECT_DIR$/services/frontend/src/routes/(default)" />
       <recent name="$PROJECT_DIR$/shared/web/src" />
       <recent name="$PROJECT_DIR$/shared/proto/src" />
-      <recent name="$PROJECT_DIR$/shared/database/src" />
     </key>
   </component>
   <component name="RsExternalLinterProjectSettings">
@@ -254,23 +283,28 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715064635596</updated>
-      <workItem from="1715064638227" duration="7506000" />
+      <workItem from="1715064638227" duration="7726000" />
+      <workItem from="1715078761126" duration="8128000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="WfRunsListSearchHistory">{
-  &quot;history&quot;: [
+  <component name="WfRunsListSearchHistory"><![CDATA[{
+  "history": [
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
     }
   ],
-  &quot;lastFilter&quot;: {
-    &quot;branch&quot;: &quot;main&quot;,
-    &quot;currentBranchFilter&quot;: true
+  "lastFilter": {
+    "branch": "main",
+    "currentBranchFilter": true
   }
-}</component>
+}]]></component>
 </project>

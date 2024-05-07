@@ -49,6 +49,6 @@
 		"hammerjs": "^2.0.8",
 		"lucide-svelte": "^0.378.0",
 		"svelte-sonner": "^0.3.24",
-		"three": "^0.163.0"
+		"three": "^0.164.0"
 	}
 }

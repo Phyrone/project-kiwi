@@ -1,13 +1,13 @@
 use std::hash::Hash;
 
-use base64::engine::general_purpose::URL_SAFE_NO_PAD as B64;
 use base64::Engine;
+use base64::engine::general_purpose::URL_SAFE_NO_PAD as B64;
 use digest::Mac;
 use sea_orm::{ConnectionTrait, EntityTrait};
 use serde::{Deserialize, Serialize};
 
-use common::error_stack::ResultExt;
 use common::{error_object, error_stack};
+use common::error_stack::ResultExt;
 
 type HmacSha256 = hmac::Hmac<sha3::Sha3_256>;
 
@@ -48,8 +48,8 @@ impl UserToken {
         Ok(decoded)
     }
 
-    pub fn valid_signature(&self, secret: &[u8]) -> bool {
-        let expected = self.payload.create_signature(secret);
+    pub fn valid_signature(&self, secret: &[u8], namespace: &str) -> bool {
+        let expected = self.payload.create_signature(secret, namespace);
         self.signature == expected
     }
 }
@@ -60,8 +60,9 @@ impl UserTokenPayload {
         self.valid_since <= now && self.valid_until.unwrap_or(u64::MAX) >= now
     }
 
-    pub fn create_signature(&self, secret: &[u8]) -> [u8; 32] {
+    pub fn create_signature(&self, secret: &[u8], namespace: &str) -> [u8; 32] {
         let mut hasher = HmacSha256::new_from_slice(secret).expect("should never fail");
+        hasher.update(namespace.as_bytes());
         hasher.update(&self.user_id.to_be_bytes());
         hasher.update(&self.valid_since.to_be_bytes());
         if let Some(valid_until) = self.valid_until {
@@ -78,8 +79,8 @@ impl UserTokenPayload {
 
         result
     }
-    pub fn singed(&self, secret: &[u8]) -> UserToken {
-        let signature = self.create_signature(secret);
+    pub fn singed(&self, secret: &[u8], namespace: &str) -> UserToken {
+        let signature = self.create_signature(secret, namespace);
         UserToken {
             payload: self.clone(),
             signature,
@@ -87,9 +88,9 @@ impl UserTokenPayload {
     }
 }
 
-pub async fn check_user_token<C>(token: &str, database: &C) -> Option<UserTokenPayload>
-where
-    C: ConnectionTrait,
+pub async fn check_user_token<C>(token: &str, database: &C, namespace: &str) -> Option<UserTokenPayload>
+    where
+        C: ConnectionTrait,
 {
     let token = UserToken::decode(token).ok()?;
     if !token.payload.valid_time() {
@@ -101,7 +102,7 @@ where
         .await
         .ok()??;
 
-    if token.valid_signature(&user_entity.session_secret) {
+    if token.valid_signature(&user_entity.session_secret, namespace) {
         Some(token.payload)
     } else {
         None
@@ -112,17 +113,18 @@ where
 mod test {
     #[test]
     pub fn test_signature() {
+        const NAMESPACE: &str = "test";
         let payload = super::UserTokenPayload {
             user_id: 188287775496339456,
             valid_since: chrono::Utc::now().timestamp() as u64,
             valid_until: None,
         };
         let secret = b"secret";
-        let token = payload.singed(secret);
+        let token = payload.singed(secret, NAMESPACE);
         let encoded = token.encode().unwrap();
         println!("{}", encoded);
         let decoded = super::UserToken::decode(&encoded).unwrap();
-        assert!(decoded.valid_signature(secret));
+        assert!(decoded.valid_signature(secret, NAMESPACE));
         assert_eq!(decoded, token);
     }
 }

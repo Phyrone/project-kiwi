@@ -1,6 +1,11 @@
 use ffmpeg_sidecar::event::{FfmpegEvent, FfmpegProgress};
 
 fn main() {
+
+}
+
+
+fn ffmpeg_experiment(){
     ffmpeg_sidecar::download::auto_download()
         .expect("Failed to download ffmpeg");
 
@@ -28,14 +33,14 @@ fn main() {
                 .output(output);
         }
     }
-    
+
     let mut command = command.spawn()
         .expect("Failed to spawn ffmpeg");
 
     command.iter().unwrap().for_each(|e| {
         match e {
             FfmpegEvent::Progress(FfmpegProgress { frame, time, fps, .. }) =>
-                println!("[Progress]: {cframe} {fps}/s ({time})"),
+                println!("[Progress]: {frame} {fps}/s ({time})"),
             FfmpegEvent::Log(_level, msg) =>
                 println!("[ffmpeg] {msg}"),
             _ => {}

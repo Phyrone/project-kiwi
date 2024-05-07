@@ -21,7 +21,7 @@ fn main() {
         .compile_well_known_types(false)
         .use_arc_self(false)
         .include_file("_all.rs")
-        .out_dir("src/main/rust")
+        .out_dir("src/")
         .compile(
             /* &["../../proto/snowflake.proto"]*/ &proto_files,
             &[PROTO_DIR],

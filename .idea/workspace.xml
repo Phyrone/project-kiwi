@@ -8,113 +8,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="14b7fb34-0a0f-433e-9d2d-ecd09430e637" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/metadata_js_0_0_1_INDEV.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/metadata_jvm_0_0_1_INDEV.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/4b952a35-f821-47bd-8b57-a6d34bac7682.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/4b952a35-f821-47bd-8b57-a6d34bac7682/storage_v2/_src_/database/app2.McotAA.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/4b952a35-f821-47bd-8b57-a6d34bac7682/storage_v2/_src_/database/app2.McotAA/schema/public.abK9xQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/beac90f4-0523-4123-aca2-020e9bb29ad2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/beac90f4-0523-4123-aca2-020e9bb29ad2/storage_v2/_src_/schema/kiwi.sDwyAA.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c34b8242-3dba-4b94-9a4f-d6d5c0cc2a68.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c34b8242-3dba-4b94-9a4f-d6d5c0cc2a68/storage_v2/_src_/database/kiwi.sDwyAA.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c34b8242-3dba-4b94-9a4f-d6d5c0cc2a68/storage_v2/_src_/database/kiwi.sDwyAA/schema/public.abK9xQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/page/docs/999_developement/architecture.md" beforeDir="false" afterPath="$PROJECT_DIR$/page/docs/999_developement/architecture.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/build.gradle.kts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/GrpcTest.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/Main.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/MainLoop.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/ModuleBundle.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/RFC9457Error.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/StartupParams.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/WebApplication.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/documents/AuthCheckResponse.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/documents/HealthStatusResponse.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/documents/JsonDocument.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/documents/LoginRequest.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/documents/LoginResponse.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/documents/RegisterRequest.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/documents/RegisterResponse.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/documents/SessionData.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/grpc-clients.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/minio.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/objectMappers.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/packets/clientbound.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/packets/serverbound.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/packets/topic.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/routes/Api1Auth.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/routes/Api1Media.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/routes/Api1Posts.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/routes/Api1Users.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/routes/routes.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/systems/GatewaySystem.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/systems/SessionManager.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/systems/UserPrincipal.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/systems/WebSocketSubscriptionService.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/utils.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/kotlin/de/phyrone/kiwi/gateway/webapp.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/resources/application.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/src/main/resources/openapi.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/core/test.application.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/new_core/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/new_core/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/new_core/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/new_core/src/startup.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/startup.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/new_core/src/web/auth.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/web/auth.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/new_core/src/web/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/web/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/new_core/src/web/post.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/web/post.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/relay/build.gradle.kts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/generate-entites.sh" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/generate-entites.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/kotlin/de/phyrone/kiwi/database/DatabaseMigrator.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/kotlin/de/phyrone/kiwi/database/DatabaseModule.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/kotlin/de/phyrone/kiwi/database/DatabaseShutdown.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/kotlin/de/phyrone/kiwi/database/DatabaseStartupParams.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/kotlin/de/phyrone/kiwi/database/PostgresConfiguration.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/kotlin/de/phyrone/kiwi/database/utils.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/resources/files/db/migration/R1_0_0__Initial Schema.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/resources/files/db/migration/V1_0_0__Initial Schema.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/lib.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/account.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/account.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/account_key.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/account_key.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/actor.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/actor.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/asset.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/asset.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/asset_processing_task.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/asset_processing_task.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/configuration.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/configuration.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/guild.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/guild.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/guild_channel.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/guild_channel.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/post.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/post.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/post_attatchment.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/post_attatchment.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/post_flag.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/post_flag.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/prelude.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/prelude.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/redis.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/redis.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/metadata/build.gradle.kts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/permission/build.gradle.kts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/permission/src/main/kotlin/de/phyrone/kiwi/permission/PermisionSubject.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/permission/src/main/kotlin/de/phyrone/kiwi/permission/PermissionComponents.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/permission/src/main/kotlin/de/phyrone/kiwi/permission/PermissionRequest.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/permission/src/main/kotlin/de/phyrone/kiwi/permission/ProfilePermissionManager.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/proto/Cargo.toml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/proto/build.gradle.kts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/proto/build.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/proto/src/main/kotlin/de/phyrone/kiwi/proto/clients.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/proto/src/main/rust/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/proto/src/main/rust/lib.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/gateway/log/latest.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/media/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/services/media/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/common/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/proto/build.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/proto/build.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/proto/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/proto/src/lib.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/web/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/shared/web/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/web/src/main/rust/auth.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/web/src/auth.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/web/src/main/rust/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/web/src/lib.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/web/src/main/rust/rfc9457.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/web/src/rfc9457.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,52 +29,56 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "Phyrone"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Phyrone&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Phyrone/project-kiwi.git",
-    "accountId": "c6061796-4341-41ae-8560-02937b366a57"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Phyrone/project-kiwi.git&quot;,
+    &quot;accountId&quot;: &quot;c6061796-4341-41ae-8560-02937b366a57&quot;
   }
-}]]></component>
+}</component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="r8bk84ux" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 6
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2g81x4EcIFzsq7sgT5iDDtkH19A" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
-    "org.rust.first.attach.projects": "true",
-    "settings.editor.selected.configurable": "preferences.fileTypes",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
+    &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.fileTypes&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/shared/web/src" />
       <recent name="$PROJECT_DIR$/shared/proto/src" />
       <recent name="$PROJECT_DIR$/shared/database/src" />
     </key>
+  </component>
+  <component name="RsExternalLinterProjectSettings">
+    <option name="runOnTheFly" value="true" />
   </component>
   <component name="RunManager" selected="Cargo.Run project-kiwi">
     <configuration name="Run gateway" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
@@ -354,23 +263,23 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715064635596</updated>
-      <workItem from="1715064638227" duration="684000" />
+      <workItem from="1715064638227" duration="1802000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="WfRunsListSearchHistory"><![CDATA[{
-  "history": [
+  <component name="WfRunsListSearchHistory">{
+  &quot;history&quot;: [
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     }
   ],
-  "lastFilter": {
-    "branch": "main",
-    "currentBranchFilter": true
+  &quot;lastFilter&quot;: {
+    &quot;branch&quot;: &quot;main&quot;,
+    &quot;currentBranchFilter&quot;: true
   }
-}]]></component>
+}</component>
 </project>

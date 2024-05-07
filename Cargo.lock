@@ -3658,9 +3658,6 @@ dependencies = [
 [[package]]
 name = "project-kiwi"
 version = "0.0.1-INDEV"
-dependencies = [
- "ffmpeg-sidecar",
-]
 
 [[package]]
 name = "prost"

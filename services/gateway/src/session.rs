@@ -8,8 +8,8 @@ use tokio::task::JoinError;
 
 use common::error_object;
 
-use crate::packets::{WsPacketClientbound, WsPacketServerbound};
-use crate::Encoding;
+use crate::packets::{DebugData, WsPacketClientbound, WsPacketServerbound};
+use crate::{Encoding, WebSocketQueryParams};
 
 #[derive(Debug, Clone)]
 pub enum DataMessage {
@@ -75,13 +75,25 @@ error_object!(RunSessionError, "Failed to run session");
 impl SocketSession {
     pub async fn run<F, Fut>(
         socket: &mut WebSocket,
-        encoding: Encoding,
+        params: &WebSocketQueryParams,
         use_session: F,
     ) -> error_stack::Result<(), StartSessionError>
     where
         F: FnOnce(SocketSession) -> Fut + Send + 'static,
         Fut: Future<Output = error_stack::Result<(), RunSessionError>> + Send + 'static,
     {
+        let WebSocketQueryParams { encoding, debug } = params;
+        let encoding = encoding.unwrap_or_default();
+        if *debug {
+            let debug_packet1 = WsPacketServerbound::Debug(DebugData::QueryParams(params.clone()));
+            let debug_packet1 =
+                create_message(encoding, &debug_packet1).change_context(StartSessionError)?;
+            socket
+                .send(debug_packet1.into())
+                .await
+                .change_context(StartSessionError)?;
+        }
+
         let (send_channel, mut send_pipe) = tokio::sync::mpsc::channel(128);
         let (receive_pipe, receive_channel) = tokio::sync::broadcast::channel(128);
         let session = SocketSession {
@@ -93,10 +105,9 @@ impl SocketSession {
 
         while let Some(received) = socket_loop(socket, &mut send_pipe, &mut task).await {
             match received {
-                LoopResult::Send(send) => socket
-                    .send(send.into())
-                    .await
-                    .change_context(StartSessionError)?,
+                LoopResult::Send(send) => {
+                    socket.send(send).await.change_context(StartSessionError)?
+                }
 
                 LoopResult::Receive(received) => match received {
                     Message::Text(text) => {
@@ -211,14 +222,16 @@ where
         Encoding::MessagePack => DataMessage::Binary(
             rmp_serde::to_vec_named(message).change_context(CreateMessageError)?,
         ),
-        Encoding::MessagePacketPositional => {
-            DataMessage::Binary(rmp_serde::to_vec(message).change_context(CreateMessageError)?)
-        }
         Encoding::Ron => {
             DataMessage::Text(ron::ser::to_string(message).change_context(CreateMessageError)?)
         }
         Encoding::Xml => {
             DataMessage::Text(quick_xml::se::to_string(message).change_context(CreateMessageError)?)
+        }
+        Encoding::Cbor => {
+            let mut buffer = Vec::with_capacity(64);
+            ciborium::into_writer(&message, &mut buffer).change_context(CreateMessageError)?;
+            DataMessage::Binary(buffer)
         }
     };
     Ok(message)
@@ -250,23 +263,24 @@ async fn read_message<T>(
 where
     T: serde::de::DeserializeOwned,
 {
-    let decoded = match message {
-        DataMessage::Text(text) => match encoding {
-            Encoding::Json => serde_json::from_str::<T>(&text)
-                .change_context(ReadMessageError::DeserializeError)?,
-            Encoding::Ron => {
-                ron::de::from_str::<T>(&text).change_context(ReadMessageError::DeserializeError)?
-            }
-            Encoding::Xml => quick_xml::de::from_str::<T>(&text)
-                .change_context(ReadMessageError::DeserializeError)?,
-            _ => return Err(Report::new(ReadMessageError::ExpectedText)),
-        },
-        DataMessage::Binary(binary) => match encoding {
-            Encoding::MessagePack | Encoding::MessagePacketPositional => {
-                rmp_serde::from_slice(&binary).change_context(ReadMessageError::DeserializeError)?
-            }
-            _ => return Err(Report::new(ReadMessageError::ExpectedBinary)),
-        },
-    };
+    let decoded =
+        match message {
+            DataMessage::Text(text) => match encoding {
+                Encoding::Json => serde_json::from_str::<T>(&text)
+                    .change_context(ReadMessageError::DeserializeError)?,
+                Encoding::Ron => ron::de::from_str::<T>(&text)
+                    .change_context(ReadMessageError::DeserializeError)?,
+                Encoding::Xml => quick_xml::de::from_str::<T>(&text)
+                    .change_context(ReadMessageError::DeserializeError)?,
+                _ => return Err(Report::new(ReadMessageError::ExpectedText)),
+            },
+            DataMessage::Binary(binary) => match encoding {
+                Encoding::MessagePack { .. } => rmp_serde::from_slice(&binary)
+                    .change_context(ReadMessageError::DeserializeError)?,
+                Encoding::Cbor => ciborium::from_reader(&binary[..])
+                    .change_context(ReadMessageError::DeserializeError)?,
+                _ => return Err(Report::new(ReadMessageError::ExpectedBinary)),
+            },
+        };
     Ok(decoded)
 }

@@ -8,37 +8,32 @@ pub struct Entity;
 
 impl EntityName for Entity {
     fn table_name(&self) -> &str {
-        "account_key"
+        "post_flag"
     }
 }
 
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
-    pub id: i64,
-    pub created_at: DateTimeWithTimeZone,
-    pub account_id: i64,
-    pub name: String,
-    pub data: Json,
-    pub challenge: Option<i64>,
+    pub post_id: i64,
+    pub flag: String,
+    pub details: Json,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
-    Id,
-    CreatedAt,
-    AccountId,
-    Name,
-    Data,
-    Challenge,
+    PostId,
+    Flag,
+    Details,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
 pub enum PrimaryKey {
-    Id,
+    PostId,
+    Flag,
 }
 
 impl PrimaryKeyTrait for PrimaryKey {
-    type ValueType = i64;
+    type ValueType = (i64, String);
     fn auto_increment() -> bool {
         false
     }
@@ -46,19 +41,16 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Account,
+    Post,
 }
 
 impl ColumnTrait for Column {
     type EntityName = Entity;
     fn def(&self) -> ColumnDef {
         match self {
-            Self::Id => ColumnType::BigInteger.def(),
-            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
-            Self::AccountId => ColumnType::BigInteger.def(),
-            Self::Name => ColumnType::String(None).def(),
-            Self::Data => ColumnType::JsonBinary.def(),
-            Self::Challenge => ColumnType::BigInteger.def().null(),
+            Self::PostId => ColumnType::BigInteger.def(),
+            Self::Flag => ColumnType::String(None).def(),
+            Self::Details => ColumnType::JsonBinary.def(),
         }
     }
 }
@@ -66,17 +58,17 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Account => Entity::belongs_to(super::account::Entity)
-                .from(Column::AccountId)
-                .to(super::account::Column::Id)
+            Self::Post => Entity::belongs_to(super::post::Entity)
+                .from(Column::PostId)
+                .to(super::post::Column::Id)
                 .into(),
         }
     }
 }
 
-impl Related<super::account::Entity> for Entity {
+impl Related<super::post::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Account.def()
+        Relation::Post.def()
     }
 }
 

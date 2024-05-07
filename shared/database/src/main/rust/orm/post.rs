@@ -50,6 +50,7 @@ impl PrimaryKeyTrait for PrimaryKey {
 pub enum Relation {
     Actor,
     PostAttatchment,
+    PostFlag,
 }
 
 impl ColumnTrait for Column {
@@ -75,6 +76,7 @@ impl RelationTrait for Relation {
                 .to(super::actor::Column::Id)
                 .into(),
             Self::PostAttatchment => Entity::has_many(super::post_attatchment::Entity).into(),
+            Self::PostFlag => Entity::has_many(super::post_flag::Entity).into(),
         }
     }
 }
@@ -88,6 +90,12 @@ impl Related<super::actor::Entity> for Entity {
 impl Related<super::post_attatchment::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::PostAttatchment.def()
+    }
+}
+
+impl Related<super::post_flag::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::PostFlag.def()
     }
 }
 

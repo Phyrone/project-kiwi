@@ -1,0 +1,9 @@
+services:
+  av1an:
+    privileged: true
+    image: masterofzen/av1an
+    entrypoint: sleep infinity
+    working_dir: /data
+    user: 0:0
+    volumes:
+      - ./:/data

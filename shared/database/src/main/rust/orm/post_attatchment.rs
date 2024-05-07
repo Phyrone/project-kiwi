@@ -15,7 +15,7 @@ impl EntityName for Entity {
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
     pub post_id: i64,
-    pub asset_id: i64,
+    pub asset_id: Uuid,
     pub order: i16,
 }
 
@@ -33,7 +33,7 @@ pub enum PrimaryKey {
 }
 
 impl PrimaryKeyTrait for PrimaryKey {
-    type ValueType = (i64, i64);
+    type ValueType = (i64, Uuid);
     fn auto_increment() -> bool {
         false
     }
@@ -50,7 +50,7 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::PostId => ColumnType::BigInteger.def(),
-            Self::AssetId => ColumnType::BigInteger.def(),
+            Self::AssetId => ColumnType::Uuid.def(),
             Self::Order => ColumnType::SmallInteger.def(),
         }
     }

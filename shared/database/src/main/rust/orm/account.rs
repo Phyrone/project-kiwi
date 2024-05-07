@@ -19,6 +19,7 @@ pub struct Model {
     pub updated_at: DateTimeWithTimeZone,
     pub session_secret: Vec<u8>,
     pub email: String,
+    pub password: Option<String>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -28,6 +29,7 @@ pub enum Column {
     UpdatedAt,
     SessionSecret,
     Email,
+    Password,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -55,7 +57,8 @@ impl ColumnTrait for Column {
             Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
             Self::UpdatedAt => ColumnType::TimestampWithTimeZone.def(),
             Self::SessionSecret => ColumnType::Binary(BlobSize::Blob(None)).def(),
-            Self::Email => ColumnType::String(None).def(),
+            Self::Email => ColumnType::String(Some(320u32)).def().unique(),
+            Self::Password => ColumnType::Text.def().null(),
         }
     }
 }

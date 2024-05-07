@@ -8,39 +8,54 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="143514f7-a623-4ea2-adb1-1b576e35fd29" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/services/new_core/src/startup.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/beac90f4-0523-4123-aca2-020e9bb29ad2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/beac90f4-0523-4123-aca2-020e9bb29ad2/storage_v2/_src_/schema/kiwi.sDwyAA.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/av1an-test/docker-compose.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/new_core/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/new_core/src/web/auth.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/new_core/src/web/mod.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/new_core/src/web/post.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shared/database/src/main/rust/orm/post_flag.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shared/web/Cargo.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shared/web/src/main/rust/auth.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shared/web/src/main/rust/lib.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shared/web/src/main/rust/rfc9457.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/4b952a35-f821-47bd-8b57-a6d34bac7682.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/4b952a35-f821-47bd-8b57-a6d34bac7682.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/4b952a35-f821-47bd-8b57-a6d34bac7682/storage_v2/_src_/database/app2.McotAA/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/4b952a35-f821-47bd-8b57-a6d34bac7682/storage_v2/_src_/database/app2.McotAA/schema/public.abK9xQ.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c34b8242-3dba-4b94-9a4f-d6d5c0cc2a68/storage_v2/_src_/database/kiwi.sDwyAA/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c34b8242-3dba-4b94-9a4f-d6d5c0cc2a68/storage_v2/_src_/database/kiwi.sDwyAA/schema/information_schema.FNRwLQ.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c34b8242-3dba-4b94-9a4f-d6d5c0cc2a68/storage_v2/_src_/database/kiwi.sDwyAA/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c34b8242-3dba-4b94-9a4f-d6d5c0cc2a68/storage_v2/_src_/database/kiwi.sDwyAA/schema/pg_catalog.0S1ZNQ.zip" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/dev-env/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/dev/dev-env/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/page/docs/999_contribute/architecture.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/page/docs/999_contribute/index.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/services/gateway/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/services/gateway/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/gateway/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/gateway/src/main.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/gateway/src/packets.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/gateway/src/packets.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/gateway/src/session.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/gateway/src/session.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/gateway/src/startup.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/gateway/src/startup.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/relay/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/services/relay/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/relay/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/relay/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/relay/src/startup.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/relay/src/startup.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/new_core/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/services/new_core/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/new_core/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/new_core/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/new_core/src/startup.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/new_core/src/startup.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/common/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/shared/common/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/common/src/main/rust/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/common/src/main/rust/lib.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/database/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/account.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/account_key.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/asset.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/asset_variant.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/channel.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/content.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/content_tag.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/flyway_schema_history.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/guild.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/migration/src/m20220101_000001_create_table.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/migration/src/m20220101_000001_create_table.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/main/rust/lib.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/account.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/main/rust/orm/account.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/account_key.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/main/rust/orm/account_key.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/actor.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/main/rust/orm/actor.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/asset.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/main/rust/orm/asset.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/main/rust/orm/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/post.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/post_attachment.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/post_flag.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/post_tag.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/prelude.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/profile.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/sea_orm_active_enums.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/user.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/user_key.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/post.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/main/rust/orm/post.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/post_attatchment.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/main/rust/orm/post_attatchment.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/main/rust/orm/prelude.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/main/rust/orm/prelude.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +108,20 @@
     &quot;accountId&quot;: &quot;c6061796-4341-41ae-8560-02937b366a57&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aide-0.13.4/src/openapi/media_type.rs" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/.cargo/registry/src/index.crates.io-6f17d22bba15001f/axum-0.7.5/src/json.rs" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/.cargo/registry/src/index.crates.io-6f17d22bba15001f/base64-0.22.0/src/engine/general_purpose/mod.rs" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/.cargo/registry/src/index.crates.io-6f17d22bba15001f/colored-2.1.0/src/lib.rs" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ffmpeg-sidecar-1.1.0/src/command.rs" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ffmpeg-sidecar-1.1.0/src/download.rs" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/.cargo/registry/src/index.crates.io-6f17d22bba15001f/figlet-rs-0.1.5/src/lib.rs" root0="SKIP_INSPECTION" />
+  </component>
   <component name="KotlinMultiplatform" KONAN_HOME="$USER_HOME$/.konan/kotlin-native-prebuilt-macos-aarch64-1.9.23" />
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="6e29snuf" />
   </component>
@@ -106,39 +134,109 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.Build project-kiwi.executor&quot;: &quot;Run&quot;,
-    &quot;Kotlin.Main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenDatabaseViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/samuellaqua&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
-    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
-    &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.fileTypes&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Cargo.Build `Test auth`.executor": "Run",
+    "Cargo.Build `Test test::test_signature`.executor": "Run",
+    "Cargo.Test auth.executor": "Run",
+    "Cargo.Test auth::test::test_signature.executor": "Run",
+    "Cargo.Test test::test_signature.executor": "Run",
+    "Gradle.Build project-kiwi.executor": "Run",
+    "Kotlin.Main.executor": "Run",
+    "RunOnceActivity.OpenDatabaseViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/samuellaqua/git/project-kiwi/services/media/src",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
+    "org.rust.first.attach.projects": "true",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "/Users/samuellaqua/git/project-kiwi/services/frontend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql",
+      "mariadb"
     ],
-    &quot;kotlin-gradle-user-dirs&quot;: [
-      &quot;/Users/samuellaqua/.gradle&quot;
+    "kotlin-gradle-user-dirs": [
+      "/Users/samuellaqua/.gradle"
     ]
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/services/media/src" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/services/media" />
+    </key>
+  </component>
   <component name="RsExternalLinterProjectSettings">
     <option name="runOnTheFly" value="true" />
+    <option name="tool" value="Clippy" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Cargo.Test auth::test::test_signature">
+    <configuration name="Test auth" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package web --lib auth" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+        <option name="com.soywiz.korge.intellij.UpdateResourceBeforeRunTask" enabled="false" />
+      </method>
+    </configuration>
+    <configuration name="Test auth::test::test_signature" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package web --lib auth::test::test_signature -- --exact" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+        <option name="com.soywiz.korge.intellij.UpdateResourceBeforeRunTask" enabled="false" />
+      </method>
+    </configuration>
+    <configuration name="Test test::test_signature" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package web --lib test::test_signature -- --exact" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+        <option name="com.soywiz.korge.intellij.UpdateResourceBeforeRunTask" enabled="false" />
+      </method>
+    </configuration>
     <configuration name="Main" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="de.phyrone.kiwi.media.Main" />
       <module name="project-kiwi.services.media.main" />
@@ -147,6 +245,14 @@
         <option name="com.soywiz.korge.intellij.UpdateResourceBeforeRunTask" enabled="false" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Kotlin.Main" />
+        <item itemvalue="Cargo.Test test::test_signature" />
+        <item itemvalue="Cargo.Test auth::test::test_signature" />
+        <item itemvalue="Cargo.Test auth" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
@@ -154,8 +260,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
-        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.15989.150" />
+        <option value="bundled-js-predefined-1d06a55b98c1-91d5c284f522-JavaScript-IU-241.15989.150" />
       </set>
     </attachedChunks>
   </component>
@@ -171,34 +277,114 @@
       <workItem from="1713808409555" duration="1542000" />
       <workItem from="1713852517085" duration="365000" />
       <workItem from="1713877875967" duration="37488000" />
+      <workItem from="1713965991528" duration="657000" />
+      <workItem from="1713978440808" duration="3402000" />
+      <workItem from="1714054104627" duration="58000" />
+      <workItem from="1714131783848" duration="505000" />
+      <workItem from="1714223592086" duration="2861000" />
+      <workItem from="1714384191510" duration="5987000" />
+      <workItem from="1714391158180" duration="12766000" />
+      <workItem from="1714418047649" duration="81000" />
+      <workItem from="1714732003158" duration="21457000" />
+      <workItem from="1714799729967" duration="31207000" />
+      <workItem from="1714990475522" duration="8384000" />
+      <workItem from="1715018479754" duration="1296000" />
+      <workItem from="1715022109559" duration="1604000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="WfRunsListSearchHistory">{
-  &quot;history&quot;: [
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WfRunsListSearchHistory"><![CDATA[{
+  "history": [
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
     }
   ],
-  &quot;lastFilter&quot;: {
-    &quot;branch&quot;: &quot;main&quot;,
-    &quot;currentBranchFilter&quot;: true
+  "lastFilter": {
+    "branch": "main",
+    "currentBranchFilter": true
   }
-}</component>
+}]]></component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
 </project>

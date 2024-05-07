@@ -6,12 +6,24 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        manager.create_table(Table::create()
-            .table(Configuration::Table)
-            .col(ColumnDef::new(Configuration::Name).string().primary_key().not_null())
-            .col(ColumnDef::new(Configuration::Value).json_binary().not_null())
-            .to_owned()
-        ).await?;
+        manager
+            .create_table(
+                Table::create()
+                    .table(Configuration::Table)
+                    .col(
+                        ColumnDef::new(Configuration::Name)
+                            .string()
+                            .primary_key()
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(Configuration::Value)
+                            .json_binary()
+                            .not_null(),
+                    )
+                    .to_owned(),
+            )
+            .await?;
 
         manager
             .create_table(
@@ -33,7 +45,12 @@ impl MigrationTrait for Migration {
                             .binary_len(128)
                             .not_null(),
                     )
-                    .col(ColumnDef::new(Account::Email).string().not_null())
+                    .col(ColumnDef::new(Account::Email)
+                        .unique_key()
+                        .string_len(320)
+                        .not_null()
+                    )
+                    .col(ColumnDef::new(Account::Password).text().null())
                     .to_owned(),
             )
             .await?;
@@ -54,6 +71,7 @@ impl MigrationTrait for Migration {
                     )
                     .col(ColumnDef::new(AccountKey::Name).string().not_null())
                     .col(ColumnDef::new(AccountKey::Data).json_binary().not_null())
+                    .col(ColumnDef::new(AccountKey::Challenge).big_integer())
                     .foreign_key(
                         ForeignKey::create()
                             .name(AccountKey::FkAccountKeyAccountId.to_string())
@@ -70,7 +88,7 @@ impl MigrationTrait for Migration {
             .create_table(
                 Table::create()
                     .table(Asset::Table)
-                    .col(ColumnDef::new(Asset::Id).big_integer().primary_key())
+                    .col(ColumnDef::new(Asset::Id).uuid().primary_key())
                     .col(
                         ColumnDef::new(Asset::CreatedAt)
                             .timestamp_with_time_zone()
@@ -81,6 +99,20 @@ impl MigrationTrait for Migration {
                     .to_owned(),
             )
             .await?;
+
+        manager.create_table(Table::create()
+            .table(AssetProcessingTask::Table)
+            .col(ColumnDef::new(AssetProcessingTask::TaskId)
+                .big_integer().auto_increment().primary_key())
+            .col(ColumnDef::new(AssetProcessingTask::AssetId).uuid().not_null())
+            .col(ColumnDef::new(AssetProcessingTask::CreatedAt).timestamp().not_null())
+            .col(ColumnDef::new(AssetProcessingTask::StartedAt).timestamp().null())
+            .col(ColumnDef::new(AssetProcessingTask::FinishedAt).timestamp().null())
+            //progress is a double between 0.0 and 1.0
+            .col(ColumnDef::new(AssetProcessingTask::Progress).double().not_null().default(0.0))
+            //override default task settings with specific task configuration
+            .col(ColumnDef::new(AssetProcessingTask::Configuration).json_binary().null())
+            .to_owned()).await?;
 
         manager
             .create_table(
@@ -100,14 +132,14 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Actor::Name).string().not_null())
                     .col(ColumnDef::new(Actor::Discriminator).small_unsigned().null())
                     .col(ColumnDef::new(Actor::DisplayName).string().null())
-                    .col(ColumnDef::new(Actor::Avatar).big_integer().null())
+                    .col(ColumnDef::new(Actor::Avatar).uuid().null())
+                    .col(ColumnDef::new(Actor::Banner).uuid().null())
                     .foreign_key(
                         ForeignKey::create()
                             .name(Actor::FkActorAvatarAssetId.to_string())
                             .from(Actor::Table, Actor::Avatar)
                             .to(Asset::Table, Asset::Id),
                     )
-                    .col(ColumnDef::new(Actor::Banner).big_integer().null())
                     .foreign_key(
                         ForeignKey::create()
                             .name(Actor::FkActorBannerAssetId.to_string())
@@ -168,24 +200,40 @@ impl MigrationTrait for Migration {
             .await?;
 
         manager
-            .create_table(Table::create()
-                .table(GuildChannel::Table)
-                .col(ColumnDef::new(GuildChannel::Id).big_integer().primary_key())
-                .col(ColumnDef::new(GuildChannel::Order).small_unsigned().not_null().default(0))
-                .col(ColumnDef::new(GuildChannel::CreatedAt).timestamp_with_time_zone().not_null())
-                .col(ColumnDef::new(GuildChannel::GuildId).big_integer().not_null())
-                .col(ColumnDef::new(GuildChannel::ParentId).big_integer().null())
-                .col(ColumnDef::new(GuildChannel::Name).string().not_null())
-                .col(ColumnDef::new(GuildChannel::Data).json_binary().not_null())
-                .foreign_key(ForeignKey::create()
-                    .name(GuildChannel::FkGuildChannelGuildId.to_string())
-                    .from(GuildChannel::Table, GuildChannel::GuildId)
-                    .to(Guild::Table, Guild::Id)
-                    .on_delete(ForeignKeyAction::Cascade)
-                    .on_update(ForeignKeyAction::Cascade)
-                )
-                .to_owned()
-            ).await?;
+            .create_table(
+                Table::create()
+                    .table(GuildChannel::Table)
+                    .col(ColumnDef::new(GuildChannel::Id).big_integer().primary_key())
+                    .col(
+                        ColumnDef::new(GuildChannel::Order)
+                            .small_unsigned()
+                            .not_null()
+                            .default(0),
+                    )
+                    .col(
+                        ColumnDef::new(GuildChannel::CreatedAt)
+                            .timestamp_with_time_zone()
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(GuildChannel::GuildId)
+                            .big_integer()
+                            .not_null(),
+                    )
+                    .col(ColumnDef::new(GuildChannel::ParentId).big_integer().null())
+                    .col(ColumnDef::new(GuildChannel::Name).string().not_null())
+                    .col(ColumnDef::new(GuildChannel::Data).json_binary().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(GuildChannel::FkGuildChannelGuildId.to_string())
+                            .from(GuildChannel::Table, GuildChannel::GuildId)
+                            .to(Guild::Table, Guild::Id)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .to_owned(),
+            )
+            .await?;
 
         manager
             .create_table(
@@ -228,7 +276,7 @@ impl MigrationTrait for Migration {
                     )
                     .col(
                         ColumnDef::new(PostAttatchment::AssetId)
-                            .big_integer()
+                            .uuid()
                             .not_null(),
                     )
                     .primary_key(
@@ -257,6 +305,26 @@ impl MigrationTrait for Migration {
                             .small_unsigned()
                             .not_null()
                             .default(0),
+                    )
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_table(
+                Table::create()
+                    .table(PostFlag::Table)
+                    .col(ColumnDef::new(PostFlag::PostId).big_integer().not_null())
+                    .col(ColumnDef::new(PostFlag::Flag).string().not_null())
+                    .col(ColumnDef::new(PostFlag::Details).json_binary().not_null())
+                    .primary_key(Index::create().col(PostFlag::PostId).col(PostFlag::Flag))
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(PostFlag::FkPostFlagPostId.to_string())
+                            .from(PostFlag::Table, PostFlag::PostId)
+                            .to(Post::Table, Post::Id)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
             )
@@ -293,6 +361,7 @@ enum Account {
     UpdatedAt,
     SessionSecret,
     Email,
+    Password,
 }
 
 #[derive(DeriveIden)]
@@ -303,7 +372,7 @@ enum AccountKey {
     CreatedAt,
     Name,
     Data,
-
+    Challenge,
     FkAccountKeyAccountId,
 }
 
@@ -315,6 +384,19 @@ enum Asset {
     CreatedAt,
     Public,
     FkAssetOriginActorId,
+}
+
+#[derive(DeriveIden)]
+enum AssetProcessingTask {
+    Table,
+    TaskId,
+    AssetId,
+    CreatedAt,
+    StartedAt,
+    FinishedAt,
+    Progress,
+    Configuration,
+    FkAssetProcessingTaskAssetId,
 }
 
 #[derive(DeriveIden)]
@@ -381,4 +463,13 @@ enum PostAttatchment {
     AssetId,
     FkPostAttatchmentPostId,
     FkPostAttatchmentAssetId,
+}
+
+#[derive(DeriveIden)]
+enum PostFlag {
+    Table,
+    PostId,
+    Flag,
+    Details,
+    FkPostFlagPostId,
 }

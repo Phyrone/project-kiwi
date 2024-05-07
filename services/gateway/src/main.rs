@@ -1,4 +1,6 @@
+use std::future::{poll_fn, Future, IntoFuture};
 use std::net::SocketAddr;
+use std::task::Poll;
 
 use axum::extract::ws::{Message, WebSocket};
 use axum::extract::{ConnectInfo, Query, WebSocketUpgrade};
@@ -6,8 +8,8 @@ use axum::response::IntoResponse;
 use axum::routing::get;
 use axum::Router;
 use clap::Parser;
-use error_stack::{FutureExt, ResultExt};
-use futures::{SinkExt, StreamExt};
+use error_stack::{Report, ResultExt};
+use futures::{FutureExt, SinkExt, StreamExt};
 use log::{error, info};
 use reql::r;
 use serde::{Deserialize, Serialize};
@@ -16,7 +18,10 @@ use tokio::time::sleep;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 
-use common::{error_object, init_logger};
+use common::{
+    close_logger, error_object, init_logger, pre_boot, prohibit_root_step, startup_info_banner,
+};
+use database::init_database;
 
 use crate::packets::{WsPacketClientbound, WsPacketServerbound};
 use crate::session::{send_message, RunSessionError, SocketSession};
@@ -28,14 +33,20 @@ mod startup;
 
 error_object!(ApplicationError, "Failed to start gateway");
 
-#[tokio::main]
-async fn main() -> error_stack::Result<(), ApplicationError> {
+fn main() -> error_stack::Result<(), ApplicationError> {
+    pre_boot(env!("CARGO_PKG_NAME"));
     let params = StartupParams::parse();
-    init_logger(params.log_level).change_context(ApplicationError)?;
+    prohibit_root_step(&params.allow_root_params);
+    init_logger(&params.logger_params).change_context(ApplicationError)?;
+    startup_info_banner();
+    let runtime = tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
+        .change_context(ApplicationError)?;
 
-    let run_server_result = run_server(params).await;
-    fast_log::flush().change_context(ApplicationError)?;
-    fast_log::exit().change_context(ApplicationError)?;
+    let run_server_result = runtime.block_on(run_server(params));
+    close_logger().change_context(ApplicationError)?;
+    runtime.shutdown_background();
     run_server_result.change_context(ApplicationError)?;
     Ok(())
 }
@@ -43,16 +54,38 @@ async fn main() -> error_stack::Result<(), ApplicationError> {
 error_object!(ServerError, "Failed to run server");
 
 async fn run_server(params: StartupParams) -> error_stack::Result<(), ServerError> {
-    let router = Router::new().route("/", get(handle_websocket));
-
-    let listener = TcpListener::bind(params.bind)
+    let database = init_database(&params.database_params)
         .await
         .change_context(ServerError)?;
-    info!("local addr =  {}", listener.local_addr().unwrap());
-    axum::serve(
-        listener,
-        router.into_make_service_with_connect_info::<SocketAddr>(),
-    )
+
+    let router = Router::new().route("/", get(handle_websocket));
+
+    if params.binds.is_empty() {
+        error!("No binds specified");
+        return Err(Report::new(ServerError)
+            .attach_printable("No addresses specified to bind the web server to"));
+    }
+
+    let mut servers = Vec::with_capacity(params.binds.len());
+    for bind in params.binds.iter() {
+        let router = router.clone();
+        let listener = TcpListener::bind(bind).await.change_context(ServerError)?;
+        info!("Listening on http://{}", listener.local_addr().unwrap());
+        let server = axum::serve(
+            listener,
+            router.into_make_service_with_connect_info::<SocketAddr>(),
+        );
+        servers.push(server.into_future());
+    }
+    poll_fn(|cx| {
+        for server in servers.iter_mut() {
+            let poll = server.poll_unpin(cx);
+            if let Poll::Ready(outcome) = poll {
+                return Poll::Ready(outcome);
+            }
+        }
+        Poll::Pending
+    })
     .await
     .change_context(ServerError)?;
 
@@ -60,8 +93,10 @@ async fn run_server(params: StartupParams) -> error_stack::Result<(), ServerErro
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
-struct WebSocketParams {
-    #[serde(alias = "e")]
+struct WebSocketQueryParams {
+    #[serde(default, alias = "dev")]
+    pub debug: bool,
+    #[serde(alias = "e", skip_serializing_if = "Option::is_none")]
     pub encoding: Option<Encoding>,
     //since we are at the first version, we don't need to specify the version yet
     //pub version: Option<u32>,
@@ -73,21 +108,19 @@ enum Encoding {
     #[default]
     #[serde(alias = "javascript_object_notation")]
     Json,
-    #[serde(alias = "msp", alias = "msgpack")]
+    #[serde(alias = "msp", alias = "mp", alias = "msgpack")]
     MessagePack,
-    //like messagepacket, but instead of using named fields,
-    // it uses positional fields making it more compact but harder to implement
-    #[serde(alias = "mp", alias = "msgpack_p")]
-    MessagePacketPositional,
     #[serde(alias = "rust_object_notation")]
     Ron,
     #[serde(alias = "extensible_markup_language")]
     Xml,
+    #[serde(alias = "concise-binary-object-representation")]
+    Cbor,
 }
 
 async fn handle_websocket(
     ws: WebSocketUpgrade,
-    params: Query<WebSocketParams>,
+    params: Query<WebSocketQueryParams>,
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
 ) -> impl IntoResponse {
     let params = params.0;
@@ -95,10 +128,10 @@ async fn handle_websocket(
         .on_upgrade(move |socket| handle_socket(socket, params))
 }
 
-async fn handle_socket(mut socket: WebSocket, params: WebSocketParams) {
-    let encoding = params.encoding.unwrap_or_default().clone();
-    let run_socket_result = run_websocket(&mut socket, encoding).await;
+async fn handle_socket(mut socket: WebSocket, params: WebSocketQueryParams) {
+    let run_socket_result = run_websocket(&mut socket, &params).await;
     if let Err(report) = run_socket_result {
+        let encoding = params.encoding.unwrap_or_default();
         let _ = send_message(
             encoding,
             &mut socket,
@@ -112,9 +145,9 @@ async fn handle_socket(mut socket: WebSocket, params: WebSocketParams) {
 error_object!(SocketError, "Failed to handle socket");
 async fn run_websocket(
     socket: &mut WebSocket,
-    encoding: Encoding,
+    params: &WebSocketQueryParams,
 ) -> error_stack::Result<(), SocketError> {
-    SocketSession::run(socket, encoding, |mut session| async move {
+    SocketSession::run(socket, params, |mut session| async move {
         loop {
             let message = session.receive().await.change_context(RunSessionError)?;
             match message {

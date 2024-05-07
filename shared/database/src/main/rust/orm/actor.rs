@@ -20,8 +20,8 @@ pub struct Model {
     pub name: String,
     pub discriminator: Option<i16>,
     pub display_name: Option<String>,
-    pub avatar: Option<i64>,
-    pub banner: Option<i64>,
+    pub avatar: Option<Uuid>,
+    pub banner: Option<Uuid>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -66,8 +66,8 @@ impl ColumnTrait for Column {
             Self::Name => ColumnType::String(None).def(),
             Self::Discriminator => ColumnType::SmallInteger.def().null(),
             Self::DisplayName => ColumnType::String(None).def().null(),
-            Self::Avatar => ColumnType::BigInteger.def().null(),
-            Self::Banner => ColumnType::BigInteger.def().null(),
+            Self::Avatar => ColumnType::Uuid.def().null(),
+            Self::Banner => ColumnType::Uuid.def().null(),
         }
     }
 }

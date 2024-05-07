@@ -7,11 +7,25 @@ edition = "2021"
 
 [dependencies]
 common = {path = "../../shared/common"}
+database = {path = "../../shared/database"}
+web = { path = "../../shared/web" }
 axum = { version = "0.7.5", features = ["http2"] }
 clap = { version = "4.5.4", features = ["env", "string", "cargo", "derive", "unicode"] }
 jwt = "0.16.0"
-webauthn-rs = "0.4.8"
+webauthn-rs = { version = "0.5.0", features = ["preview-features"] }
 log = { version = "0.4.21", features = ["serde", "std"] }
 tokio = { version = "1.37.0", features = ["full"] }
 error-stack = { version = "0.4.1", features = ["serde"] }
 sqlx = { version = "0.7.4", features = ["postgres"] }
+jsonwebtoken = "9.3.0"
+sea-orm = "0.12.15"
+futures-lite = "2.3.0"
+rmp-serde = "1.3.0"
+serde = { version = "1.0.198", features = ["derive", "alloc", "rc"] }
+mime = "0.3.17"
+argon2 = { version = "0.5.3", features = ["std", "zeroize", "simple"] }
+schemars = { version = "0.8.17", features = ["uuid", "chrono"] }
+serde_json = { version = "1.0.116", features = ["alloc", "preserve_order", "raw_value"] }
+aide = { version = "0.13.4", features = ["macros", "http", "axum", "axum-ws", "serde_qs", "axum-headers"] }
+utoipa-swagger-ui = { version = "6.0.0", features = ["axum"] }
+axum-auth = "0.7.0"

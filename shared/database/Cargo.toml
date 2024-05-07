@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 common = { path = "../common" }
-chrono = "0.4.37"
+chrono = "0.4.38"
 clap = { version = "4.5.4", features = ["derive"] }
 migration = { path = "migration" }
 sea-orm = { version = "0.12.15", features = [
@@ -22,7 +22,7 @@ sea-orm = { version = "0.12.15", features = [
     "with-uuid",
     "with-bigdecimal"
 ] }
-serde = { version = "1.0.197", features = ["derive"] }
+serde = { version = "1.0.200", features = ["derive"] }
 error-stack = { version = "0.4.1", features = ["serde"] }
 log = { version = "0.4.21", features = ["std", "serde"] }
 colored = "2.1.0"

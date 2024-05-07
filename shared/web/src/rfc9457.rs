@@ -1,11 +1,8 @@
-use std::str::FromStr;
 
-use aide::axum::IntoApiResponse;
 use aide::gen::GenContext;
-use aide::openapi::{Link, MediaType, Operation, ReferenceOr, SchemaObject};
+use aide::openapi::{MediaType, Operation, SchemaObject};
 use aide::OperationOutput;
-use axum::extract::rejection::FormRejection;
-use axum::http::{StatusCode, Version};
+use axum::http::{StatusCode};
 use axum::response::{IntoResponse, Response};
 use indexmap::IndexMap;
 use schemars::JsonSchema;

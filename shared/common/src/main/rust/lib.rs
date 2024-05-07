@@ -9,7 +9,7 @@ use fast_log::plugin::packer::GZipPacker;
 use figlet_rs::FIGfont;
 use human_panic::Metadata;
 use is_root::is_root;
-use log::{error, info, LevelFilter};
+use log::{info, LevelFilter};
 
 pub fn pre_boot(app_name: &'static str) {
     human_panic::setup_panic!(

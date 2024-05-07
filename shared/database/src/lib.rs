@@ -1,5 +1,4 @@
 use std::time::Instant;
-use chrono::Duration;
 use clap::{Args, ValueEnum};
 use colored::Colorize;
 use log::{debug, info, warn};

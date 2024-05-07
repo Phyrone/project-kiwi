@@ -10,7 +10,7 @@ error_object!(ApplicationError, "Failed to start relay");
 #[tokio::main]
 async fn main() -> error_stack::Result<(), ApplicationError> {
     let params = startup::StartupParams::parse();
-    init_logger(params.log_level).change_context(ApplicationError)?;
+    init_logger(&params.logger_params).change_context(ApplicationError)?;
     debug!("params: {:#?}", params);
 
     Ok(())

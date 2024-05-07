@@ -1,6 +1,6 @@
 use std::net::SocketAddr;
 
-use chrono::{DateTime, ParseResult, Utc};
+use chrono::{DateTime, Utc};
 use clap::Parser;
 use clap_num::number_range;
 use error_stack::ResultExt;

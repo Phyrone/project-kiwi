@@ -1,8 +1,8 @@
-use std::future::{poll_fn, Future, IntoFuture};
+use std::future::{poll_fn, IntoFuture};
 use std::net::SocketAddr;
 use std::task::Poll;
 
-use axum::extract::ws::{Message, WebSocket};
+use axum::extract::ws::{WebSocket};
 use axum::extract::{ConnectInfo, Query, WebSocketUpgrade};
 use axum::response::IntoResponse;
 use axum::routing::get;
@@ -11,12 +11,8 @@ use clap::Parser;
 use error_stack::{Report, ResultExt};
 use futures::{FutureExt, SinkExt, StreamExt};
 use log::{error, info};
-use reql::r;
 use serde::{Deserialize, Serialize};
 use tokio::net::TcpListener;
-use tokio::time::sleep;
-use tracing_subscriber::layer::SubscriberExt;
-use tracing_subscriber::util::SubscriberInitExt;
 
 use common::{
     close_logger, error_object, init_logger, pre_boot, prohibit_root_step, startup_info_banner,

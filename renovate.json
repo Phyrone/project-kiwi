@@ -12,5 +12,6 @@
   "automerge": true,
   "platformAutomerge": true,
   "automergeType": "pr",
-  "automergeStrategy": "rebase"
+  "automergeStrategy": "rebase",
+  "commitMessagePrefix": "⬆\uFE0F "
 }

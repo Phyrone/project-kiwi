@@ -1,20 +1,20 @@
-use aide::axum::{ApiRouter, IntoApiResponse};
 use aide::axum::routing::{get_with, post, post_with};
+use aide::axum::{ApiRouter, IntoApiResponse};
 use aide::transform::TransformOperation;
 use argon2::{Algorithm, Argon2, Params, ParamsBuilder, PasswordVerifier, Version};
-use axum::{Json, Router};
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
+use axum::{Json, Router};
 use axum_auth::AuthBearer;
 use schemars::JsonSchema;
 use sea_orm::{ColumnTrait, DatabaseConnection, DbErr, EntityTrait, ModelTrait, QueryFilter};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use common::error_object;
-use web::rfc9457::{ErrorExt, PROBLEM_TYPE_BASE, ProblemDescription, ProblemResult};
 use crate::web::WebServerState;
+use common::error_object;
+use web::rfc9457::{ErrorExt, ProblemDescription, ProblemResult, PROBLEM_TYPE_BASE};
 
 error_object!(CreateAuthRoutesError, "Failed to register auth routes");
 pub fn auth_routes() -> ApiRouter<WebServerState> {
@@ -42,7 +42,6 @@ pub enum LoginRequestWith {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct AuthProblem {
     success: bool,
-
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
@@ -56,7 +55,6 @@ pub struct LoginSuccess {
     /// A bearer token to be used for future requests to authenticate as the user.
     pub token: String,
 }
-
 
 fn request_login_docs(t: TransformOperation) -> TransformOperation {
     t.hidden(false)
@@ -75,9 +73,7 @@ fn request_login_docs(t: TransformOperation) -> TransformOperation {
                 title: "Unauthorized".to_string(),
                 detail: Some("The email or password provided is incorrect.".to_string()),
                 instance: None,
-                data: AuthProblem {
-                    success: false,
-                },
+                data: AuthProblem { success: false },
             })
         })
 }
@@ -93,9 +89,7 @@ async fn request_login(
         .await;
 
     let response: Response = match user_model {
-        Err(err) => {
-            err.into_problem().into_response()
-        }
+        Err(err) => err.into_problem().into_response(),
         Ok(user_model) => {
             if let Some(user) = user_model {
                 match payload.with {
@@ -105,9 +99,7 @@ async fn request_login(
                     LoginRequestWith::Passkey { passkey } => {
                         todo!()
                     }
-                    LoginRequestWith::Password {
-                        password
-                    } => {
+                    LoginRequestWith::Password { password } => {
                         todo!()
                     }
                 }
@@ -118,10 +110,9 @@ async fn request_login(
                     title: "Unauthorized".to_string(),
                     detail: Some("The email or password provided is incorrect.".to_string()),
                     instance: None,
-                    data: AuthProblem {
-                        success: false,
-                    },
-                }.into_response()
+                    data: AuthProblem { success: false },
+                }
+                .into_response()
             }
         }
     };
@@ -142,17 +133,17 @@ async fn auth_status(
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct LogoutAllRequest {
     #[serde(default)]
-    renew_current_token: bool
+    renew_current_token: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct LogoutAllResponse {
-    new_token: Option<String>
+    new_token: Option<String>,
 }
 
 /// Logs out all sessions for the current user and invalidates all tokens
 async fn logout_all_handler(
     Json(body): Json<LogoutAllRequest>,
-) -> Result<Json<LogoutAllResponse>,ProblemDescription> {
+) -> Result<Json<LogoutAllResponse>, ProblemDescription> {
     todo!()
 }

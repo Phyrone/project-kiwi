@@ -45,10 +45,11 @@ impl MigrationTrait for Migration {
                             .binary_len(128)
                             .not_null(),
                     )
-                    .col(ColumnDef::new(Account::Email)
-                        .unique_key()
-                        .string_len(320)
-                        .not_null()
+                    .col(
+                        ColumnDef::new(Account::Email)
+                            .unique_key()
+                            .string_len(320)
+                            .not_null(),
                     )
                     .col(ColumnDef::new(Account::Password).text().null())
                     .to_owned(),
@@ -100,19 +101,52 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        manager.create_table(Table::create()
-            .table(AssetProcessingTask::Table)
-            .col(ColumnDef::new(AssetProcessingTask::TaskId)
-                .big_integer().auto_increment().primary_key())
-            .col(ColumnDef::new(AssetProcessingTask::AssetId).uuid().not_null())
-            .col(ColumnDef::new(AssetProcessingTask::CreatedAt).timestamp().not_null())
-            .col(ColumnDef::new(AssetProcessingTask::StartedAt).timestamp().null())
-            .col(ColumnDef::new(AssetProcessingTask::FinishedAt).timestamp().null())
-            //progress is a double between 0.0 and 1.0
-            .col(ColumnDef::new(AssetProcessingTask::Progress).double().not_null().default(0.0))
-            //override default task settings with specific task configuration
-            .col(ColumnDef::new(AssetProcessingTask::Configuration).json_binary().null())
-            .to_owned()).await?;
+        manager
+            .create_table(
+                Table::create()
+                    .table(AssetProcessingTask::Table)
+                    .col(
+                        ColumnDef::new(AssetProcessingTask::TaskId)
+                            .big_integer()
+                            .auto_increment()
+                            .primary_key(),
+                    )
+                    .col(
+                        ColumnDef::new(AssetProcessingTask::AssetId)
+                            .uuid()
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(AssetProcessingTask::CreatedAt)
+                            .timestamp()
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(AssetProcessingTask::StartedAt)
+                            .timestamp()
+                            .null(),
+                    )
+                    .col(
+                        ColumnDef::new(AssetProcessingTask::FinishedAt)
+                            .timestamp()
+                            .null(),
+                    )
+                    //progress is a double between 0.0 and 1.0
+                    .col(
+                        ColumnDef::new(AssetProcessingTask::Progress)
+                            .double()
+                            .not_null()
+                            .default(0.0),
+                    )
+                    //override default task settings with specific task configuration
+                    .col(
+                        ColumnDef::new(AssetProcessingTask::Configuration)
+                            .json_binary()
+                            .null(),
+                    )
+                    .to_owned(),
+            )
+            .await?;
 
         manager
             .create_table(
@@ -274,11 +308,7 @@ impl MigrationTrait for Migration {
                             .big_integer()
                             .not_null(),
                     )
-                    .col(
-                        ColumnDef::new(PostAttatchment::AssetId)
-                            .uuid()
-                            .not_null(),
-                    )
+                    .col(ColumnDef::new(PostAttatchment::AssetId).uuid().not_null())
                     .primary_key(
                         Index::create()
                             .col(PostAttatchment::PostId)

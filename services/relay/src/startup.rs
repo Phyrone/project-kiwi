@@ -1,6 +1,6 @@
 use clap::Parser;
-use log::LevelFilter;
 use common::LoggerParams;
+use log::LevelFilter;
 
 enum Module {
     Session,

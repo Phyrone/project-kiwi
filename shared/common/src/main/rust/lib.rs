@@ -3,9 +3,9 @@ use colored::{Color, Colorize};
 pub use error_stack;
 use error_stack::ResultExt;
 use fast_log::consts::LogSize;
-use fast_log::Logger;
 use fast_log::plugin::file_split::RollingType;
 use fast_log::plugin::packer::GZipPacker;
+use fast_log::Logger;
 use figlet_rs::FIGfont;
 use human_panic::Metadata;
 use is_root::is_root;
@@ -26,16 +26,11 @@ pub fn prohibit_root_step(allow_root_params: &AllowRootParams) {
     }
 }
 
-
 pub fn startup_info_banner() -> bool {
     print_banner("Kiwi", Color::Cyan)
 }
 
-
-pub fn print_banner(
-    text: &str,
-    color: Color,
-) -> bool {
+pub fn print_banner(text: &str, color: Color) -> bool {
     let font = FIGfont::standard();
     if let Ok(font) = font {
         let converted = font.convert(text);
@@ -57,7 +52,12 @@ pub fn init_logger(
     let config = fast_log::Config::new()
         .console()
         .chan_len(Some(10_000))
-        .file_split("log/latest.log", LogSize::MB(16), RollingType::KeepNum(10), GZipPacker {})
+        .file_split(
+            "log/latest.log",
+            LogSize::MB(16),
+            RollingType::KeepNum(10),
+            GZipPacker {},
+        )
         .level(log_level);
 
     let result = fast_log::init(config).change_context(InitLoggerError)?;
@@ -70,7 +70,14 @@ pub fn init_logger(
         LevelFilter::Debug => Color::Cyan,
         LevelFilter::Trace => Color::White,
     };
-    info!("logger initialized with level: {}", log_level.to_string().to_lowercase().color(level_color).bold());
+    info!(
+        "logger initialized with level: {}",
+        log_level
+            .to_string()
+            .to_lowercase()
+            .color(level_color)
+            .bold()
+    );
     Ok(result)
 }
 
@@ -90,7 +97,11 @@ pub struct LoggerParams {
 
 #[derive(Debug, Clone, Args)]
 pub struct AllowRootParams {
-    #[clap(long = "imRunningAsRootItIsEvilAndIKnowIt", default_value = "false", hide = true)]
+    #[clap(
+        long = "imRunningAsRootItIsEvilAndIKnowIt",
+        default_value = "false",
+        hide = true
+    )]
     pub allow_root: bool,
 }
 

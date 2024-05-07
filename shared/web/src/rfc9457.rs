@@ -1,8 +1,7 @@
-
 use aide::gen::GenContext;
 use aide::openapi::{MediaType, Operation, SchemaObject};
 use aide::OperationOutput;
-use axum::http::{StatusCode};
+use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use indexmap::IndexMap;
 use schemars::JsonSchema;
@@ -24,7 +23,7 @@ pub struct ProblemDescription<T = ()> {
     pub detail: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub instance: Option<String>,
-    
+
     #[serde(flatten)]
     pub data: T,
 }
@@ -42,7 +41,10 @@ impl Default for ProblemDescription {
     }
 }
 
-impl<T> IntoResponse for ProblemDescription<T> where T: Serialize {
+impl<T> IntoResponse for ProblemDescription<T>
+where
+    T: Serialize,
+{
     fn into_response(self) -> Response {
         let body = serde_json::to_string(&self).expect("Failed to serialize problem description");
 
@@ -55,8 +57,9 @@ impl<T> IntoResponse for ProblemDescription<T> where T: Serialize {
     }
 }
 
-impl<T> OperationOutput for ProblemDescription<T> where
-    T: Serialize + JsonSchema + Send + Sync + 'static
+impl<T> OperationOutput for ProblemDescription<T>
+where
+    T: Serialize + JsonSchema + Send + Sync + 'static,
 {
     type Inner = Self;
 
@@ -70,9 +73,7 @@ impl<T> OperationOutput for ProblemDescription<T> where
             .into_object();
 
         Some(aide::openapi::Response {
-            description: schema.metadata()
-                .description.clone()
-                .unwrap_or_default(),
+            description: schema.metadata().description.clone().unwrap_or_default(),
             links: IndexMap::from_iter([]),
             content: IndexMap::from_iter([(
                 PROBLEM_JSON_MIME_TYPE.to_string(),

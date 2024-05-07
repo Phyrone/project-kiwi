@@ -1,17 +1,17 @@
-use std::future::{Future, IntoFuture, poll_fn};
+use std::future::{poll_fn, Future, IntoFuture};
 use std::net::SocketAddr;
 use std::task::Poll;
 
-use aide::axum::{ApiRouter, IntoApiResponse};
 use aide::axum::routing::get as api_get;
 use aide::axum::routing::post as api_post;
+use aide::axum::{ApiRouter, IntoApiResponse};
 use aide::openapi::{Info, OpenApi};
 use argon2::{Algorithm, Argon2, Params, ParamsBuilder, Version};
-use axum::{Extension, Json, Router, ServiceExt};
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Redirect};
 use axum::routing::get;
+use axum::{Extension, Json, Router, ServiceExt};
 use clap::Args;
 use error_stack::ResultExt;
 use futures_lite::FutureExt;
@@ -47,17 +47,18 @@ impl WebServerState {
     fn new(database: DatabaseConnection) -> Self {
         const PARAMS_MULTIPLIER: u32 = 8;
         const OUTPUT_BASE_LENGTH: usize = 32;
-        let argon2 = Argon2::new(Algorithm::Argon2id, Version::V0x13, ParamsBuilder::new()
-            .t_cost(Params::DEFAULT_T_COST * PARAMS_MULTIPLIER)
-            .p_cost(Params::DEFAULT_P_COST * PARAMS_MULTIPLIER)
-            .m_cost(Params::DEFAULT_M_COST * PARAMS_MULTIPLIER)
-            .output_len(OUTPUT_BASE_LENGTH * PARAMS_MULTIPLIER as usize)
-            .build()
-            .expect("Failed to build argon2 params"));
-        Self {
-            database,
-            argon2,
-        }
+        let argon2 = Argon2::new(
+            Algorithm::Argon2id,
+            Version::V0x13,
+            ParamsBuilder::new()
+                .t_cost(Params::DEFAULT_T_COST * PARAMS_MULTIPLIER)
+                .p_cost(Params::DEFAULT_P_COST * PARAMS_MULTIPLIER)
+                .m_cost(Params::DEFAULT_M_COST * PARAMS_MULTIPLIER)
+                .output_len(OUTPUT_BASE_LENGTH * PARAMS_MULTIPLIER as usize)
+                .build()
+                .expect("Failed to build argon2 params"),
+        );
+        Self { database, argon2 }
     }
 }
 
@@ -74,7 +75,6 @@ pub async fn run_web_server(
         ..OpenApi::default()
     };
 
-
     let api_router = ApiRouter::new()
         .route("/", api_get(root))
         .api_route("/health", api_get(healthcheck))
@@ -82,11 +82,9 @@ pub async fn run_web_server(
         .merge(auth::auth_routes())
         .finish_api(&mut open_api);
 
-    let open_api_spec = serde_json::to_value(&open_api)
-        .change_context(RunWebServerError)?;
+    let open_api_spec = serde_json::to_value(&open_api).change_context(RunWebServerError)?;
 
-    let api_router = api_router
-        .layer(Extension(open_api));
+    let api_router = api_router.layer(Extension(open_api));
 
     let router = Router::new()
         .merge(api_router)
@@ -114,7 +112,7 @@ pub async fn run_web_server(
         }
         Poll::Pending
     })
-        .await;
+    .await;
 
     Ok(())
 }
@@ -126,11 +124,16 @@ pub enum HealthCheckResponse {
     DatabaseUnavailable,
 }
 
-async fn healthcheck(State(database): State<WebServerState>) -> (StatusCode, Json<HealthCheckResponse>) {
+async fn healthcheck(
+    State(database): State<WebServerState>,
+) -> (StatusCode, Json<HealthCheckResponse>) {
     let WebServerState { database, .. } = database;
     let ping = database.ping().await;
     if let Err(e) = ping {
-        (StatusCode::SERVICE_UNAVAILABLE, Json(HealthCheckResponse::DatabaseUnavailable))
+        (
+            StatusCode::SERVICE_UNAVAILABLE,
+            Json(HealthCheckResponse::DatabaseUnavailable),
+        )
     } else {
         (StatusCode::OK, Json(HealthCheckResponse::Ok))
     }

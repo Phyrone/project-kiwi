@@ -1,8 +1,8 @@
-use std::time::Instant;
 use clap::{Args, ValueEnum};
 use colored::Colorize;
 use log::{debug, info, warn};
 use sea_orm::{Database, DatabaseConnection};
+use std::time::Instant;
 
 use common::error_object;
 use common::error_stack::ResultExt;
@@ -14,7 +14,12 @@ mod redis;
 #[derive(Debug, Clone, Args)]
 pub struct DatabaseParams {
     /// Strategy to keep the database schema up to date.
-    #[clap(value_enum, long = "database-migration-strategy", default_value = "apply", env = "DATABASE_MIGRATION_STRATEGY")]
+    #[clap(
+        value_enum,
+        long = "database-migration-strategy",
+        default_value = "apply",
+        env = "DATABASE_MIGRATION_STRATEGY"
+    )]
     migration_strategy: MigrationStrategy,
 
     //TODO more documentation
@@ -42,12 +47,15 @@ pub enum MigrationStrategy {
 
 error_object!(InitDatabaseError, "failed to init database");
 
-pub async fn init_database(params: &DatabaseParams) -> error_stack::Result<DatabaseConnection, InitDatabaseError> {
+pub async fn init_database(
+    params: &DatabaseParams,
+) -> error_stack::Result<DatabaseConnection, InitDatabaseError> {
     debug!("database url: {}", params.database_url.bright_blue());
 
     info!("connecting to the database...");
     let time = Instant::now();
-    let database = Database::connect(&params.database_url).await
+    let database = Database::connect(&params.database_url)
+        .await
         .change_context(InitDatabaseError)?;
     let time = time.elapsed();
     info!("database connected ({:?})", time);
@@ -56,11 +64,13 @@ pub async fn init_database(params: &DatabaseParams) -> error_stack::Result<Datab
     match params.migration_strategy {
         MigrationStrategy::Fresh => {
             warn!("database migration strategy is set to Fresh. Dropping and recreating the database...");
-            Migrator::fresh(&database).await
+            Migrator::fresh(&database)
+                .await
                 .change_context(InitDatabaseError)?;
         }
         MigrationStrategy::Apply => {
-            Migrator::up(&database, None).await
+            Migrator::up(&database, None)
+                .await
                 .change_context(InitDatabaseError)?;
         }
         MigrationStrategy::NoOp => {
@@ -69,7 +79,6 @@ pub async fn init_database(params: &DatabaseParams) -> error_stack::Result<Datab
     }
     let time = time.elapsed();
     info!("database migration done ({:?})", time);
-
 
     Ok(database)
 }

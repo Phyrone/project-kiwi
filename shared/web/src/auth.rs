@@ -1,13 +1,13 @@
 use std::hash::Hash;
 
-use base64::Engine;
 use base64::engine::general_purpose::URL_SAFE_NO_PAD as B64;
+use base64::Engine;
 use digest::Mac;
 use sea_orm::{ConnectionTrait, EntityTrait};
 use serde::{Deserialize, Serialize};
 
-use common::{error_object, error_stack};
 use common::error_stack::ResultExt;
+use common::{error_object, error_stack};
 
 type HmacSha256 = hmac::Hmac<sha3::Sha3_256>;
 
@@ -88,9 +88,13 @@ impl UserTokenPayload {
     }
 }
 
-pub async fn check_user_token<C>(token: &str, database: &C, namespace: &str) -> Option<UserTokenPayload>
-    where
-        C: ConnectionTrait,
+pub async fn check_user_token<C>(
+    token: &str,
+    database: &C,
+    namespace: &str,
+) -> Option<UserTokenPayload>
+where
+    C: ConnectionTrait,
 {
     let token = UserToken::decode(token).ok()?;
     if !token.payload.valid_time() {

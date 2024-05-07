@@ -2,7 +2,7 @@ use std::future::{poll_fn, IntoFuture};
 use std::net::SocketAddr;
 use std::task::Poll;
 
-use axum::extract::ws::{WebSocket};
+use axum::extract::ws::WebSocket;
 use axum::extract::{ConnectInfo, Query, WebSocketUpgrade};
 use axum::response::IntoResponse;
 use axum::routing::get;

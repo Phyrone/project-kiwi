@@ -1,6 +1,11 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "hello": "Hallo {name}!",
+  "meta": {
+    "code": "de",
+    "name": "Deutsch",
+    "name_english": "German"
+  },
   "meta_code": "de",
   "meta_name": "Deutsch",
   "meta_name_english": "German"

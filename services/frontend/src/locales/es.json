@@ -1,0 +1,7 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "hello": "Hola {name}!",
+  "meta_code": "es",
+  "meta_name": "Español",
+  "meta_name_english": "Spanish"
+}

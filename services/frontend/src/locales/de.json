@@ -3,10 +3,5 @@
   "hello": "Hallo {name}!",
   "meta_code": "de",
   "meta_name": "Deutsch",
-  "meta_name_english": "German",
-  "meta": {
-    "code": "de",
-    "name": "Deutsch",
-    "name_english": "German"
-  }
+  "meta_name_english": "German"
 }

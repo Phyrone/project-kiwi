@@ -27,5 +27,5 @@ argon2 = { version = "0.5.3", features = ["std", "zeroize", "simple"] }
 schemars = { version = "0.8.19", features = ["uuid", "chrono"] }
 serde_json = { version = "1.0.116", features = ["alloc", "preserve_order", "raw_value"] }
 aide = { version = "0.13.4", features = ["macros", "http", "axum", "axum-ws", "serde_qs", "axum-headers"] }
-utoipa-swagger-ui = { version = "6.0.0", features = ["axum"] }
+utoipa-swagger-ui = { version = "7.0.0", features = ["axum"] }
 axum-auth = "0.7.0"

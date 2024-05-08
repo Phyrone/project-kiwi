@@ -1,1 +1,8 @@
-<h1>User View</h1>
+<script lang="ts">
+	import type { PageData } from './$types';
+
+
+	export let data: PageData;
+
+
+</script>

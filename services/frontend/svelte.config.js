@@ -5,7 +5,6 @@ import adapter_static from '@sveltejs/adapter-static';
 import adapter_netlify from '@sveltejs/adapter-netlify';
 import adapter_vercel from '@sveltejs/adapter-vercel';
 import adapter_cloudflare from '@sveltejs/adapter-cloudflare';
-import adapter_deno from 'svelte-adapter-deno';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -24,10 +23,6 @@ const config = {
 						gzip: true,
 						brotli: true
 					}
-				}),
-				adapter_deno({
-					out: 'out/deno',
-					precompress: true,
 				}),
 				adapter_static({
 					assets: 'out/static',

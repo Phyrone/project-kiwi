@@ -1,18 +1,19 @@
 <script lang="ts">
-
-	import { Menu } from 'lucide-svelte';
-
-	export let drawer_toggle_id: string;
+import { page } from '$app/stores';
+import { AppRail, AppRailAnchor } from '@skeletonlabs/skeleton';
+import { CircleHelp, Home } from 'lucide-svelte';
 </script>
-
-
-<div class="h-full overflow-y-auto flex flex-col w-64 md:rounded-2xl">
-	<nav class="w-full sticky top-0 z-40 navbar bg-base-100 md:hidden">
-		<label for={drawer_toggle_id} class="btn btn-ghost md:disabled drawer-button">
-			<Menu />
-		</label>
-	</nav>
-	<ul class="w-full flex-auto menu bg-base-200 text-base-content">
-
-	</ul>
+<div class="sticky top-0 h-screen">
+	<AppRail width="w-14">
+		<AppRailAnchor href="/" selected={$page.url.pathname === '/'}>
+			<svelte:fragment slot="lead">
+				<Home />
+			</svelte:fragment>
+		</AppRailAnchor>
+		<AppRailAnchor href="/about" selected={$page.url.pathname === '/about'}>
+			<svelte:fragment slot="lead">
+				<CircleHelp />
+			</svelte:fragment>
+		</AppRailAnchor>
+	</AppRail>
 </div>

@@ -8,8 +8,8 @@
     "fr"
   ],
   "messageLintRuleLevels": {
-    "messageLintRule.inlang.validJsIdentifier": "warning",
-    "messageLintRule.inlang.snakeCaseId": "warning"
+    "messageLintRule.inlang.validJsIdentifier": "error",
+    "messageLintRule.inlang.snakeCaseId": "error"
   },
   "modules": [
     "https://cdn.jsdelivr.net/npm/@inlang/message-lint-rule-empty-pattern@latest/dist/index.js",

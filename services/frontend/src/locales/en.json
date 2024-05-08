@@ -1,0 +1,11 @@
+{
+  "meta": {
+    "display-name": "English",
+    "display-name-short": "EN",
+    "display-name-english": "English"
+  },
+  "test": "test value 123",
+  "another": {
+    "test": "test value 456"
+  }
+}

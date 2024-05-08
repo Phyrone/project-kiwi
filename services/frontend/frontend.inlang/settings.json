@@ -2,11 +2,13 @@
   "$schema": "https://inlang.com/schema/project-settings",
   "sourceLanguageTag": "en",
   "languageTags": [
+    "en",
     "de",
-    "en"
+    "es",
+    "fr"
   ],
   "messageLintRuleLevels": {
-    "messageLintRule.inlang.validJsIdentifier": "error",
+    "messageLintRule.inlang.validJsIdentifier": "warning",
     "messageLintRule.inlang.snakeCaseId": "warning"
   },
   "modules": [
@@ -18,9 +20,11 @@
     "https://cdn.jsdelivr.net/npm/@inlang/plugin-json@latest/dist/index.js"
   ],
   "plugin.inlang.json": {
-    "ignore": [
-      "$schema"
-    ],
-    "pathPattern": "./src/locales/{languageTag}.json"
+    "ignore": [],
+    "pathPattern": "./src/locales/{languageTag}.json",
+    "variableReferencePattern": [
+      "{",
+      "}"
+    ]
   }
 }

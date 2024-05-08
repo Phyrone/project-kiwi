@@ -5,8 +5,8 @@ import { paraglide } from '@inlang/paraglide-sveltekit/vite';
 
 export default defineConfig({
 	plugins: [sveltekit(), purgeCss(), paraglide({
-		outdir: 'tmp/paraglide',
-		project: 'sveltekit',
+		outdir: 'src/locales/compiled',
+		project: 'frontend.inlang',
 	})],
 
 	test: {

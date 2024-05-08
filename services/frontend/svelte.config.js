@@ -47,7 +47,8 @@ const config = {
 				$types: './src/types',
 				$assets: './src/assets',
 				$routes: './src/routes',
-				$locales: './src/locales'
+				$locales: './src/locales/compiled',
+				$messages: './src/locales/compiled/messages'
 			}
 		}
 	}

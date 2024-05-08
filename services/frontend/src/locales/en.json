@@ -1,11 +1,9 @@
 {
-  "meta": {
-    "display-name": "English",
-    "display-name-short": "EN",
-    "display-name-english": "English"
-  },
-  "test": "test value 123",
-  "another": {
-    "test": "test value 456"
-  }
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "hello": "Hello {name}!",
+
+    "meta_code": "en",
+    "meta_name": "English",
+    "meta_name_english": "English"
+
 }

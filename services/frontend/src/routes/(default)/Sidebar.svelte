@@ -6,7 +6,7 @@
 </script>
 
 
-<div class="h-full overflow-y-auto flex flex-col w-64">
+<div class="h-full overflow-y-auto flex flex-col w-64 md:rounded-2xl">
 	<nav class="w-full sticky top-0 z-40 navbar bg-base-100 md:hidden">
 		<label for={drawer_toggle_id} class="btn btn-ghost md:disabled drawer-button">
 			<Menu />

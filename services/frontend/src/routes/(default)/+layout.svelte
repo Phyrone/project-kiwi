@@ -17,9 +17,9 @@
 </script>
 <svelte:window bind:innerWidth={clientWidth} />
 <div
-	class="min-h-screen drawer overscroll-y-none transition md:drawer-open md:max-w-screen-xl xl:rounded-2xl overflow-clip mx-auto shadow-2xl">
+	class="min-h-screen drawer overscroll-y-none transition md:drawer-open md:max-w-screen-xl overflow-clip mx-auto">
 	<input bind:checked={drawer} id={drawer_toggle_id} type="checkbox" class="drawer-toggle" />
-	<div class="drawer-content">
+	<div class="drawer-content md:mx-4">
 		<!-- Page content here -->
 		<NavBar {drawer_toggle_id} />
 		<slot />

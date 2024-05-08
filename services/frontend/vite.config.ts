@@ -7,7 +7,6 @@ export default defineConfig({
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
-
 	ssr: {
 		noExternal: ['three']
 	}

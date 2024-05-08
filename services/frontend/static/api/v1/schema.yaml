@@ -1,0 +1,21 @@
+openapi: 3.1.0
+title: Sample Pet Store App
+paths:
+  '/health':
+    get:
+      summary: 'Run a health check to ensure the service is up and running'
+      responses:
+        '200':
+          description: 'The service is up and running'
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/HealthCheckResponse'
+components:
+  HealthCheckResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        description: 'The status of the service'
+        example: 'up'

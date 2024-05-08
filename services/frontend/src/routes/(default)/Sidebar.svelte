@@ -3,7 +3,6 @@
 	import { Menu } from 'lucide-svelte';
 
 	export let drawer_toggle_id: string;
-	export let drawer: boolean;
 </script>
 
 

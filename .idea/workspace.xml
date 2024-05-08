@@ -8,21 +8,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="14b7fb34-0a0f-433e-9d2d-ecd09430e637" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.node-version" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/+layout.svelte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/NavBar.svelte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/Sidebar.svelte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/[[lang]]/@[user]/+page.svelte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/[[lang]]/~[community]/+page.svelte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/+layout.svelte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/styles/app.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/components/Localised.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/components/WithPolygot.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/locales/de-de.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/locales/de.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/locales/en.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/api/+layout.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/api/+server.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/api/app/locale/+server.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/api/v1/+page.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/api/v1/+page.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/scripts/localized.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/src/types/common.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/frontend/static/api/v1/schema.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/frontend/.eslintrc.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/.eslintrc.cjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/routes/+page.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/+page.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/frontend/src/routes/(default)/+layout.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/+layout.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/frontend/src/routes/(default)/+layout.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/+layout.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/frontend/src/routes/(default)/Sidebar.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/Sidebar.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/frontend/src/routes/(default)/[[lang]]/+page.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/+page.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/frontend/src/routes/(default)/[[lang]]/@[user]/+page.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/@[user]/+page.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/frontend/src/routes/(default)/[[lang]]/~[community]/+page.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/src/routes/(default)/~[community]/+page.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/frontend/svelte.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/svelte.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/tsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/frontend/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/vite.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -33,12 +43,15 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="+layout" />
         <option value="Rust File" />
         <option value="Sidebar" />
         <option value="NavBar" />
         <option value="GestureListener" />
         <option value="+page" />
+        <option value="+layout" />
+        <option value="i18n-text" />
+        <option value="WithPolygot" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -75,6 +88,8 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last.edited.regexp&quot;: &quot;/src/locales/de-de.json&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/samuellaqua/git/project-kiwi/services/frontend/src/locales&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -89,12 +104,17 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/services/frontend/src/locales" />
+      <recent name="$PROJECT_DIR$/services/frontend/src/locales/common" />
+      <recent name="$PROJECT_DIR$/services/frontend/src/routes/api/v1" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/services/frontend/src/routes/(default)/[[lang]]" />
-      <recent name="$PROJECT_DIR$/services/frontend/src" />
       <recent name="$PROJECT_DIR$/services/frontend/src/routes/(default)" />
-      <recent name="$PROJECT_DIR$/shared/web/src" />
-      <recent name="$PROJECT_DIR$/shared/proto/src" />
+      <recent name="$PROJECT_DIR$/services/frontend/src/routes/(default)/[[lang]]" />
+      <recent name="$PROJECT_DIR$/services/frontend/src/routes/api/app/locales/[locale]" />
+      <recent name="$PROJECT_DIR$/services/frontend/src/routes/api/app" />
+      <recent name="$PROJECT_DIR$/services/frontend/src/types" />
     </key>
   </component>
   <component name="RsExternalLinterProjectSettings">
@@ -285,6 +305,8 @@
       <updated>1715064635596</updated>
       <workItem from="1715064638227" duration="7726000" />
       <workItem from="1715078761126" duration="8128000" />
+      <workItem from="1715105037542" duration="13398000" />
+      <workItem from="1715151095565" duration="2415000" />
     </task>
     <servers />
   </component>
@@ -293,6 +315,14 @@
   </component>
   <component name="WfRunsListSearchHistory">{
   &quot;history&quot;: [
+    {
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
+    },
+    {
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
+    },
     {
       &quot;branch&quot;: &quot;main&quot;,
       &quot;currentBranchFilter&quot;: true

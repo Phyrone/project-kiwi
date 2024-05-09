@@ -91,7 +91,7 @@ importers:
         version: 1.3.8
       swagger-ui:
         specifier: ^5.17.6
-        version: 5.17.6(@types/react@18.3.1)
+        version: 5.17.7(@types/react@18.3.1)(ramda@0.30.0)
       three:
         specifier: ^0.164.1
         version: 0.164.1
@@ -2615,6 +2615,9 @@ packages:
   anymatch@3.1.3:
     resolution: {integrity: sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==}
     engines: {node: '>= 8'}
+
+  apg-lite@1.0.3:
+    resolution: {integrity: sha512-lOoNkL7vN7PGdyQMFPey1aok2oVVqvs3n7UMFBRvQ9FoELSbKhgPc3rd7JptaGwCmo4125gLX9Cqb8ElvLCFaQ==}
 
   aproba@2.0.0:
     resolution: {integrity: sha512-lYe4Gx7QT+MKGbDsA+Z+he/Wtef0BiwDOlK/XkBrdfsh9J/jPPXbX0tE9x9cl27Tmu5gg3QUbUrQYa/y+KOHPQ==}
@@ -5451,6 +5454,10 @@ packages:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
 
+  openapi-path-templating@1.5.1:
+    resolution: {integrity: sha512-kgRHToVP571U1YzUnaZnWaUIygon2itg5g96kwaFIi8bnpsw4oXYOk7k59Ivn+ley1iQnMENe/1HSovpPVZuXA==}
+    engines: {node: '>=12.20.0'}
+
   opener@1.5.2:
     resolution: {integrity: sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A==}
     hasBin: true
@@ -6888,11 +6895,11 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  swagger-client@3.27.3:
-    resolution: {integrity: sha512-hkm+F67b1xjfAKdeRILsF/vg7mfEcAKAf96/BOcJzu532FlhOhH8umWmJ46ipmOJ8fLPM0eY+NqA0G1E6xZb5A==}
+  swagger-client@3.27.7:
+    resolution: {integrity: sha512-Tu4CBtygM+dxxFSh5HzCPaHzdWHfx3cVy+do18kYbABsIIntbMndiX4dU3vxHizcQuOCuvgJzl/7I1DQ+ux0GA==}
 
-  swagger-ui@5.17.6:
-    resolution: {integrity: sha512-4HYKYaaB0TRa19zKJonPsFyNmnXvnXO4LIUerKDOrx6Ti+xp+1lyHxxPnf+tsORmaKY/hTjc1EZS2ZaboXy9ug==}
+  swagger-ui@5.17.7:
+    resolution: {integrity: sha512-IibEYeNlLOMfdALN2Dsp1w46MiK0Fx5LWupHrJ1wsAxdBOIPEfpGtHiHy05bhALLgMVSMlBaUZVdApgqJLdzdQ==}
 
   tailwindcss@3.4.3:
     resolution: {integrity: sha512-U7sxQk/n397Bmx4JHbJx/iSOOv5G+II3f1kpLpY2QeUv5DcPdcTsYLlusZfq1NthHS1c1cZoyFmmkex1rzke0A==}
@@ -11045,6 +11052,8 @@ snapshots:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
+  apg-lite@1.0.3: {}
+
   aproba@2.0.0: {}
 
   are-we-there-yet@2.0.0:
@@ -14500,6 +14509,10 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
+  openapi-path-templating@1.5.1:
+    dependencies:
+      apg-lite: 1.0.3
+
   opener@1.5.2: {}
 
   optionator@0.9.4:
@@ -16087,7 +16100,7 @@ snapshots:
       csso: 5.0.5
       picocolors: 1.0.0
 
-  swagger-client@3.27.3:
+  swagger-client@3.27.7(ramda@0.30.0):
     dependencies:
       '@babel/runtime-corejs3': 7.24.5
       '@swagger-api/apidom-core': 0.99.2
@@ -16102,12 +16115,15 @@ snapshots:
       js-yaml: 4.1.0
       node-abort-controller: 3.1.1
       node-fetch-commonjs: 3.3.2
+      openapi-path-templating: 1.5.1
       qs: 6.12.1
+      ramda-adjunct: 5.0.0(ramda@0.30.0)
       traverse: 0.6.8
     transitivePeerDependencies:
       - debug
+      - ramda
 
-  swagger-ui@5.17.6(@types/react@18.3.1):
+  swagger-ui@5.17.7(@types/react@18.3.1)(ramda@0.30.0):
     dependencies:
       '@babel/runtime-corejs3': 7.24.5
       '@braintree/sanitize-url': 7.0.1
@@ -16139,7 +16155,7 @@ snapshots:
       reselect: 5.1.0
       serialize-error: 8.1.0
       sha.js: 2.4.11
-      swagger-client: 3.27.3
+      swagger-client: 3.27.7(ramda@0.30.0)
       url-parse: 1.5.10
       xml: 1.0.1
       xml-but-prettier: 1.0.1
@@ -16147,6 +16163,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
       - debug
+      - ramda
 
   tailwindcss@3.4.3:
     dependencies:

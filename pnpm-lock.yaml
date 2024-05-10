@@ -101,7 +101,7 @@ importers:
         version: 1.8.0
       '@inlang/paraglide-sveltekit':
         specifier: ^0.6.17
-        version: 0.6.18(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.16)(vite@5.2.11(@types/node@20.12.11)(sass@1.77.0)(terser@5.31.0)))(svelte@4.2.16)(vite@5.2.11(@types/node@20.12.11)(sass@1.77.0)(terser@5.31.0)))(svelte@4.2.16)
+        version: 0.6.19(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.16)(vite@5.2.11(@types/node@20.12.11)(sass@1.77.0)(terser@5.31.0)))(svelte@4.2.16)(vite@5.2.11(@types/node@20.12.11)(sass@1.77.0)(terser@5.31.0)))(svelte@4.2.16)
       '@macfja/svelte-multi-adapter':
         specifier: ^1.0.2
         version: 1.0.2
@@ -1558,8 +1558,8 @@ packages:
     resolution: {integrity: sha512-wnvj7D1SdCirDcF8YCK31jIpVcULM5IUBitO/ebTsxNYrKhg0b+ennPfBNrfsgrSkggfoQ7hQ8YqpdihfsD0tQ==}
     hasBin: true
 
-  '@inlang/paraglide-sveltekit@0.6.18':
-    resolution: {integrity: sha512-zAJf4rVgCMSs6+FPxUYw/LvMNCHLUBJ9h9yrHRYAQuZK8a+/ROiJgtGM4QY5QRb4ro8UOizKg2NBUMYZlqyq3g==}
+  '@inlang/paraglide-sveltekit@0.6.19':
+    resolution: {integrity: sha512-vgmpaFxBgOFIBrI6GFp8un6qeCLbE3dd7DRYegdUzi48y8ZzVTZslC+7ZxfWFntW4iRMsXoMBWxI1RLQT3EZbg==}
     peerDependencies:
       '@sveltejs/kit': ^2.4.3
       svelte: ^5.0.0 || ^5.0.0-next.1 || ^4.0.0 || ^3.0.0
@@ -9497,7 +9497,7 @@ snapshots:
       - babel-plugin-macros
       - debug
 
-  '@inlang/paraglide-sveltekit@0.6.18(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.16)(vite@5.2.11(@types/node@20.12.11)(sass@1.77.0)(terser@5.31.0)))(svelte@4.2.16)(vite@5.2.11(@types/node@20.12.11)(sass@1.77.0)(terser@5.31.0)))(svelte@4.2.16)':
+  '@inlang/paraglide-sveltekit@0.6.19(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.16)(vite@5.2.11(@types/node@20.12.11)(sass@1.77.0)(terser@5.31.0)))(svelte@4.2.16)(vite@5.2.11(@types/node@20.12.11)(sass@1.77.0)(terser@5.31.0)))(svelte@4.2.16)':
     dependencies:
       '@inlang/paraglide-js': 1.8.0
       '@inlang/paraglide-vite': 1.2.51

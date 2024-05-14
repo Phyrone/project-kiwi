@@ -91,7 +91,7 @@ importers:
         version: 1.3.8
       swagger-ui:
         specifier: ^5.17.6
-        version: 5.17.8(@types/react@18.3.1)(ramda@0.30.0)
+        version: 5.17.9(@types/react@18.3.1)(ramda@0.30.0)
       three:
         specifier: ^0.164.1
         version: 0.164.1
@@ -6895,11 +6895,11 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  swagger-client@3.27.8:
-    resolution: {integrity: sha512-2wrqNHdMhgQzBM4xjxNDPvinysQ1lc9wHqMJ/HyllyzRyEKL96KyEfP8laI8G1gGbO/vmdtTDEXPFDHp1RrOHQ==}
+  swagger-client@3.27.9:
+    resolution: {integrity: sha512-7F7PnwSyIs+wBsX1rVkKDHXqwgVIX9aIl5O84eBcXEXLcrnndGS4C3n0Mk37+ZpJZN5uqv8MQKN6nQzhjsn6hQ==}
 
-  swagger-ui@5.17.8:
-    resolution: {integrity: sha512-Ji4P2SPTqcr8S+ZJhvBKiAiVmQN9TDFHV4DeS1QKZjYTE3LBQWTKMGbxA2Xv7YN2uryusDKm7DA05LM89PWxrQ==}
+  swagger-ui@5.17.9:
+    resolution: {integrity: sha512-xSZrhMjtDRYwc4g/4pzfaQ/R3J2Qt//3S+39q613lWh0zs5lh6JnRBYXCd88rUogo7kfnG8RfSUwvIMQpl0Etg==}
 
   tailwindcss@3.4.3:
     resolution: {integrity: sha512-U7sxQk/n397Bmx4JHbJx/iSOOv5G+II3f1kpLpY2QeUv5DcPdcTsYLlusZfq1NthHS1c1cZoyFmmkex1rzke0A==}
@@ -16095,7 +16095,7 @@ snapshots:
       csso: 5.0.5
       picocolors: 1.0.0
 
-  swagger-client@3.27.8(ramda@0.30.0):
+  swagger-client@3.27.9(ramda@0.30.0):
     dependencies:
       '@babel/runtime-corejs3': 7.24.5
       '@swagger-api/apidom-core': 0.99.2
@@ -16118,7 +16118,7 @@ snapshots:
       - debug
       - ramda
 
-  swagger-ui@5.17.8(@types/react@18.3.1)(ramda@0.30.0):
+  swagger-ui@5.17.9(@types/react@18.3.1)(ramda@0.30.0):
     dependencies:
       '@babel/runtime-corejs3': 7.24.5
       '@braintree/sanitize-url': 7.0.1
@@ -16150,7 +16150,7 @@ snapshots:
       reselect: 5.1.0
       serialize-error: 8.1.0
       sha.js: 2.4.11
-      swagger-client: 3.27.8(ramda@0.30.0)
+      swagger-client: 3.27.9(ramda@0.30.0)
       url-parse: 1.5.10
       xml: 1.0.1
       xml-but-prettier: 1.0.1

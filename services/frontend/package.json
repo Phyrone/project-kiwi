@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@inlang/paraglide-js": "1.9.0",
-    "@inlang/paraglide-sveltekit": "^0.6.17",
+    "@inlang/paraglide-sveltekit": "^0.7.0",
     "@macfja/svelte-multi-adapter": "^1.0.2",
     "@playwright/test": "^1.44.0",
     "@skeletonlabs/skeleton": "^2.10.0",

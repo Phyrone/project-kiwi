@@ -75,8 +75,8 @@ importers:
         specifier: ^2.0.8
         version: 2.0.8
       lucide-svelte:
-        specifier: ^0.378.0
-        version: 0.378.0(svelte@4.2.17)
+        specifier: ^0.379.0
+        version: 0.379.0(svelte@4.2.17)
       qr-code-styling:
         specifier: github:kozakdenys/qr-code-styling
         version: https://codeload.github.com/kozakdenys/qr-code-styling/tar.gz/c265dd47f968b4878264985e9146ef9a4cd3f379
@@ -4443,6 +4443,7 @@ packages:
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
 
   inherits@2.0.3:
     resolution: {integrity: sha512-x00IRNXNy63jwGkJmzPigoySHbaqpNuzKbBOmzK+g2OdZpQ9w+sxCN+VSB3ja7IAge2OP2qpfxTjeNcyjmW1uw==}
@@ -4871,8 +4872,8 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
-  lucide-svelte@0.378.0:
-    resolution: {integrity: sha512-T7hV1sfOc94AWE5GOJ6r9wGEsR4h4TJr8d4Z0sM8O0e3IBcmeIvEGRAA6jCp7NGy4PeGrn5Tju6Y2JwJQntNrQ==}
+  lucide-svelte@0.379.0:
+    resolution: {integrity: sha512-KnlxrmVJlzFDHNA2oOAvD/g2a5zYMtUsQ7g7A3b5m5Q7prwu+tuVm0MQ6SI7NwPfFZh6bkCnQ0freBOGI/9MiA==}
     peerDependencies:
       svelte: ^3 || ^4 || ^5.0.0-next.42
 
@@ -13554,7 +13555,7 @@ snapshots:
     dependencies:
       yallist: 4.0.0
 
-  lucide-svelte@0.378.0(svelte@4.2.17):
+  lucide-svelte@0.379.0(svelte@4.2.17):
     dependencies:
       svelte: 4.2.17
 

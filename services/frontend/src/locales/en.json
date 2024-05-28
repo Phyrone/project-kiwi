@@ -1,7 +1,0 @@
-{
-  "$schema": "https://inlang.com/schema/inlang-message-format",
-  "hello": "Hello {name}!",
-  "meta_code": "en",
-  "meta_name": "English",
-  "meta_name_english": "English"
-}

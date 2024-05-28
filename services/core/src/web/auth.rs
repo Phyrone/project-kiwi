@@ -1,20 +1,21 @@
-use aide::axum::routing::{get_with, post, post_with};
 use aide::axum::{ApiRouter, IntoApiResponse};
+use aide::axum::routing::{get_with, post, post_with};
 use aide::transform::TransformOperation;
-use argon2::{Algorithm, Argon2, Params, ParamsBuilder, PasswordVerifier, Version};
-use axum::extract::State;
-use axum::http::StatusCode;
-use axum::response::{IntoResponse, Response};
+use argon2::{Algorithm, Argon2, Params, ParamsBuilder, PasswordHash, PasswordVerifier, Version};
 use axum::{Json, Router};
+use axum::extract::{Request, State};
+use axum::http::{HeaderMap, StatusCode};
+use axum::response::{IntoResponse, Response};
 use axum_auth::AuthBearer;
 use schemars::JsonSchema;
-use sea_orm::{ColumnTrait, DatabaseConnection, DbErr, EntityTrait, ModelTrait, QueryFilter};
+use sea_orm::{ColumnTrait, DatabaseConnection, DbErr, EntityTrait, ModelTrait, QueryFilter, TransactionTrait};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use crate::web::WebServerState;
 use common::error_object;
-use web::rfc9457::{ErrorExt, ProblemDescription, ProblemResult, PROBLEM_TYPE_BASE};
+use web::rfc9457::{IntoProblemResultExt, PROBLEM_TYPE_BASE, ProblemDescription, ProblemResult};
+
+use crate::web::WebServerState;
 
 error_object!(CreateAuthRoutesError, "Failed to register auth routes");
 pub fn auth_routes() -> ApiRouter<WebServerState> {
@@ -86,49 +87,73 @@ async fn request_login(
     let user_model = database::orm::account::Entity::find()
         .filter(database::orm::account::Column::Email.eq(payload.user.to_lowercase()))
         .one(&database)
-        .await;
+        .await.into_problem()?;
 
-    let response: Response = match user_model {
-        Err(err) => err.into_problem().into_response(),
-        Ok(user_model) => {
-            if let Some(user) = user_model {
-                match payload.with {
-                    LoginRequestWith::Email => {
-                        todo!()
-                    }
-                    LoginRequestWith::Passkey { passkey } => {
-                        todo!()
-                    }
-                    LoginRequestWith::Password { password } => {
-                        todo!()
-                    }
-                }
-            } else {
-                ProblemDescription {
-                    status: StatusCode::UNAUTHORIZED.as_u16(),
-                    problem_type: format!("{}/unauthorized", PROBLEM_TYPE_BASE),
-                    title: "Unauthorized".to_string(),
-                    detail: Some("The email or password provided is incorrect.".to_string()),
-                    instance: None,
-                    data: AuthProblem { success: false },
-                }
-                .into_response()
+    if let Some(user) = user_model {
+        match payload.with {
+            LoginRequestWith::Email => {
+                todo!()
+            }
+            LoginRequestWith::Passkey { passkey } => {
+                todo!()
+            }
+            LoginRequestWith::Password { password } => {
+                todo!()
             }
         }
-    };
+    } else {
+        ProblemDescription {
+            status: StatusCode::UNAUTHORIZED.as_u16(),
+            problem_type: format!("{}/unauthorized", PROBLEM_TYPE_BASE),
+            title: "Unauthorized".to_string(),
+            detail: Some("The email or password provided is incorrect.".to_string()),
+            instance: None,
+            data: AuthProblem { success: false },
+        }
+            .into_response()
+    }
     response
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct AuthStatusFailureResponse {
+    pub success: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct AuthStatusSuccessResponse {
+    pub success: bool,
+    pub user_id: i64,
 }
 
 fn auth_status_docs(t: TransformOperation) -> TransformOperation {
     t.description("Request the status of the current login session")
+        .security_requirement("bearerAuth")
 }
 
 async fn auth_status(
     State(server): State<WebServerState>,
     //AuthBearer(token): AuthBearer,
-) -> impl IntoApiResponse {
-    todo!()
+    headers: HeaderMap,
+) -> ProblemResult<Json<AuthStatusSuccessResponse>, AuthStatusFailureResponse> {
+    let auth = headers.get("Authorization");
+    if let Some(auth) = auth.and_then(|auth| auth.to_str().ok()) {
+        Ok(Json(AuthStatusSuccessResponse {
+            success: true,
+            user_id: 1536267501962947106,
+        }))
+    } else {
+        Err(ProblemDescription {
+            status: StatusCode::UNAUTHORIZED.as_u16(),
+            problem_type: format!("{}/not-logged-in", PROBLEM_TYPE_BASE),
+            title: "Unauthorized".to_string(),
+            detail: Some("There is no active login session.".to_string()),
+            instance: None,
+            data: AuthStatusFailureResponse { success: false },
+        })
+    }
 }
+
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct LogoutAllRequest {
@@ -143,7 +168,10 @@ pub struct LogoutAllResponse {
 
 /// Logs out all sessions for the current user and invalidates all tokens
 async fn logout_all_handler(
+    State(server): State<WebServerState>,
     Json(body): Json<LogoutAllRequest>,
 ) -> Result<Json<LogoutAllResponse>, ProblemDescription> {
+    let WebServerState { database, argon2 } = server;
+    database.begin();
     todo!()
 }

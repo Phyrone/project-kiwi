@@ -10,4 +10,5 @@
 		});
 	});
 </script>
+
 <div id="swagger" />

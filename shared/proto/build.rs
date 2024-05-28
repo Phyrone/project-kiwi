@@ -13,15 +13,18 @@ fn main() {
         .iter()
         .map(|p| p.to_str().unwrap())
         .collect::<Vec<_>>();
+    let generated_dir = "src/generated";
+    std::fs::create_dir_all(generated_dir)
+        .expect("Failed to create proto generated directory");
 
-    tonic_build::configure()
+   let configure=  tonic_build::configure()
         .build_client(true)
         .build_server(true)
-        .build_transport(true)
+        .build_transport(cfg!(feature = "transport-h2"))
         .compile_well_known_types(false)
         .use_arc_self(false)
         .include_file("_all.rs")
-        .out_dir("src/")
+        .out_dir(generated_dir)
         .compile(
             /* &["../../proto/snowflake.proto"]*/ &proto_files,
             &[PROTO_DIR],

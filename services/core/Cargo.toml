@@ -6,8 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-common = {path = "../../shared/common"}
-database = {path = "../../shared/database"}
+common = { path = "../../shared/common" }
+database = { path = "../../shared/database" }
 web = { path = "../../shared/web" }
 axum = { version = "0.7.5", features = ["http2"] }
 clap = { version = "4.5.4", features = ["env", "string", "cargo", "derive", "unicode"] }
@@ -26,6 +26,7 @@ mime = "0.3.17"
 argon2 = { version = "0.5.3", features = ["std", "zeroize", "simple"] }
 schemars = { version = "0.8.19", features = ["uuid", "chrono"] }
 serde_json = { version = "1.0.116", features = ["alloc", "preserve_order", "raw_value"] }
-aide = { version = "0.13.4", features = ["macros", "http", "axum", "axum-ws", "serde_qs", "axum-headers"] }
+aide = { version = "0.13.4", features = ["macros", "http", "axum", "axum-extra","axum-extra-cookie","axum-wasm", "axum-ws", "serde_qs", "axum-headers"] }
 utoipa-swagger-ui = { version = "7.0.0", features = ["axum"] }
 axum-auth = "0.7.0"
+tower-http = { version = "0.5.2", features = ["compression-br", "compression-deflate", "compression-gzip", "compression-zstd", "request-id", "timeout", "auth"] }

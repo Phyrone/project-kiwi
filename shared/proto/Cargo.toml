@@ -7,10 +7,29 @@ edition = "2021"
 
 [dependencies]
 tokio = { version = "1.37.0", features = ["full"] }
-tonic = { version = "0.11.0", features = ["tls", "zstd"] }
-prost = "0.12.4"
+tonic = { version = "0.11.0", features = ["codegen", "channel", "zstd", "prost"], default-features = false }
+prost = { version = "0.12.6" }
 log = "0.4.21"
+h3 = { version = "0.0.5", optional = true }
+http = { version = "1.1.0", optional = true }
+h3-quinn = { version = "0.0.6", optional = true }
+quinn = { version = "0.11.1", optional = true }
+thiserror = "1.0.61"
+error-stack = "0.4.1"
+bytes = "1.6.0"
+bytemuck = { version = "1.16.0", features = ["must_cast"] }
+zerocopy = { version = "0.7.34", features = ["derive"] }
+futures = "0.3.30"
+tonic-types = "0.11.0"
 
 [build-dependencies]
-prost-build = "0.12.4"
+prost-build = "0.12.6"
 tonic-build = "0.11.0"
+
+[features]
+default = ["transport-all"]
+transport-all = ["transport-h2",]
+transport-h2 = ["tonic/transport"]
+## Comming soon
+#transport-local = []
+#transport-h3 = ["dep:h3", "dep:http"]

@@ -41,3 +41,7 @@ mime = "0.3.17"
 aide = { version = "0.13.4", features = ["axum", "http", "axum-ws", "serde_qs"] }
 indexmap = { version = "2.2.6", features = ["rayon", "serde"] }
 axum-auth = "0.7.0"
+jsonwebtoken = "9.3.0"
+radix_fmt = "1.0.0"
+num = { version = "0.4.3", features = ["serde"] }
+

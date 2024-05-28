@@ -1,0 +1,6 @@
+{
+	"code": "en",
+	"name": "English",
+	"name_en": "English",
+	"test": "Hello {{name}}!"
+}

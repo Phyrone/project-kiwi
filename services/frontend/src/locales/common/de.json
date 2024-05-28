@@ -1,0 +1,4 @@
+{
+	"test": "Hallo {{name}}!",
+	"sel-default": "Standard"
+}

@@ -1,5 +1,5 @@
 <script>
-	import DefaultAppSkeleton from '$routes/(default)/DefaultAppSkeleton.svelte';
+	import DefaultAppSkeleton from '$routes/(app)/DefaultAppSkeleton.svelte';
 	import { page } from '$app/stores';
 </script>
 

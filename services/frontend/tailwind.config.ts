@@ -1,32 +1,20 @@
-import { skeleton } from '@skeletonlabs/tw-plugin';
-import { join } from 'path';
+import daisyuiPlugin from 'daisyui';
+import * as containerQueryPlugin from '@tailwindcss/container-queries';
+import safeAreaPlugin from 'tailwindcss-safe-area';
 
 /** @type {import('tailwindcss').Config} */
 export default {
 	darkMode: 'media',
-	content: [
-		'./src/**/*.{html,js,svelte,ts}',
-		// 3. Append the path to the Skeleton package
-		join(require.resolve(
-				'@skeletonlabs/skeleton'),
-			'../**/*.{html,js,svelte,ts}'
-		)
-	],
+	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
-		extend: {},
-	},
-	plugins: [
-		skeleton({
-			themes: {
-				preset: [
-					'skeleton',
-					'modern',
-					'sahara',
-					'vintage',
-					'crimson',
-					'wintry'
-				]
+		extend: {
+			width: {
+				sim: '4rem'
+			},
+			containers: {
+				sim: '4.1rem'
 			}
-		})
-	]
+		}
+	},
+	plugins: [daisyuiPlugin, containerQueryPlugin, safeAreaPlugin]
 };

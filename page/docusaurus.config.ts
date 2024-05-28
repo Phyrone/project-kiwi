@@ -148,7 +148,7 @@ const config: Config = {
 	} satisfies Preset.ThemeConfig,
 	stylesheets: [
 		{
-			href: '/assets/katex/katex.min.css',
+			href: '/dicebear/katex/katex.min.css',
 			type: 'text/css'
 		}
 	]

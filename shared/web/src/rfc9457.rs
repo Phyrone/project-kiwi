@@ -91,17 +91,26 @@ where
     }
 }
 
-pub trait ErrorExt {
-    fn into_problem(self) -> ProblemDescription;
+pub trait IntoProblemResultExt<T, E> {
+    fn into_problem(self) -> ProblemResult<T, E>;
 }
 
-impl ErrorExt for DbErr {
-    fn into_problem(self) -> ProblemDescription {
+impl<T, E, D> IntoProblemResultExt<T, D> for Result<T, E>
+where
+    E: Into<ProblemDescription<D>>,
+{
+    fn into_problem(self) -> ProblemResult<T, D> {
+        self.map_err(Into::into)
+    }
+}
+
+impl From<DbErr> for ProblemDescription {
+    fn from(err: DbErr) -> Self {
         ProblemDescription {
             status: StatusCode::INTERNAL_SERVER_ERROR.as_u16(),
             problem_type: format!("{PROBLEM_TYPE_BASE}/database-error"),
             title: "Database Error".to_string(),
-            detail: Some(self.to_string()),
+            detail: Some(err.to_string()),
             instance: None,
             data: (),
         }

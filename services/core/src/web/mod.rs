@@ -1,19 +1,20 @@
-use std::future::{poll_fn, Future, IntoFuture};
+use std::future::{Future, IntoFuture, poll_fn};
 use std::net::SocketAddr;
 use std::task::Poll;
+use std::time::Duration;
 
+use aide::axum::{ApiRouter, IntoApiResponse};
 use aide::axum::routing::get as api_get;
 use aide::axum::routing::post as api_post;
-use aide::axum::{ApiRouter, IntoApiResponse};
 use aide::openapi::{Info, OpenApi};
 use argon2::{Algorithm, Argon2, Params, ParamsBuilder, Version};
+use axum::{Extension, Json, Router, ServiceExt};
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Redirect};
 use axum::routing::get;
-use axum::{Extension, Json, Router, ServiceExt};
 use clap::Args;
-use error_stack::ResultExt;
+use error_stack::ResultExt as ErrorStackResultExt;
 use futures_lite::FutureExt;
 use log::info;
 use schemars::JsonSchema;
@@ -22,9 +23,14 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use sqlx::Database;
 use tokio::net::TcpListener;
+use tower_http::compression::{CompressionLayer, DefaultPredicate, Predicate};
+use tower_http::compression::predicate::NotForContentType;
+use tower_http::CompressionLevel;
+use tower_http::timeout::TimeoutLayer;
 use utoipa_swagger_ui::SwaggerUi;
 
 use common::error_object;
+use web::rfc9457::{IntoProblemResultExt as ProblemResultExt, ProblemDescription};
 
 mod auth;
 mod post;
@@ -90,6 +96,15 @@ pub async fn run_web_server(
         .merge(api_router)
         .with_state(WebServerState::new(database))
         .merge(SwaggerUi::new("/swagger").external_url_unchecked("/openapi.json", open_api_spec))
+        .layer(TimeoutLayer::new(Duration::from_secs(30)))
+        .layer(CompressionLayer::new()
+            .br(true)
+            .zstd(true)
+            .gzip(true)
+            .deflate(true)
+            .quality(CompressionLevel::Best)
+            .compress_when(DefaultPredicate::default())
+        )
         .into_make_service_with_connect_info::<SocketAddr>();
 
     let mut servers = Vec::new();
@@ -112,7 +127,7 @@ pub async fn run_web_server(
         }
         Poll::Pending
     })
-    .await;
+        .await;
 
     Ok(())
 }
@@ -126,17 +141,11 @@ pub enum HealthCheckResponse {
 
 async fn healthcheck(
     State(database): State<WebServerState>,
-) -> (StatusCode, Json<HealthCheckResponse>) {
+) -> Result<(StatusCode, Json<HealthCheckResponse>), ProblemDescription> {
     let WebServerState { database, .. } = database;
-    let ping = database.ping().await;
-    if let Err(e) = ping {
-        (
-            StatusCode::SERVICE_UNAVAILABLE,
-            Json(HealthCheckResponse::DatabaseUnavailable),
-        )
-    } else {
-        (StatusCode::OK, Json(HealthCheckResponse::Ok))
-    }
+    database.ping().await.into_problem()?;
+    
+    Ok((StatusCode::OK, Json(HealthCheckResponse::Ok)))
 }
 
 async fn root() -> impl IntoApiResponse {

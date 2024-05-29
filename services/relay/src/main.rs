@@ -1,17 +1,21 @@
-use clap::Parser;
-use common::{error_object, init_logger};
-use error_stack::ResultExt;
-use log::debug;
+use tracing::{info, instrument};
+
+use common::{Error, with_bootstrap};
+
+use crate::startup::StartupParams;
 
 mod startup;
 
-error_object!(ApplicationError, "Failed to start relay");
+with_bootstrap!(app_main,StartupParams);
 
-#[tokio::main]
-async fn main() -> error_stack::Result<(), ApplicationError> {
-    let params = startup::StartupParams::parse();
-    init_logger(&params.logger_params).change_context(ApplicationError)?;
-    debug!("params: {:#?}", params);
+#[derive(Debug, Error)]
+#[error("failed to run relay")]
+pub struct ApplicationError;
+
+#[instrument]
+async fn app_main(params: StartupParams) -> error_stack::Result<(), ApplicationError> {
+    info!("Starting relay...");
+
 
     Ok(())
 }

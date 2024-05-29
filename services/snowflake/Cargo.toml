@@ -16,6 +16,7 @@ log = "0.4.21"
 prost = "0.12.4"
 tokio = { version = "1.37.0", features = ["full"] }
 tonic = { version = "0.11.0", features = ["tls", "zstd"] }
+common = { path = "../../shared/common" }
 proto = { path = "../../shared/proto" }
 
 [build-dependencies]

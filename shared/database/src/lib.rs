@@ -1,10 +1,11 @@
-use clap::{Args, ValueEnum};
-use colored::Colorize;
-use log::{debug, info, warn};
-use sea_orm::{Database, DatabaseConnection};
 use std::time::Instant;
 
-use common::error_object;
+use clap::{Args, ValueEnum};
+use colored::Colorize;
+use sea_orm::{Database, DatabaseConnection};
+use tracing::{debug, info, instrument, warn};
+
+use common::Error;
 use common::error_stack::ResultExt;
 use migration::{Migrator, MigratorTrait};
 
@@ -45,8 +46,16 @@ pub enum MigrationStrategy {
     NoOp,
 }
 
-error_object!(InitDatabaseError, "failed to init database");
+#[derive(Debug, Error)]
+pub enum InitDatabaseError {
+    #[error("an error occured while connecting to the database")]
+    ConnectToDatabase,
+    #[error("an error occured while migrating the database")]
+    MigrateDatabase,
 
+}
+
+#[instrument]
 pub async fn init_database(
     params: &DatabaseParams,
 ) -> error_stack::Result<DatabaseConnection, InitDatabaseError> {
@@ -56,7 +65,7 @@ pub async fn init_database(
     let time = Instant::now();
     let database = Database::connect(&params.database_url)
         .await
-        .change_context(InitDatabaseError)?;
+        .change_context(InitDatabaseError::ConnectToDatabase)?;
     let time = time.elapsed();
     info!("database connected ({:?})", time);
 
@@ -66,12 +75,12 @@ pub async fn init_database(
             warn!("database migration strategy is set to Fresh. Dropping and recreating the database...");
             Migrator::fresh(&database)
                 .await
-                .change_context(InitDatabaseError)?;
+                .change_context(InitDatabaseError::MigrateDatabase)?;
         }
         MigrationStrategy::Apply => {
             Migrator::up(&database, None)
                 .await
-                .change_context(InitDatabaseError)?;
+                .change_context(InitDatabaseError::MigrateDatabase)?;
         }
         MigrationStrategy::NoOp => {
             debug!("database migration strategy is set to NoOp. Skipping database migration.");

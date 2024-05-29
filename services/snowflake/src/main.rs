@@ -9,19 +9,11 @@ use log::{error, info, LevelFilter};
 use tonic::transport::Server;
 use tonic::{Request, Response, Status};
 
+use common::with_bootstrap;
 use proto::de::phyrone::kiwi::snowflake::snowflake_service_server::SnowflakeServiceServer;
-use proto::de::phyrone::kiwi::snowflake::{SnowflakeRequest, SnowflakeResponse};
+use proto::de::phyrone::kiwi::snowflake::{Snowflake, SnowflakesRequest, SnowflakesResponse};
 
-#[tokio::main]
-async fn main() -> error_stack::Result<(), ApplicationError> {
-    let params = StartupParams::parse();
-    let logger_config = fast_log::Config::new().level(params.log_level).console();
-    fast_log::init(logger_config).change_context(ApplicationError)?;
-    let result = main_inner(params).await;
-    info!("Bye...");
-    fast_log::flush().change_context(ApplicationError)?;
-    result
-}
+with_bootstrap!(main_inner, StartupParams);
 
 async fn main_inner(startup_params: StartupParams) -> error_stack::Result<(), ApplicationError> {
     info!("NodeID is {}", startup_params.node_id);
@@ -59,14 +51,12 @@ fn node_id_parser(s: &str) -> Result<u16, String> {
     number_range(s, 0, 1023)
 }
 
-#[derive(Parser)]
+#[derive(Debug, Parser)]
 struct StartupParams {
     #[clap(env, value_parser = node_id_parser)]
     node_id: u16,
     #[clap(short, long, env, default_value = "2024-01-01T00:00:00Z")]
     epoch: String,
-    #[clap(short, long, env, default_value = "info")]
-    log_level: LevelFilter,
     #[clap(short, long, env, default_value = "0.0.0.0:50152")]
     bind: SocketAddr,
 }
@@ -96,13 +86,33 @@ impl SnowflakeServiceImpl {
 impl proto::de::phyrone::kiwi::snowflake::snowflake_service_server::SnowflakeService
     for SnowflakeServiceImpl
 {
+    async fn get_snowflake(&self, request: Request<()>) -> Result<Response<Snowflake>, Status> {
+        let snowflake = self.generator.generate().await.map_err(|e| {
+            error!("error when generating snowflake: {:?}", e);
+            match e {
+                HexaFreezeError::EpochInTheFuture => {
+                    Status::failed_precondition("Epoch in the future")
+                }
+                HexaFreezeError::EpochTooFarInThePast => {
+                    Status::failed_precondition("Epoch too far in the past")
+                }
+                HexaFreezeError::NodeIdTooLarge => Status::failed_precondition("Node ID too large"),
+                HexaFreezeError::ClockWentBackInTime => Status::internal("Clock went back in time"),
+                HexaFreezeError::Surpassed64BitLimit => {
+                    Status::resource_exhausted("no more ids left")
+                }
+            }
+        })?;
+
+        Ok(Response::new(Snowflake { snowflake }))
+    }
     async fn get_snowflakes(
         &self,
-        request: Request<SnowflakeRequest>,
-    ) -> Result<Response<SnowflakeResponse>, Status> {
+        request: Request<SnowflakesRequest>,
+    ) -> Result<Response<SnowflakesResponse>, Status> {
         self.generate_snowflake_batch(request.get_ref().count)
             .await
-            .map(|snowflakes| SnowflakeResponse { snowflakes })
+            .map(|snowflakes| SnowflakesResponse { snowflakes })
             .map(Response::new)
             .map_err(|e| {
                 error!("error when generating snowflake: {:?}", e);

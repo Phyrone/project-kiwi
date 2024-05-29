@@ -1,19 +1,23 @@
-use aide::axum::{ApiRouter, IntoApiResponse};
 use aide::axum::routing::{get_with, post, post_with};
+use aide::axum::{ApiRouter, IntoApiResponse};
 use aide::transform::TransformOperation;
 use argon2::{Algorithm, Argon2, Params, ParamsBuilder, PasswordHash, PasswordVerifier, Version};
-use axum::{Json, Router};
 use axum::extract::{Request, State};
 use axum::http::{HeaderMap, StatusCode};
 use axum::response::{IntoResponse, Response};
+use axum::{Json, Router};
 use axum_auth::AuthBearer;
 use schemars::JsonSchema;
-use sea_orm::{ColumnTrait, DatabaseConnection, DbErr, EntityTrait, ModelTrait, QueryFilter, TransactionTrait};
+use sea_orm::{
+    ColumnTrait, DatabaseConnection, DbErr, EntityTrait, ModelTrait, QueryFilter, TransactionTrait,
+};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use webauthn_rs::prelude::{PublicKeyCredential, Url};
 
 use common::error_object;
-use web::rfc9457::{IntoProblemResultExt, PROBLEM_TYPE_BASE, ProblemDescription, ProblemResult};
+use database::orm::account::Model;
+use web::rfc9457::{IntoProblemResultExt, ProblemDescription, ProblemResult, PROBLEM_TYPE_BASE};
 
 use crate::web::WebServerState;
 
@@ -35,7 +39,7 @@ pub struct LoginRequest {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "with", rename_all = "snake_case")]
 pub enum LoginRequestWith {
-    Email,
+    Email { magic_link: String },
     Passkey { passkey: Box<Value> },
     Password { password: String },
 }
@@ -64,7 +68,7 @@ fn request_login_docs(t: TransformOperation) -> TransformOperation {
             res.example(LoginSuccess {
                 success: true,
                 user_id: 1536267501962947106,
-                token: "BASE64 encoded secure token".to_string(),
+                token: "JWT token here".to_string(),
             })
         })
         .response_with::<401, ProblemDescription<AuthProblem>, _>(|res| {
@@ -87,14 +91,25 @@ async fn request_login(
     let user_model = database::orm::account::Entity::find()
         .filter(database::orm::account::Column::Email.eq(payload.user.to_lowercase()))
         .one(&database)
-        .await.into_problem()?;
+        .await
+        .into_problem();
+    let user_model = match user_model {
+        Ok(model) => model,
+        Err(err) => return err.into_response(),
+    };
 
     if let Some(user) = user_model {
         match payload.with {
-            LoginRequestWith::Email => {
+            LoginRequestWith::Email { magic_link } => {
                 todo!()
             }
             LoginRequestWith::Passkey { passkey } => {
+                let url = Url::parse("https://example.com").unwrap();
+                let authn = webauthn_rs::WebauthnBuilder::new("example.com", &url)
+                    .unwrap()
+                    .build()
+                    .unwrap();
+
                 todo!()
             }
             LoginRequestWith::Password { password } => {
@@ -102,7 +117,7 @@ async fn request_login(
             }
         }
     } else {
-        ProblemDescription {
+        return ProblemDescription {
             status: StatusCode::UNAUTHORIZED.as_u16(),
             problem_type: format!("{}/unauthorized", PROBLEM_TYPE_BASE),
             title: "Unauthorized".to_string(),
@@ -110,9 +125,8 @@ async fn request_login(
             instance: None,
             data: AuthProblem { success: false },
         }
-            .into_response()
+        .into_response();
     }
-    response
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
@@ -153,7 +167,6 @@ async fn auth_status(
         })
     }
 }
-
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct LogoutAllRequest {

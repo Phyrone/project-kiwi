@@ -1,24 +1,88 @@
-use clap::Args;
+use std::cmp::max;
+use std::fmt::{Debug, Display};
+use std::future::Future;
+use std::time::Duration;
+
+use clap::{Args, CommandFactory, FromArgMatches};
+use clap::Parser;
 use colored::{Color, Colorize};
 pub use error_stack;
-use error_stack::ResultExt;
-use fast_log::consts::LogSize;
-use fast_log::plugin::file_split::RollingType;
-use fast_log::plugin::packer::GZipPacker;
-use fast_log::Logger;
+use error_stack::{Context, ResultExt};
 use figlet_rs::FIGfont;
 use human_panic::Metadata;
 use is_root::is_root;
-use log::{info, LevelFilter};
+use itertools::Itertools;
+use log::info;
+use sysinfo::System;
+pub use thiserror::Error;
+use tracing::instrument;
 
-pub fn pre_boot(app_name: &'static str) {
+use crate::params::ParamsWithRequirements;
+
+pub mod params;
+pub mod tracing_logger;
+
+#[derive(Debug, Error)]
+pub enum BootstrapError {
+    #[error("could not initialize logger")]
+    InitLogger,
+    #[error("could not create tokio runtime")]
+    CreateRuntime,
+    #[error("could not close logger")]
+    CloseLogger,
+    #[error("an error occurred while running the application")]
+    RunApplication,
+}
+
+pub fn run_bootstrap<E, F, R, PO, P>(
+    app_name: &'static str,
+    f: F,
+) -> error_stack::Result<(), BootstrapError>
+    where
+        E: Context,
+        P: Args + Debug,
+        PO: ParamsWithRequirements<P>,
+        R: Future<Output=error_stack::Result<(), E>>,
+        F: FnOnce(P) -> R,
+{
+    pre_boot(app_name);
+    let params = PO::parse();
+    prohibit_root_step(params.prohibit_root_params());
+    print_startup_banner();
+    tracing_logger::init_logger(params.logger_params())
+        .change_context(BootstrapError::InitLogger)?;
+
+    //TODO make runtime configurable
+    let runtime = tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        //using the strategy of kotlins io dispatcher here
+        // see https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-dispatchers/-i-o.html
+        .max_blocking_threads(max(64, num_cpus::get()))
+        //the same here but with kotlins default dispatcher (almost tokios default as well)
+        // see https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-dispatchers/-default.html
+        .worker_threads(max(2, num_cpus::get()))
+        //16mib stack size
+        .thread_stack_size(16 * 1024 * 1024)
+        .thread_name("async-worker")
+        .thread_keep_alive(Duration::from_secs(30))
+        .build()
+        .change_context(BootstrapError::CreateRuntime)?;
+
+    runtime
+        .block_on(f(params.inner()))
+        .change_context(BootstrapError::RunApplication)?;
+    info!("Bye");
+    Ok(())
+}
+
+fn pre_boot(app_name: &'static str) {
     human_panic::setup_panic!(
         Metadata::new(app_name, env!("CARGO_PKG_VERSION")).authors("Phyrone <phyrone@phyrone.de>")
     );
     dotenv::dotenv().ok();
 }
 
-pub fn prohibit_root_step(allow_root_params: &AllowRootParams) {
+fn prohibit_root_step(allow_root_params: &AllowRootParams) {
     if is_root() && !allow_root_params.allow_root {
         print_banner("Root is Evil", Color::Red);
         eprintln!("Running this app root is a bad idea. If you know what you are doing you can use the '--imRunningAsRootItIsEvilAndIKnowIt' option to run as root anyways.");
@@ -26,8 +90,52 @@ pub fn prohibit_root_step(allow_root_params: &AllowRootParams) {
     }
 }
 
-pub fn startup_info_banner() -> bool {
-    print_banner("Kiwi", Color::Cyan)
+fn print_startup_banner() {
+    let banner_printed = print_banner("Proj.-Kiwi", Color::Cyan);
+    if banner_printed && sysinfo::IS_SUPPORTED_SYSTEM {
+        let mut sys_info = System::new_all();
+        sys_info.refresh_cpu();
+        println!("  OS: {}", os_info::get());
+        if let Some(kernel_version) = System::kernel_version() {
+            println!("    Kernel: {}", kernel_version);
+        }
+
+        let process = sysinfo::get_current_pid()
+            .ok()
+            .map(|pid| sys_info.process(pid))
+            .flatten();
+        if let Some(process) = process {
+            println!("  Process: ", );
+            println!("    PID: {}", process.pid());
+        }
+        println!();
+        let cpu_data = sys_info
+            .cpus()
+            .iter()
+            .map(|cpu| cpu.brand())
+            .sorted_unstable()
+            .dedup_with_count()
+            .collect::<Vec<_>>();
+        for (count, cpu) in cpu_data {
+            println!("  CPU: {}x {}", count, cpu.color(Color::Red).bold());
+        }
+
+        //println!("  CPU: {}", "Unknown".color(Color::Red).bold());
+
+        let cpus_poll = sys_info.cpus();
+
+        //Print Memory info
+        sys_info.refresh_memory();
+        let memory = sys_info.total_memory();
+        println!(
+            "  Memory: {}",
+            humansize::format_size(memory, humansize::BINARY)
+                .color(Color::Cyan)
+                .bold()
+        );
+
+        println!()
+    }
 }
 
 pub fn print_banner(text: &str, color: Color) -> bool {
@@ -35,64 +143,12 @@ pub fn print_banner(text: &str, color: Color) -> bool {
     if let Ok(font) = font {
         let converted = font.convert(text);
         if let Some(converted) = converted {
-            let converted = converted.to_string().color(color).bold();
+            let converted = converted.to_string().color(color);
             println!("{}", converted);
             return true;
         }
     }
     false
-}
-
-error_object!(InitLoggerError, "Failed to initialize logger");
-pub fn init_logger(
-    logger_params: &LoggerParams,
-) -> error_stack::Result<&'static Logger, InitLoggerError> {
-    let log_level = logger_params.log_level;
-    log::set_max_level(log_level);
-    let config = fast_log::Config::new()
-        .console()
-        .chan_len(Some(10_000))
-        .file_split(
-            "log/latest.log",
-            LogSize::MB(16),
-            RollingType::KeepNum(10),
-            GZipPacker {},
-        )
-        .level(log_level);
-
-    let result = fast_log::init(config).change_context(InitLoggerError)?;
-
-    let level_color = match log_level {
-        LevelFilter::Off => Color::Black,
-        LevelFilter::Error => Color::Red,
-        LevelFilter::Warn => Color::Yellow,
-        LevelFilter::Info => Color::Green,
-        LevelFilter::Debug => Color::Cyan,
-        LevelFilter::Trace => Color::White,
-    };
-    info!(
-        "logger initialized with level: {}",
-        log_level
-            .to_string()
-            .to_lowercase()
-            .color(level_color)
-            .bold()
-    );
-    Ok(result)
-}
-
-error_object!(CloseLoggerError, "Failed to close logger");
-pub fn close_logger() -> error_stack::Result<(), CloseLoggerError> {
-    fast_log::flush().change_context(CloseLoggerError)?;
-    fast_log::exit().change_context(CloseLoggerError)?;
-    Ok(())
-}
-
-#[derive(Debug, Clone, Args)]
-#[group(id = "logger")]
-pub struct LoggerParams {
-    #[clap(short, long, default_value = "info", env = "LOG_LEVEL")]
-    pub log_level: LevelFilter,
 }
 
 #[derive(Debug, Clone, Args)]
@@ -106,18 +162,77 @@ pub struct AllowRootParams {
 }
 
 #[macro_use]
-pub mod error_macro {
+pub mod bootstrap {
+    pub use clap;
+    pub use error_stack;
+    pub use jemallocator::Jemalloc;
+
+    pub use crate::{AllowRootParams, tracing_logger::LoggerParams};
+    pub use crate::BootstrapError;
+    pub use crate::params::ParamsWithRequirements;
+    pub use crate::run_bootstrap;
+
     #[macro_export]
-    macro_rules! error_object {
-        ($name:ident,$msg:expr) => {
-            #[derive(Debug)]
-            pub struct $name;
-            impl std::fmt::Display for $name {
-                fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                    write!(f, $msg)
+    macro_rules! with_bootstrap {
+        ($bootstrap_fn:expr,$params:ident) => {
+            pub use common::bootstrap::run_bootstrap;
+            #[cfg(not(target_env = "msvc"))]
+            pub use common::bootstrap::Jemalloc;
+
+            #[cfg(not(target_env = "msvc"))]
+            #[global_allocator]
+            static GLOBAL: Jemalloc = Jemalloc;
+
+            #[derive(Debug, common::bootstrap::clap::Parser)]
+            #[clap(
+                version,
+                rename_all_env = "SCREAMING_SNAKE_CASE",
+                author = "Phyrone <phyrone@phyrone.de>",
+            )]
+            struct AppParams {
+                #[clap(flatten)]
+                allow_root_params: common::bootstrap::AllowRootParams,
+                #[clap(flatten)]
+                logger_params: common::bootstrap::LoggerParams,
+                #[clap(flatten)]
+                app_params: $params,
+            }
+
+            impl common::bootstrap::ParamsWithRequirements<$params> for AppParams {
+                
+                #[inline]
+                fn prohibit_root_params(&self) -> &common::AllowRootParams {
+                    &self.allow_root_params
+                }
+
+                #[inline]
+                fn logger_params(&self) -> &common::bootstrap::LoggerParams {
+                    &self.logger_params
+                }
+
+                #[inline]
+                fn inner(self) -> $params {
+                    self.app_params
                 }
             }
-            impl std::error::Error for $name {}
+
+            fn main(
+            ) -> common::bootstrap::error_stack::Result<(), common::bootstrap::BootstrapError> {
+                return run_bootstrap::<_,_,_,AppParams,$params>(env!("CARGO_PKG_NAME"), $bootstrap_fn);
+            }
+        };
+    }
+}
+
+#[macro_use]
+pub mod error {
+    #[macro_export]
+    macro_rules! error_object {
+        ($type:ident,$msg:literal) => {
+            
+            #[derive(Debug, common::Error)]
+            #[error($msg)]
+            pub struct $type;
         };
     }
 }

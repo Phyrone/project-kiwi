@@ -1,18 +1,12 @@
-use crate::web::WebServerParams;
 use clap::Parser;
-use common::{AllowRootParams, LoggerParams};
+
 use database::DatabaseParams;
-use log::LevelFilter;
+
+use crate::web::WebServerParams;
 
 #[derive(Debug, Clone, Parser)]
 #[clap(version)]
 pub struct StartupParams {
-    #[clap(flatten)]
-    pub logger_params: LoggerParams,
-
-    #[clap(flatten)]
-    pub allow_root_params: AllowRootParams,
-
     #[clap(flatten)]
     pub database_params: DatabaseParams,
 

@@ -1,15 +1,6 @@
-use clap::Parser;
-use common::LoggerParams;
-use log::LevelFilter;
+use clap::Args;
 
-enum Module {
-    Session,
-    Forwarder,
-}
-
-#[derive(Debug, Clone, Parser)]
-#[clap(version)]
+#[derive(Debug, Clone, Args)]
 pub struct StartupParams {
-    #[clap(flatten)]
-    pub logger_params: LoggerParams,
+
 }

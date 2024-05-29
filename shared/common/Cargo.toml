@@ -13,8 +13,20 @@ error-stack = { version = "0.4.1", features = ["anyhow", "serde"] }
 fast_log = { version = "1.6.16", features = ["zip", "gzip"] }
 figlet-rs = "0.1.5"
 human-panic = "2.0.0"
+humansize = "2.1.3"
 is-root = "0.1.3"
+itertools = "0.13.0"
+jemallocator = "0.5.4"
 log = { version = "0.4.21", features = ["std", "serde"] }
+num_cpus = "1.16.0"
+os_info = "3.8.2"
+sysinfo = "0.30.12"
+thiserror = "1.0.61"
+time = { version = "0.3.36", features = ["formatting", "parsing", "local-offset"] }
+tokio = { version = "1.37.0", features = ["full"] }
+tracing = { version = "0.1.40", features = ["async-await", "log"] }
+tracing-log = "0.2.0"
+tracing-subscriber = { version = "0.3.18", features = ["serde", "time", "serde_json", "json", "regex"] }
 
 
 [lib]

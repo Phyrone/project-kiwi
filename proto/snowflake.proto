@@ -3,16 +3,21 @@ package de.phyrone.kiwi.snowflake;
 option java_multiple_files = true;
 option java_generic_services = true;
 option java_generate_equals_and_hash = true;
-option java_string_check_utf8 = true;
+option java_string_check_utf8 = true;;
+import "google/protobuf/empty.proto";
 
-message SnowflakeRequest{
+message SnowflakesRequest{
   uint32 count = 1;
 }
 
-message SnowflakeResponse{
+message SnowflakesResponse{
   repeated sfixed64 snowflakes = 1;
+}
+message Snowflake{
+  sfixed64 snowflake = 1;
 }
 
 service SnowflakeService{
-  rpc GetSnowflakes(SnowflakeRequest) returns (SnowflakeResponse);
+  rpc GetSnowflake(google.protobuf.Empty) returns (Snowflake);
+  rpc GetSnowflakes(SnowflakesRequest) returns (SnowflakesResponse);
 }

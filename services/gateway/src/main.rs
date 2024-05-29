@@ -15,7 +15,7 @@ use serde::{Deserialize, Serialize};
 use tokio::net::TcpListener;
 
 use common::{
-    close_logger, error_object, init_logger, pre_boot, prohibit_root_step, startup_info_banner,
+    close_logger, error_object, init_logger, pre_boot, prohibit_root_step, print_startup_banner,
 };
 use database::init_database;
 
@@ -34,7 +34,7 @@ fn main() -> error_stack::Result<(), ApplicationError> {
     let params = StartupParams::parse();
     prohibit_root_step(&params.allow_root_params);
     init_logger(&params.logger_params).change_context(ApplicationError)?;
-    startup_info_banner();
+    print_startup_banner();
     let runtime = tokio::runtime::Builder::new_multi_thread()
         .enable_all()
         .build()

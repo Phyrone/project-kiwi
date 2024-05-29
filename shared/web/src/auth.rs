@@ -1,7 +1,7 @@
 use std::hash::Hash;
 
-use base64::Engine;
 use base64::engine::general_purpose::URL_SAFE_NO_PAD as B64;
+use base64::Engine;
 use chrono::{DateTime, Utc};
 use digest::Mac;
 use jsonwebtoken::{Algorithm, TokenData};
@@ -9,8 +9,8 @@ use num::Zero;
 use sea_orm::{ConnectionTrait, EntityTrait};
 use serde::{Deserialize, Serialize};
 
-use common::{error_object, error_stack};
 use common::error_stack::ResultExt;
+use common::{error_object, error_stack};
 
 type HmacSha256 = hmac::Hmac<sha3::Sha3_256>;
 
@@ -95,8 +95,8 @@ pub async fn check_user_token<C>(
     database: &C,
     namespace: &str,
 ) -> Option<UserTokenPayload>
-    where
-        C: ConnectionTrait,
+where
+    C: ConnectionTrait,
 {
     let token = UserToken::decode(token).ok()?;
     if !token.payload.valid_time() {
@@ -139,7 +139,7 @@ impl SessionToken {
     fn is_zero(i: &u64) -> bool {
         i.is_zero()
     }
-    
+
     const ALGORITHM: Algorithm = Algorithm::HS384;
 
     pub fn encode(&self, secret: &[u8]) -> error_stack::Result<String, TokenEncodeError> {
@@ -151,7 +151,9 @@ impl SessionToken {
         Ok(token)
     }
 
-    pub fn parse_no_validation(token: &str) -> error_stack::Result<TokenData<Self>, TokenDecodeError> {
+    pub fn parse_no_validation(
+        token: &str,
+    ) -> error_stack::Result<TokenData<Self>, TokenDecodeError> {
         let key = jsonwebtoken::DecodingKey::from_secret(b"no secret");
         let mut validation = jsonwebtoken::Validation::new(Self::ALGORITHM);
         //skip signature validation

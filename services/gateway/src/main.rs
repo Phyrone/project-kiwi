@@ -1,12 +1,12 @@
-use std::future::{poll_fn, IntoFuture};
+use std::future::{IntoFuture, poll_fn};
 use std::net::SocketAddr;
 use std::task::Poll;
 
-use axum::extract::ws::WebSocket;
 use axum::extract::{ConnectInfo, Query, WebSocketUpgrade};
+use axum::extract::ws::WebSocket;
 use axum::response::IntoResponse;
-use axum::routing::get;
 use axum::Router;
+use axum::routing::get;
 use clap::Parser;
 use error_stack::{Report, ResultExt};
 use futures::{FutureExt, SinkExt, StreamExt};
@@ -14,13 +14,10 @@ use log::{error, info};
 use serde::{Deserialize, Serialize};
 use tokio::net::TcpListener;
 
-use common::{
-    close_logger, error_object, init_logger, pre_boot, prohibit_root_step, print_startup_banner,
-};
+use common::{error_object, with_bootstrap, };
 use database::init_database;
-
 use crate::packets::{WsPacketClientbound, WsPacketServerbound};
-use crate::session::{send_message, RunSessionError, SocketSession};
+use crate::session::{RunSessionError, send_message, SocketSession};
 use crate::startup::StartupParams;
 
 mod packets;
@@ -29,23 +26,7 @@ mod startup;
 
 error_object!(ApplicationError, "Failed to start gateway");
 
-fn main() -> error_stack::Result<(), ApplicationError> {
-    pre_boot(env!("CARGO_PKG_NAME"));
-    let params = StartupParams::parse();
-    prohibit_root_step(&params.allow_root_params);
-    init_logger(&params.logger_params).change_context(ApplicationError)?;
-    print_startup_banner();
-    let runtime = tokio::runtime::Builder::new_multi_thread()
-        .enable_all()
-        .build()
-        .change_context(ApplicationError)?;
-
-    let run_server_result = runtime.block_on(run_server(params));
-    close_logger().change_context(ApplicationError)?;
-    runtime.shutdown_background();
-    run_server_result.change_context(ApplicationError)?;
-    Ok(())
-}
+with_bootstrap!(run_server, StartupParams);
 
 error_object!(ServerError, "Failed to run server");
 
@@ -82,8 +63,8 @@ async fn run_server(params: StartupParams) -> error_stack::Result<(), ServerErro
         }
         Poll::Pending
     })
-    .await
-    .change_context(ServerError)?;
+        .await
+        .change_context(ServerError)?;
 
     Ok(())
 }
@@ -133,7 +114,7 @@ async fn handle_socket(mut socket: WebSocket, params: WebSocketQueryParams) {
             &mut socket,
             &WsPacketServerbound::CriticalError(report),
         )
-        .await;
+            .await;
     }
     let _ = socket.close().await;
 }
@@ -153,12 +134,14 @@ async fn run_websocket(
                         .await
                         .change_context(RunSessionError)?;
                 }
-                WsPacketClientbound::SubscribeMessages(subscribe) => {}
+                WsPacketClientbound::SubscribeMessages(subscribe) => {
+                    
+                }
             }
         }
     })
-    .await
-    .change_context(SocketError)?;
+        .await
+        .change_context(SocketError)?;
 
     Ok(())
 }

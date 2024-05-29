@@ -2,7 +2,6 @@ use std::net::SocketAddr;
 
 use clap::Parser;
 
-use common::{AllowRootParams, LoggerParams};
 use database::DatabaseParams;
 
 #[derive(Debug, Parser, Clone)]
@@ -13,10 +12,4 @@ pub struct StartupParams {
 
     #[clap(flatten)]
     pub database_params: DatabaseParams,
-
-    #[clap(flatten)]
-    pub allow_root_params: AllowRootParams,
-
-    #[clap(flatten)]
-    pub logger_params: LoggerParams,
 }

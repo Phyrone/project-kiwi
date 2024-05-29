@@ -3,8 +3,8 @@ use std::fmt::{Debug, Display};
 use std::future::Future;
 use std::time::Duration;
 
-use clap::{Args, CommandFactory, FromArgMatches};
 use clap::Parser;
+use clap::{Args, CommandFactory, FromArgMatches};
 use colored::{Color, Colorize};
 pub use error_stack;
 use error_stack::{Context, ResultExt};
@@ -38,12 +38,12 @@ pub fn run_bootstrap<E, F, R, PO, P>(
     app_name: &'static str,
     f: F,
 ) -> error_stack::Result<(), BootstrapError>
-    where
-        E: Context,
-        P: Args + Debug,
-        PO: ParamsWithRequirements<P>,
-        R: Future<Output=error_stack::Result<(), E>>,
-        F: FnOnce(P) -> R,
+where
+    E: Context,
+    P: Args + Debug,
+    PO: ParamsWithRequirements<P>,
+    R: Future<Output = error_stack::Result<(), E>>,
+    F: FnOnce(P) -> R,
 {
     pre_boot(app_name);
     let params = PO::parse();
@@ -105,7 +105,7 @@ fn print_startup_banner() {
             .map(|pid| sys_info.process(pid))
             .flatten();
         if let Some(process) = process {
-            println!("  Process: ", );
+            println!("  Process: ",);
             println!("    PID: {}", process.pid());
         }
         println!();
@@ -167,10 +167,10 @@ pub mod bootstrap {
     pub use error_stack;
     pub use jemallocator::Jemalloc;
 
-    pub use crate::{AllowRootParams, tracing_logger::LoggerParams};
-    pub use crate::BootstrapError;
     pub use crate::params::ParamsWithRequirements;
     pub use crate::run_bootstrap;
+    pub use crate::BootstrapError;
+    pub use crate::{tracing_logger::LoggerParams, AllowRootParams};
 
     #[macro_export]
     macro_rules! with_bootstrap {
@@ -187,7 +187,7 @@ pub mod bootstrap {
             #[clap(
                 version,
                 rename_all_env = "SCREAMING_SNAKE_CASE",
-                author = "Phyrone <phyrone@phyrone.de>",
+                author = "Phyrone <phyrone@phyrone.de>"
             )]
             struct AppParams {
                 #[clap(flatten)]
@@ -199,7 +199,6 @@ pub mod bootstrap {
             }
 
             impl common::bootstrap::ParamsWithRequirements<$params> for AppParams {
-                
                 #[inline]
                 fn prohibit_root_params(&self) -> &common::AllowRootParams {
                     &self.allow_root_params
@@ -218,7 +217,10 @@ pub mod bootstrap {
 
             fn main(
             ) -> common::bootstrap::error_stack::Result<(), common::bootstrap::BootstrapError> {
-                return run_bootstrap::<_,_,_,AppParams,$params>(env!("CARGO_PKG_NAME"), $bootstrap_fn);
+                return run_bootstrap::<_, _, _, AppParams, $params>(
+                    env!("CARGO_PKG_NAME"),
+                    $bootstrap_fn,
+                );
             }
         };
     }
@@ -229,7 +231,6 @@ pub mod error {
     #[macro_export]
     macro_rules! error_object {
         ($type:ident,$msg:literal) => {
-            
             #[derive(Debug, common::Error)]
             #[error($msg)]
             pub struct $type;

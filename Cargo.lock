@@ -7269,12 +7269,12 @@ dependencies = [
  "error-stack",
  "fast_log",
  "hexafreeze",
- "log",
  "prost 0.12.6",
  "proto",
  "tokio",
  "tonic",
  "tonic-build",
+ "tracing",
 ]
 
 [[package]]

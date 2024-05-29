@@ -5,8 +5,8 @@ use colored::Colorize;
 use sea_orm::{Database, DatabaseConnection};
 use tracing::{debug, info, instrument, warn};
 
-use common::Error;
 use common::error_stack::ResultExt;
+use common::Error;
 use migration::{Migrator, MigratorTrait};
 
 pub mod orm;
@@ -52,7 +52,6 @@ pub enum InitDatabaseError {
     ConnectToDatabase,
     #[error("an error occured while migrating the database")]
     MigrateDatabase,
-
 }
 
 #[instrument]

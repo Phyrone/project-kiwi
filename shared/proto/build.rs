@@ -14,10 +14,9 @@ fn main() {
         .map(|p| p.to_str().unwrap())
         .collect::<Vec<_>>();
     let generated_dir = "src/generated";
-    std::fs::create_dir_all(generated_dir)
-        .expect("Failed to create proto generated directory");
+    std::fs::create_dir_all(generated_dir).expect("Failed to create proto generated directory");
 
-   let configure=  tonic_build::configure()
+    let configure = tonic_build::configure()
         .build_client(true)
         .build_server(true)
         .build_transport(cfg!(feature = "transport-h2"))

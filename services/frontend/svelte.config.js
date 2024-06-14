@@ -1,50 +1,23 @@
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-import adapter_all from '@macfja/svelte-multi-adapter';
 import adapter_bun from 'svelte-adapter-bun';
 import adapter_static from '@sveltejs/adapter-static';
-import adapter_netlify from '@sveltejs/adapter-netlify';
-import adapter_vercel from '@sveltejs/adapter-vercel';
-import adapter_cloudflare from '@sveltejs/adapter-cloudflare';
 
 const is_tauri = !!process.env.TAURI_ENV_PLATFORM;
 const build_target = process.env.BUILD_TARGET;
 
 /** @return {import('@sveltejs/kit').Config} */
-function get_adapter(){
-	if(is_tauri){
+function get_adapter() {
+	if (is_tauri) {
 		return adapter_static({
-			//precompression is contraproductive for tauri since ships multiple versions of the same file
-			//and tauri will be shipped will all files and does not lazy load them on demand
-			//so compression would make the app bigger
-			//tauri will compress the files itself anways
-			precompress:false,
+			//tauri will compress the files itself if necessary
+			precompress: false,
 			strict: false,
 			fallback: 'index.html',
 			assets: 'dist',
 			pages: 'dist'
-		})
-	}else {
-		switch (build_target?.toLowerCase()){
-			case 'netlify':
-				return adapter_netlify({
-					edge: true
-				})
-			case 'vercel':
-				return adapter_vercel({
-					runtime: 'edge'
-				})
-			case 'cloudflare':
-				return adapter_cloudflare({
-					fallback: 'spa',
-				})
-			case 'spa':
-				return adapter_static({
-					assets: 'dist',
-					pages: 'dist',
-					strict: false,
-					precompress: true,
-					fallback: 'index.html'
-				})
+		});
+	} else {
+		switch (build_target?.toLowerCase()) {
 			case 'bun':
 			case 'default':
 			default:
@@ -53,7 +26,7 @@ function get_adapter(){
 					precompress: {
 						gzip: true,
 						brotli: true
-					},
+					}
 
 				});
 		}
@@ -77,9 +50,10 @@ const config = {
 			$lib: './src/lib',
 			$styles: './src/styles',
 			$types: './src/types',
-			$assets: './src/dicebear',
+			$assets: './src/assets',
 			$routes: './src/routes',
-			$locales: './src/locales'
+			$locales: './src/locales',
+			$grpc: './src/grpc'
 		}
 	}
 };

@@ -41,7 +41,10 @@ pub enum MigrationStrategy {
     ///TO NOT USE IN PRODUCTION. **ALL** DATA WILL BE LOST.
     #[value(aliases = ["fresh", "reset", "drop_and_create"])]
     Fresh,
-    ///never do anything with the database schema. Its to the administrator to keep the database schema up to date.
+    ///do not apply any migration. it is up to the administrator to ensure the database scheme is uptodate.
+    /// We remcommend to use this if you are using a serverless strategy with short-lived instances to redice startup time.
+    /// Operating missmatch between database schema and application expected schema is undefined behavior.
+    /// DO NOT USE THIS WITH Auto Updating Applications.
     #[value(aliases = ["none", "skip", "ignore"])]
     NoOp,
 }
@@ -54,7 +57,7 @@ pub enum InitDatabaseError {
     MigrateDatabase,
 }
 
-#[instrument]
+#[instrument(level = "debug", skip(params),fields(url = %params.database_url, migration = ?params.migration_strategy))]
 pub async fn init_database(
     params: &DatabaseParams,
 ) -> error_stack::Result<DatabaseConnection, InitDatabaseError> {

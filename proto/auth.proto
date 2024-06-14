@@ -1,0 +1,17 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+package de.phyrone.kiwi.auth;
+
+
+
+
+
+service AuthService{
+
+}
+
+service SessionService{
+
+
+}

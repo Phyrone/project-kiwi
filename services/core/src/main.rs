@@ -9,6 +9,7 @@ use crate::startup::StartupParams;
 
 mod startup;
 mod web;
+mod graphql;
 
 with_bootstrap!(server_main, StartupParams);
 
@@ -20,7 +21,7 @@ enum CoreAppError {
     WebServer,
 }
 
-#[instrument]
+#[instrument(level = "trace")]
 async fn server_main(params: StartupParams) -> error_stack::Result<(), CoreAppError> {
     let database = init_database(&params.database_params)
         .await

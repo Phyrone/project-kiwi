@@ -1,0 +1,21 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+package de.phyrone.kiwi.post;
+
+
+
+message PostData{
+  //Title or Primary Content
+  string title = 0x10;
+  optional string content = 0x11;
+
+}
+
+
+message CreatePublicationRequest{
+
+}
+
+service PostsService{
+
+}

@@ -1,5 +1,5 @@
 [package]
-name = "new_core"
+name = "core"
 version = "0.1.0"
 edition = "2021"
 
@@ -12,7 +12,8 @@ web = { path = "../../shared/web" }
 axum = { version = "0.7.5", features = ["http2"] }
 clap = { version = "4.5.4", features = ["env", "string", "cargo", "derive", "unicode"] }
 jwt = "0.16.0"
-webauthn-rs = { version = "0.5.0", features = ["preview-features", "workaround-google-passkey-specific-issues"] }
+# danger-allow-state-serialisation: Only serialize state into the database
+webauthn-rs = { version = "0.5.0", features = ["preview-features", "danger-allow-state-serialisation"] }
 tokio = { version = "1.37.0", features = ["full"] }
 error-stack = { version = "0.4.1", features = ["serde"] }
 sqlx = { version = "0.7.4", features = ["postgres"] }
@@ -20,14 +21,18 @@ jsonwebtoken = "9.3.0"
 sea-orm = "0.12.15"
 futures-lite = "2.3.0"
 rmp-serde = "1.3.0"
-serde = { version = "1.0.200", features = ["derive", "alloc", "rc"] }
+serde = { version = "1.0.203", features = ["derive", "alloc", "rc"] }
 mime = "0.3.17"
 argon2 = { version = "0.5.3", features = ["std", "zeroize", "simple"] }
 schemars = { version = "0.8.19", features = ["uuid", "chrono"] }
 serde_json = { version = "1.0.116", features = ["alloc", "preserve_order", "raw_value"] }
-aide = { version = "0.13.4", features = ["macros", "http", "axum", "axum-extra","axum-extra-cookie","axum-wasm", "axum-ws", "serde_qs", "axum-headers"] }
-utoipa-swagger-ui = { version = "7.0.0", features = ["axum"] }
 axum-auth = "0.7.0"
 tower-http = { version = "0.5.2", features = ["compression-br", "compression-deflate", "compression-gzip", "compression-zstd", "request-id", "timeout", "auth"] }
 tracing = "0.1.40"
 url = "2.5.0"
+juniper = { version = "0.16.1", features = ["uuid", "js", "time", "chrono", "url"] }
+juniper_axum = { version = "0.1.0", features = ["subscriptions"] }
+tokio-stream = { version = "0.1.15", features = ["full"] }
+juniper_graphql_ws = "0.4.0"
+base36 = "0.0.1"
+radix_fmt = "1.0.0"

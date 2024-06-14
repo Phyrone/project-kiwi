@@ -1,5 +1,6 @@
 use clap::{Args, ValueEnum};
 use tracing::dispatcher::SetGlobalDefaultError;
+use tracing::info;
 use tracing::level_filters::LevelFilter;
 use tracing_log::LogTracer;
 
@@ -10,7 +11,7 @@ pub struct LoggerParams {
     pub log_level: LevelFilter,
 
     #[clap(long, default_value = "compact", env = "LOG_FORMAT")]
-    #[cfg_attr(debug_assertions, clap(default_value = "pretty"))]
+    //#[cfg_attr(debug_assertions, clap(default_value = "pretty"))]
     pub log_format: LoggerFormat,
 }
 
@@ -36,7 +37,7 @@ pub(crate) fn init_logger(logger_params: &LoggerParams) -> Result<(), SetGlobalD
         .with_thread_ids(false)
         .with_thread_names(true);
 
-    return match logger_params.log_format {
+    let result =  match logger_params.log_format {
         LoggerFormat::Compact => {
             tracing::subscriber::set_global_default(subscriber.compact().finish())
         }
@@ -47,4 +48,11 @@ pub(crate) fn init_logger(logger_params: &LoggerParams) -> Result<(), SetGlobalD
 
         LoggerFormat::Json => tracing::subscriber::set_global_default(subscriber.json().finish()),
     };
+    if let Ok(()) = result {
+        info!("Logger initialized with level: {}", logger_params.log_level);
+        Ok(())
+    } else {
+        Err(result.err().unwrap())
+    }
+    
 }

@@ -33,7 +33,7 @@ pub enum BootstrapError {
     #[error("an error occurred while running the application")]
     RunApplication,
 }
-
+#[instrument(level="trace",skip(f))]
 pub fn run_bootstrap<E, F, R, PO, P>(
     app_name: &'static str,
     f: F,

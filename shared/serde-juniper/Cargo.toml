@@ -1,0 +1,10 @@
+[package]
+name = "serde-juniper"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+base64 = "0.22.1"
+juniper = "0.16.1"
+serde = "1.0.204"
+thiserror = "1.0.63"

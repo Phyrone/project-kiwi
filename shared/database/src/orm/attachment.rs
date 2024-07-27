@@ -8,27 +8,27 @@ pub struct Entity;
 
 impl EntityName for Entity {
     fn table_name(&self) -> &str {
-        "post_attatchment"
+        "attachment"
     }
 }
 
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
-    pub post_id: i64,
+    pub publication_id: i64,
     pub asset_id: i64,
     pub order: i16,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
-    PostId,
+    PublicationId,
     AssetId,
     Order,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
 pub enum PrimaryKey {
-    PostId,
+    PublicationId,
     AssetId,
 }
 
@@ -41,15 +41,15 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Media,
-    Post,
+    Asset,
+    Publication,
 }
 
 impl ColumnTrait for Column {
     type EntityName = Entity;
     fn def(&self) -> ColumnDef {
         match self {
-            Self::PostId => ColumnType::BigInteger.def(),
+            Self::PublicationId => ColumnType::BigInteger.def(),
             Self::AssetId => ColumnType::BigInteger.def(),
             Self::Order => ColumnType::SmallInteger.def(),
         }
@@ -59,27 +59,27 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Media => Entity::belongs_to(super::media::Entity)
+            Self::Asset => Entity::belongs_to(super::asset::Entity)
                 .from(Column::AssetId)
-                .to(super::media::Column::Id)
+                .to(super::asset::Column::Id)
                 .into(),
-            Self::Post => Entity::belongs_to(super::post::Entity)
-                .from(Column::PostId)
-                .to(super::post::Column::Id)
+            Self::Publication => Entity::belongs_to(super::publication::Entity)
+                .from(Column::PublicationId)
+                .to(super::publication::Column::Id)
                 .into(),
         }
     }
 }
 
-impl Related<super::media::Entity> for Entity {
+impl Related<super::asset::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Media.def()
+        Relation::Asset.def()
     }
 }
 
-impl Related<super::post::Entity> for Entity {
+impl Related<super::publication::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Post.def()
+        Relation::Publication.def()
     }
 }
 

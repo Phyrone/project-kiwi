@@ -8,7 +8,7 @@ pub struct Entity;
 
 impl EntityName for Entity {
     fn table_name(&self) -> &str {
-        "account_key"
+        "profile"
     }
 }
 
@@ -16,18 +16,24 @@ impl EntityName for Entity {
 pub struct Model {
     pub id: i64,
     pub created_at: DateTimeWithTimeZone,
-    pub account_id: i64,
+    pub updated_at: DateTimeWithTimeZone,
     pub name: String,
-    pub data: Json,
+    pub discriminator: Option<i16>,
+    pub display_name: Option<String>,
+    pub avatar: Option<i64>,
+    pub banner: Option<i64>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     Id,
     CreatedAt,
-    AccountId,
+    UpdatedAt,
     Name,
-    Data,
+    Discriminator,
+    DisplayName,
+    Avatar,
+    Banner,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -44,7 +50,10 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Account,
+    Asset2,
+    Asset1,
+    Guild,
+    Publication,
 }
 
 impl ColumnTrait for Column {
@@ -53,9 +62,12 @@ impl ColumnTrait for Column {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
             Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
-            Self::AccountId => ColumnType::BigInteger.def(),
+            Self::UpdatedAt => ColumnType::TimestampWithTimeZone.def(),
             Self::Name => ColumnType::String(None).def(),
-            Self::Data => ColumnType::JsonBinary.def(),
+            Self::Discriminator => ColumnType::SmallInteger.def().null(),
+            Self::DisplayName => ColumnType::String(None).def().null(),
+            Self::Avatar => ColumnType::BigInteger.def().null(),
+            Self::Banner => ColumnType::BigInteger.def().null(),
         }
     }
 }
@@ -63,17 +75,29 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Account => Entity::belongs_to(super::account::Entity)
-                .from(Column::AccountId)
-                .to(super::account::Column::Id)
+            Self::Asset2 => Entity::belongs_to(super::asset::Entity)
+                .from(Column::Avatar)
+                .to(super::asset::Column::Id)
                 .into(),
+            Self::Asset1 => Entity::belongs_to(super::asset::Entity)
+                .from(Column::Banner)
+                .to(super::asset::Column::Id)
+                .into(),
+            Self::Guild => Entity::has_many(super::guild::Entity).into(),
+            Self::Publication => Entity::has_many(super::publication::Entity).into(),
         }
     }
 }
 
-impl Related<super::account::Entity> for Entity {
+impl Related<super::guild::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Account.def()
+        Relation::Guild.def()
+    }
+}
+
+impl Related<super::publication::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Publication.def()
     }
 }
 

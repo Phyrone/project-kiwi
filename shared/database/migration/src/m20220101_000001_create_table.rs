@@ -1,8 +1,13 @@
 use sea_orm_migration::prelude::*;
 
+use crate::extension::postgres::{TypeCreateStatement, TypeDropStatement};
+use crate::sea_orm::{DatabaseBackend, EnumIter, Iterable};
+
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
+//TODO citus support
+//TODO mysql/mariadb support?
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
@@ -51,10 +56,10 @@ impl MigrationTrait for Migration {
                             .string_len(320)
                             .not_null(),
                     )
-                    .col(ColumnDef::new(Account::Password).text().null())
                     .to_owned(),
             )
             .await?;
+
         manager
             .create_table(
                 Table::create()
@@ -72,7 +77,6 @@ impl MigrationTrait for Migration {
                     )
                     .col(ColumnDef::new(AccountKey::Name).string().not_null())
                     .col(ColumnDef::new(AccountKey::Data).json_binary().not_null())
-                    .col(ColumnDef::new(AccountKey::Challenge).big_integer())
                     .foreign_key(
                         ForeignKey::create()
                             .name(AccountKey::FkAccountKeyAccountId.to_string())
@@ -89,14 +93,19 @@ impl MigrationTrait for Migration {
             .create_table(
                 Table::create()
                     .table(Asset::Table)
-                    .col(ColumnDef::new(Asset::Id).uuid().primary_key())
+                    .col(ColumnDef::new(Asset::Id).big_integer().primary_key())
                     .col(
                         ColumnDef::new(Asset::CreatedAt)
                             .timestamp_with_time_zone()
                             .not_null(),
                     )
                     .col(ColumnDef::new(Asset::Origin).big_integer().not_null())
-                    .col(ColumnDef::new(Asset::Public).boolean().not_null())
+                    .col(
+                        ColumnDef::new(Asset::Public)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
                     .to_owned(),
             )
             .await?;
@@ -151,40 +160,48 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(Actor::Table)
-                    .col(ColumnDef::new(Actor::Id).big_integer().primary_key())
+                    .table(Profile::Table)
+                    .col(ColumnDef::new(Profile::Id).big_integer().primary_key())
                     .col(
-                        ColumnDef::new(Actor::CreatedAt)
+                        ColumnDef::new(Profile::CreatedAt)
                             .timestamp_with_time_zone()
                             .not_null(),
                     )
                     .col(
-                        ColumnDef::new(Actor::UpdatedAt)
+                        ColumnDef::new(Profile::UpdatedAt)
                             .timestamp_with_time_zone()
                             .not_null(),
                     )
-                    .col(ColumnDef::new(Actor::Name).string().not_null())
-                    .col(ColumnDef::new(Actor::Discriminator).small_unsigned().null())
-                    .col(ColumnDef::new(Actor::DisplayName).string().null())
-                    .col(ColumnDef::new(Actor::Avatar).uuid().null())
-                    .col(ColumnDef::new(Actor::Banner).uuid().null())
+                    .col(ColumnDef::new(Profile::Name).string().not_null())
+                    .col(
+                        ColumnDef::new(Profile::Discriminator)
+                            .small_unsigned()
+                            .null(),
+                    )
+                    .col(ColumnDef::new(Profile::DisplayName).string().null())
+                    .col(ColumnDef::new(Profile::Avatar).big_integer().null())
+                    .col(ColumnDef::new(Profile::Banner).big_integer().null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name(Actor::FkActorAvatarAssetId.to_string())
-                            .from(Actor::Table, Actor::Avatar)
-                            .to(Asset::Table, Asset::Id),
+                            .name(Profile::FkProfileAvatarAssetId.to_string())
+                            .from(Profile::Table, Profile::Avatar)
+                            .to(Asset::Table, Asset::Id)
+                            .on_delete(ForeignKeyAction::SetNull)
+                            .on_update(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
-                            .name(Actor::FkActorBannerAssetId.to_string())
-                            .from(Actor::Table, Actor::Banner)
-                            .to(Asset::Table, Asset::Id),
+                            .name(Profile::FkProfileBannerAssetId.to_string())
+                            .from(Profile::Table, Profile::Banner)
+                            .to(Asset::Table, Asset::Id)
+                            .on_delete(ForeignKeyAction::SetNull)
+                            .on_update(ForeignKeyAction::Cascade),
                     )
                     .index(
                         Index::create()
-                            .table(Actor::Table)
-                            .col(Actor::Name)
-                            .col(Actor::Discriminator)
+                            .table(Profile::Table)
+                            .col(Profile::Name)
+                            .col(Profile::Discriminator)
                             .unique(),
                     )
                     .to_owned(),
@@ -197,11 +214,11 @@ impl MigrationTrait for Migration {
                     .table(Asset::Table)
                     .add_foreign_key(
                         TableForeignKey::new()
-                            .name(Asset::FkAssetOriginActorId.to_string())
+                            .name(Asset::FkMediaOriginProfileId.to_string())
                             .from_tbl(Asset::Table)
                             .from_col(Asset::Origin)
-                            .to_tbl(Actor::Table)
-                            .to_col(Actor::Id)
+                            .to_tbl(Profile::Table)
+                            .to_col(Profile::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
@@ -225,7 +242,130 @@ impl MigrationTrait for Migration {
                         ForeignKey::create()
                             .name(Guild::FkGuildOwnerId.to_string())
                             .from(Guild::Table, Guild::OwnerId)
-                            .to(Actor::Table, Actor::Id)
+                            .to(Profile::Table, Profile::Id)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_type(
+                TypeCreateStatement::new()
+                    .values(ChannelTypeEnum::iter().skip(1).collect::<Vec<_>>())
+                    .as_enum(ChannelTypeEnum::Entity)
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_table(
+                Table::create()
+                    .table(Channel::Table)
+                    .col(ColumnDef::new(Channel::Id).big_integer().primary_key())
+                    .col(
+                        ColumnDef::new(Channel::CreatedAt)
+                            .timestamp_with_time_zone()
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(Channel::UpdatedAt)
+                            .timestamp_with_time_zone()
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(Channel::Data)
+                            .json_binary()
+                            .not_null()
+                            .default("{}".to_owned()),
+                    )
+                    .to_owned(),
+            )
+            .await?;
+        manager
+            .create_table(
+                Table::create()
+                    .table(GuildChannel::Table)
+                    .col(ColumnDef::new(GuildChannel::Id).big_integer().primary_key())
+                    .col(
+                        ColumnDef::new(GuildChannel::Type)
+                            .custom(ChannelTypeEnum::Entity)
+                            .not_null(),
+                    )
+                    .col(ColumnDef::new(GuildChannel::Name).string().not_null())
+                    .col(
+                        ColumnDef::new(GuildChannel::GuildId)
+                            .big_integer()
+                            .not_null(),
+                    )
+                    .col(ColumnDef::new(GuildChannel::ParentId).big_integer().null())
+                    .col(
+                        ColumnDef::new(GuildChannel::Order)
+                            .small_unsigned()
+                            .not_null()
+                            .default(0),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(GuildChannel::FkGuildChannelChannelId.to_string())
+                            .from(GuildChannel::Table, GuildChannel::Id)
+                            .to(Channel::Table, Channel::Id)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(GuildChannel::FkGuildChannelParentId.to_string())
+                            .from(GuildChannel::Table, GuildChannel::ParentId)
+                            .to(GuildChannel::Table, GuildChannel::Id)
+                            .on_delete(ForeignKeyAction::SetNull)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(GuildChannel::FkGuildChannelGuildId.to_string())
+                            .from(GuildChannel::Table, GuildChannel::GuildId)
+                            .to(Guild::Table, Guild::Id)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .index(
+                        Index::create()
+                            .table(GuildChannel::Table)
+                            .col(GuildChannel::GuildId)
+                            .col(GuildChannel::ParentId)
+                            .col(GuildChannel::Name)
+                            .unique(),
+                    )
+                    .to_owned(),
+            )
+            .await?;
+        manager
+            .create_table(
+                Table::create()
+                    .table(Publication::Table)
+                    .col(ColumnDef::new(Publication::Id).big_integer().primary_key())
+                    .col(
+                        ColumnDef::new(Publication::CreatedAt)
+                            .timestamp_with_time_zone()
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(Publication::UpdatedAt)
+                            .timestamp_with_time_zone()
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(Publication::AuthorId)
+                            .big_integer()
+                            .not_null(),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(Publication::FkPublicationAuthorId.to_string())
+                            .from(Publication::Table, Publication::AuthorId)
+                            .to(Profile::Table, Profile::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
@@ -236,32 +376,82 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(GuildChannel::Table)
-                    .col(ColumnDef::new(GuildChannel::Id).big_integer().primary_key())
+                    .table(Attachment::Table)
                     .col(
-                        ColumnDef::new(GuildChannel::Order)
+                        ColumnDef::new(Attachment::PublicationId)
+                            .big_integer()
+                            .not_null(),
+                    )
+                    .col(ColumnDef::new(Attachment::AssetId).big_integer().not_null())
+                    .primary_key(
+                        Index::create()
+                            .col(Attachment::PublicationId)
+                            .col(Attachment::AssetId),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(Attachment::FkAttatchmentPublicationId.to_string())
+                            .from(Attachment::Table, Attachment::PublicationId)
+                            .to(Publication::Table, Publication::Id)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(Attachment::FkAttatchmentAssetId.to_string())
+                            .from(Attachment::Table, Attachment::AssetId)
+                            .to(Asset::Table, Asset::Id)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .col(
+                        ColumnDef::new(Attachment::Order)
                             .small_unsigned()
                             .not_null()
                             .default(0),
                     )
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_type(
+                TypeCreateStatement::new()
+                    .values(ContentFlagEnum::iter().skip(1).collect::<Vec<_>>())
+                    .as_enum(ContentFlagEnum::Entity)
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_table(
+                Table::create()
+                    .table(ContentFlag::Table)
                     .col(
-                        ColumnDef::new(GuildChannel::CreatedAt)
-                            .timestamp_with_time_zone()
-                            .not_null(),
-                    )
-                    .col(
-                        ColumnDef::new(GuildChannel::GuildId)
+                        ColumnDef::new(ContentFlag::PublicationId)
                             .big_integer()
                             .not_null(),
                     )
-                    .col(ColumnDef::new(GuildChannel::ParentId).big_integer().null())
-                    .col(ColumnDef::new(GuildChannel::Name).string().not_null())
-                    .col(ColumnDef::new(GuildChannel::Data).json_binary().not_null())
+                    .col(
+                        ColumnDef::new(ContentFlag::Flag)
+                            .custom(ContentFlagEnum::Entity)
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(ContentFlag::Details)
+                            .json_binary()
+                            .not_null(),
+                    )
+                    .primary_key(
+                        Index::create()
+                            .col(ContentFlag::PublicationId)
+                            .col(ContentFlag::Flag),
+                    )
                     .foreign_key(
                         ForeignKey::create()
-                            .name(GuildChannel::FkGuildChannelGuildId.to_string())
-                            .from(GuildChannel::Table, GuildChannel::GuildId)
-                            .to(Guild::Table, Guild::Id)
+                            .name(ContentFlag::FkPostFlagPostId.to_string())
+                            .from(ContentFlag::Table, ContentFlag::PublicationId)
+                            .to(Publication::Table, Publication::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
@@ -274,67 +464,16 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Post::Table)
                     .col(ColumnDef::new(Post::Id).big_integer().primary_key())
-                    .col(
-                        ColumnDef::new(Post::CreatedAt)
-                            .timestamp_with_time_zone()
-                            .not_null(),
-                    )
-                    .col(
-                        ColumnDef::new(Post::UpdatedAt)
-                            .timestamp_with_time_zone()
-                            .not_null(),
-                    )
-                    .col(ColumnDef::new(Post::AuthorId).big_integer().not_null())
                     .col(ColumnDef::new(Post::Draft).boolean().not_null())
                     .col(ColumnDef::new(Post::Title).string().null())
-                    .col(ColumnDef::new(Post::Content).json_binary().not_null())
+                    .col(ColumnDef::new(Post::Content).text().not_null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name(Post::FkPostAuthorId.to_string())
-                            .from(Post::Table, Post::AuthorId)
-                            .to(Actor::Table, Actor::Id)
+                            .name(Post::FkPostPublicationId.to_string())
+                            .from(Post::Table, Post::Id)
+                            .to(Publication::Table, Publication::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
-                    )
-                    .to_owned(),
-            )
-            .await?;
-        manager
-            .create_table(
-                Table::create()
-                    .table(PostAttatchment::Table)
-                    .col(
-                        ColumnDef::new(PostAttatchment::PostId)
-                            .big_integer()
-                            .not_null(),
-                    )
-                    .col(ColumnDef::new(PostAttatchment::AssetId).uuid().not_null())
-                    .primary_key(
-                        Index::create()
-                            .col(PostAttatchment::PostId)
-                            .col(PostAttatchment::AssetId),
-                    )
-                    .foreign_key(
-                        ForeignKey::create()
-                            .name(PostAttatchment::FkPostAttatchmentPostId.to_string())
-                            .from(PostAttatchment::Table, PostAttatchment::PostId)
-                            .to(Post::Table, Post::Id)
-                            .on_delete(ForeignKeyAction::Cascade)
-                            .on_update(ForeignKeyAction::Cascade),
-                    )
-                    .foreign_key(
-                        ForeignKey::create()
-                            .name(PostAttatchment::FkPostAttatchmentAssetId.to_string())
-                            .from(PostAttatchment::Table, PostAttatchment::AssetId)
-                            .to(Asset::Table, Asset::Id)
-                            .on_delete(ForeignKeyAction::Cascade)
-                            .on_update(ForeignKeyAction::Cascade),
-                    )
-                    .col(
-                        ColumnDef::new(PostAttatchment::Order)
-                            .small_unsigned()
-                            .not_null()
-                            .default(0),
                     )
                     .to_owned(),
             )
@@ -343,17 +482,46 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(PostFlag::Table)
-                    .col(ColumnDef::new(PostFlag::PostId).big_integer().not_null())
-                    .col(ColumnDef::new(PostFlag::Flag).string().not_null())
-                    .col(ColumnDef::new(PostFlag::Details).json_binary().not_null())
-                    .primary_key(Index::create().col(PostFlag::PostId).col(PostFlag::Flag))
+                    .table(ChannelMessage::Table)
+                    .col(
+                        ColumnDef::new(ChannelMessage::Id)
+                            .big_integer()
+                            .primary_key(),
+                    )
+                    .col(
+                        ColumnDef::new(ChannelMessage::ChannelId)
+                            .big_integer()
+                            .not_null(),
+                    )
+                    .col(ColumnDef::new(ChannelMessage::ReplyTo).big_integer().null())
+                    .col(
+                        ColumnDef::new(ChannelMessage::Overwrites)
+                            .big_integer()
+                            .null(),
+                    )
+                    .col(ColumnDef::new(ChannelMessage::Content).text().null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name(PostFlag::FkPostFlagPostId.to_string())
-                            .from(PostFlag::Table, PostFlag::PostId)
-                            .to(Post::Table, Post::Id)
+                            .name(ChannelMessage::FkMessageChannelId.to_string())
+                            .from(ChannelMessage::Table, ChannelMessage::ChannelId)
+                            .to(Channel::Table, Channel::Id)
                             .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(ChannelMessage::FkMessagePublicationId.to_string())
+                            .from(ChannelMessage::Table, ChannelMessage::Id)
+                            .to(Publication::Table, Publication::Id)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(ChannelMessage::FkMessageOverwrites.to_string())
+                            .from(ChannelMessage::Table, ChannelMessage::Overwrites)
+                            .to(ChannelMessage::Table, ChannelMessage::Id)
+                            .on_delete(ForeignKeyAction::SetNull)
                             .on_update(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
@@ -364,12 +532,120 @@ impl MigrationTrait for Migration {
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        // Drop Publications
+
         manager
-            .drop_table(Table::drop().table(Configuration::Table).to_owned())
+            .drop_table(
+                Table::drop()
+                    .table(ChannelMessage::Table)
+                    .if_exists()
+                    .to_owned(),
+            )
+            .await?;
+        manager
+            .drop_table(Table::drop().table(Post::Table).if_exists().to_owned())
             .await?;
 
         manager
-            .drop_table(Table::drop().table(Post::Table).to_owned())
+            .drop_table(
+                Table::drop()
+                    .table(ContentFlag::Table)
+                    .if_exists()
+                    .to_owned(),
+            )
+            .await?;
+        manager
+            .drop_type(
+                TypeDropStatement::new()
+                    .if_exists()
+                    .name(ContentFlagEnum::Entity)
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .drop_table(
+                Table::drop()
+                    .table(Attachment::Table)
+                    .if_exists()
+                    .to_owned(),
+            )
+            .await?;
+        manager
+            .drop_table(
+                Table::drop()
+                    .table(Publication::Table)
+                    .if_exists()
+                    .to_owned(),
+            )
+            .await?;
+
+        // Drop channels and guilds
+        manager
+            .drop_table(
+                Table::drop()
+                    .table(GuildChannel::Table)
+                    .if_exists()
+                    .to_owned(),
+            )
+            .await?;
+        manager
+            .drop_type(
+                TypeDropStatement::new()
+                    .if_exists()
+                    .name(ChannelTypeEnum::Entity)
+                    .to_owned(),
+            )
+            .await?;
+        manager
+            .drop_table(Table::drop().table(Channel::Table).if_exists().to_owned())
+            .await?;
+        manager
+            .drop_table(Table::drop().table(Guild::Table).if_exists().to_owned())
+            .await?;
+
+        // Drop profiles and accounts
+        manager.drop_foreign_key(
+            ForeignKey::drop()
+                .table(Asset::Table)
+                .name(Asset::FkMediaOriginProfileId.to_string())
+                .to_owned(),
+        ).await?;
+
+        manager
+            .drop_table(Table::drop().table(Profile::Table).if_exists().to_owned())
+            .await?;
+        manager
+            .drop_table(
+                Table::drop()
+                    .table(AccountKey::Table)
+                    .if_exists()
+                    .to_owned(),
+            )
+            .await?;
+        manager
+            .drop_table(Table::drop().table(Account::Table).if_exists().to_owned())
+            .await?;
+
+        // Drop everything else
+        manager
+            .drop_table(
+                Table::drop()
+                    .table(AssetProcessingTask::Table)
+                    .if_exists()
+                    .to_owned(),
+            )
+            .await?;
+        manager
+            .drop_table(Table::drop().table(Asset::Table).if_exists().to_owned())
+            .await?;
+        manager
+            .drop_table(
+                Table::drop()
+                    .table(Configuration::Table)
+                    .if_exists()
+                    .to_owned(),
+            )
             .await?;
 
         Ok(())
@@ -391,7 +667,6 @@ enum Account {
     UpdatedAt,
     SessionSecret,
     Email,
-    Password,
 }
 
 #[derive(DeriveIden)]
@@ -402,8 +677,15 @@ enum AccountKey {
     CreatedAt,
     Name,
     Data,
-    Challenge,
     FkAccountKeyAccountId,
+}
+
+enum WebAuthNChallenge {
+    Table,
+    Id,
+    AccountId,
+    CreatedAt,
+    Challenge,
 }
 
 #[derive(DeriveIden)]
@@ -413,7 +695,7 @@ enum Asset {
     Id,
     CreatedAt,
     Public,
-    FkAssetOriginActorId,
+    FkMediaOriginProfileId,
 }
 
 #[derive(DeriveIden)]
@@ -430,7 +712,7 @@ enum AssetProcessingTask {
 }
 
 #[derive(DeriveIden)]
-enum Actor {
+enum Profile {
     Table,
     Id,
     CreatedAt,
@@ -443,8 +725,8 @@ enum Actor {
     //Assets
     Avatar,
     Banner,
-    FkActorAvatarAssetId,
-    FkActorBannerAssetId,
+    FkProfileAvatarAssetId,
+    FkProfileBannerAssetId,
 }
 
 #[derive(DeriveIden)]
@@ -454,52 +736,108 @@ enum Guild {
     CreatedAt,
     OwnerId,
     Name,
-
     FkGuildOwnerId,
 }
 
+#[derive(DeriveIden, EnumIter)]
+enum ChannelTypeEnum {
+    #[sea_orm(iden = "channel_type")]
+    Entity,
+    Dummy,
+    Text,
+    Voice,
+    Feed,
+    //Forum,
+    //Stage,
+}
+
+#[derive(DeriveIden)]
+enum Channel {
+    Table,
+    Id,
+    CreatedAt,
+    UpdatedAt,
+    Data,
+}
 #[derive(DeriveIden)]
 enum GuildChannel {
     Table,
     Id,
-    CreatedAt,
-    Order,
+    Type,
+    Name,
     GuildId,
     ParentId,
-    Name,
-    Data,
-
+    Order,
+    FkGuildChannelChannelId,
+    FkGuildChannelParentId,
     FkGuildChannelGuildId,
 }
 
 #[derive(DeriveIden)]
-enum Post {
+enum Publication {
     Table,
     Id,
     CreatedAt,
     UpdatedAt,
     AuthorId,
-    Draft,
-    Title,
-    Content,
-    FkPostAuthorId,
+    FkPublicationAuthorId,
 }
 
 #[derive(DeriveIden)]
-enum PostAttatchment {
+enum Attachment {
     Table,
     Order,
-    PostId,
+    PublicationId,
     AssetId,
-    FkPostAttatchmentPostId,
-    FkPostAttatchmentAssetId,
+    FkAttatchmentPublicationId,
+    FkAttatchmentAssetId,
+}
+
+#[derive(DeriveIden, EnumIter)]
+enum ContentFlagEnum {
+    #[sea_orm(iden = "content_flag_type")]
+    Entity,
+    Spam,
+    Nsfw,
+    //like nsfw but more intense
+    NsfwX,
+    //like nsfwx but even more intense
+    NsfwXX,
+    //like nsfwxx but the most intense
+    NsfwXXX,
+    FakeNews,
+    AiGenerated,
 }
 
 #[derive(DeriveIden)]
-enum PostFlag {
+enum ContentFlag {
     Table,
-    PostId,
+    PublicationId,
     Flag,
     Details,
     FkPostFlagPostId,
+}
+
+#[derive(DeriveIden)]
+enum Post {
+    Table,
+    Draft,
+    Id,
+    Title,
+    Content,
+    FkPostPublicationId,
+}
+
+#[derive(DeriveIden)]
+enum ChannelMessage {
+    Table,
+    Id,
+    ChannelId,
+    ReplyTo,
+    Overwrites,
+    Content,
+    FkMessageReplyTo,
+    FkMessageOverwrites,
+    FkMessageChannelId,
+    FkMessagePublicationId,
 }

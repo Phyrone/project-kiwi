@@ -8,24 +8,26 @@ pub struct Entity;
 
 impl EntityName for Entity {
     fn table_name(&self) -> &str {
-        "guild"
+        "channel_message"
     }
 }
 
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
     pub id: i64,
-    pub created_at: DateTimeWithTimeZone,
-    pub owner_id: i64,
-    pub name: String,
+    pub channel_id: i64,
+    pub reply_to: Option<i64>,
+    pub overwrites: Option<i64>,
+    pub content: Option<String>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     Id,
-    CreatedAt,
-    OwnerId,
-    Name,
+    ChannelId,
+    ReplyTo,
+    Overwrites,
+    Content,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -42,8 +44,9 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    GuildChannel,
-    Profile,
+    Channel,
+    SelfRef,
+    Publication,
 }
 
 impl ColumnTrait for Column {
@@ -51,9 +54,10 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
-            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
-            Self::OwnerId => ColumnType::BigInteger.def(),
-            Self::Name => ColumnType::String(None).def(),
+            Self::ChannelId => ColumnType::BigInteger.def(),
+            Self::ReplyTo => ColumnType::BigInteger.def().null(),
+            Self::Overwrites => ColumnType::BigInteger.def().null(),
+            Self::Content => ColumnType::Text.def().null(),
         }
     }
 }
@@ -61,24 +65,31 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::GuildChannel => Entity::has_many(super::guild_channel::Entity).into(),
-            Self::Profile => Entity::belongs_to(super::profile::Entity)
-                .from(Column::OwnerId)
-                .to(super::profile::Column::Id)
+            Self::Channel => Entity::belongs_to(super::channel::Entity)
+                .from(Column::ChannelId)
+                .to(super::channel::Column::Id)
+                .into(),
+            Self::SelfRef => Entity::belongs_to(Entity)
+                .from(Column::Overwrites)
+                .to(Column::Id)
+                .into(),
+            Self::Publication => Entity::belongs_to(super::publication::Entity)
+                .from(Column::Id)
+                .to(super::publication::Column::Id)
                 .into(),
         }
     }
 }
 
-impl Related<super::guild_channel::Entity> for Entity {
+impl Related<super::channel::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::GuildChannel.def()
+        Relation::Channel.def()
     }
 }
 
-impl Related<super::profile::Entity> for Entity {
+impl Related<super::publication::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Profile.def()
+        Relation::Publication.def()
     }
 }
 

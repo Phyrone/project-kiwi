@@ -14,7 +14,7 @@ impl EntityName for Entity {
 
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
-    pub id: Uuid,
+    pub id: i64,
     pub created_at: DateTimeWithTimeZone,
     pub origin: i64,
     pub public: bool,
@@ -34,7 +34,7 @@ pub enum PrimaryKey {
 }
 
 impl PrimaryKeyTrait for PrimaryKey {
-    type ValueType = Uuid;
+    type ValueType = i64;
     fn auto_increment() -> bool {
         false
     }
@@ -42,15 +42,15 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Actor,
-    PostAttatchment,
+    Attachment,
+    Profile,
 }
 
 impl ColumnTrait for Column {
     type EntityName = Entity;
     fn def(&self) -> ColumnDef {
         match self {
-            Self::Id => ColumnType::Uuid.def(),
+            Self::Id => ColumnType::BigInteger.def(),
             Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
             Self::Origin => ColumnType::BigInteger.def(),
             Self::Public => ColumnType::Boolean.def(),
@@ -61,33 +61,33 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Actor => Entity::belongs_to(super::actor::Entity)
+            Self::Attachment => Entity::has_many(super::attachment::Entity).into(),
+            Self::Profile => Entity::belongs_to(super::profile::Entity)
                 .from(Column::Origin)
-                .to(super::actor::Column::Id)
+                .to(super::profile::Column::Id)
                 .into(),
-            Self::PostAttatchment => Entity::has_many(super::post_attatchment::Entity).into(),
         }
     }
 }
 
-impl Related<super::actor::Entity> for Entity {
+impl Related<super::attachment::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Actor.def()
+        Relation::Attachment.def()
     }
 }
 
-impl Related<super::post_attatchment::Entity> for Entity {
+impl Related<super::profile::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::PostAttatchment.def()
+        Relation::Profile.def()
     }
 }
 
-impl Related<super::post::Entity> for Entity {
+impl Related<super::publication::Entity> for Entity {
     fn to() -> RelationDef {
-        super::post_attatchment::Relation::Post.def()
+        super::attachment::Relation::Publication.def()
     }
     fn via() -> Option<RelationDef> {
-        Some(super::post_attatchment::Relation::Asset.def().rev())
+        Some(super::attachment::Relation::Asset.def().rev())
     }
 }
 

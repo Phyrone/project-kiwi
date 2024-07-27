@@ -15,20 +15,14 @@ impl EntityName for Entity {
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
     pub id: i64,
-    pub created_at: DateTimeWithTimeZone,
-    pub updated_at: DateTimeWithTimeZone,
-    pub author_id: i64,
     pub draft: bool,
     pub title: Option<String>,
-    pub content: Json,
+    pub content: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     Id,
-    CreatedAt,
-    UpdatedAt,
-    AuthorId,
     Draft,
     Title,
     Content,
@@ -48,9 +42,7 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Actor,
-    PostAttatchment,
-    PostFlag,
+    Publication,
 }
 
 impl ColumnTrait for Column {
@@ -58,12 +50,9 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
-            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
-            Self::UpdatedAt => ColumnType::TimestampWithTimeZone.def(),
-            Self::AuthorId => ColumnType::BigInteger.def(),
             Self::Draft => ColumnType::Boolean.def(),
             Self::Title => ColumnType::String(None).def().null(),
-            Self::Content => ColumnType::JsonBinary.def(),
+            Self::Content => ColumnType::Text.def(),
         }
     }
 }
@@ -71,40 +60,17 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Actor => Entity::belongs_to(super::actor::Entity)
-                .from(Column::AuthorId)
-                .to(super::actor::Column::Id)
+            Self::Publication => Entity::belongs_to(super::publication::Entity)
+                .from(Column::Id)
+                .to(super::publication::Column::Id)
                 .into(),
-            Self::PostAttatchment => Entity::has_many(super::post_attatchment::Entity).into(),
-            Self::PostFlag => Entity::has_many(super::post_flag::Entity).into(),
         }
     }
 }
 
-impl Related<super::actor::Entity> for Entity {
+impl Related<super::publication::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Actor.def()
-    }
-}
-
-impl Related<super::post_attatchment::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::PostAttatchment.def()
-    }
-}
-
-impl Related<super::post_flag::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::PostFlag.def()
-    }
-}
-
-impl Related<super::asset::Entity> for Entity {
-    fn to() -> RelationDef {
-        super::post_attatchment::Relation::Asset.def()
-    }
-    fn via() -> Option<RelationDef> {
-        Some(super::post_attatchment::Relation::Post.def().rev())
+        Relation::Publication.def()
     }
 }
 

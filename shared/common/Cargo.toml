@@ -23,10 +23,17 @@ os_info = "3.8.2"
 sysinfo = "0.30.12"
 thiserror = "1.0.61"
 time = { version = "0.3.36", features = ["formatting", "parsing", "local-offset"] }
-tokio = { version = "1.37.0", features = ["full"] }
+tokio = { version = "1.37.0", features = ["full","tracing"] }
+tokio-util = {version = "0.7.11",features = ["full","tracing"]}
 tracing = { version = "0.1.40", features = ["async-await", "log"] }
 tracing-log = "0.2.0"
 tracing-subscriber = { version = "0.3.18", features = ["serde", "time", "serde_json", "json", "regex"] }
+radix_fmt = "1.0.0"
+serde = { version = "1.0.203", features = ["alloc", "derive", "rc"] }
+regex = { version = "1.10.5", features = ["logging"] }
+regex-macro = "0.2.0"
+once_cell = "1.19.0"
+console-subscriber = "0.3.0"
 
 
 [lib]

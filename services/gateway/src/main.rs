@@ -1,12 +1,12 @@
-use std::future::{IntoFuture, poll_fn};
+use std::future::{poll_fn, IntoFuture};
 use std::net::SocketAddr;
 use std::task::Poll;
 
-use axum::extract::{ConnectInfo, Query, WebSocketUpgrade};
 use axum::extract::ws::WebSocket;
+use axum::extract::{ConnectInfo, Query, WebSocketUpgrade};
 use axum::response::IntoResponse;
-use axum::Router;
 use axum::routing::get;
+use axum::Router;
 use clap::Parser;
 use error_stack::{Report, ResultExt};
 use futures::{FutureExt, SinkExt, StreamExt};
@@ -14,11 +14,11 @@ use log::{error, info};
 use serde::{Deserialize, Serialize};
 use tokio::net::TcpListener;
 
-use common::{error_object, with_bootstrap, };
-use database::init_database;
 use crate::packets::{WsPacketClientbound, WsPacketServerbound};
-use crate::session::{RunSessionError, send_message, SocketSession};
+use crate::session::{send_message, RunSessionError, SocketSession};
 use crate::startup::StartupParams;
+use common::{error_object, with_bootstrap};
+use database::init_database;
 
 mod packets;
 mod session;
@@ -63,8 +63,8 @@ async fn run_server(params: StartupParams) -> error_stack::Result<(), ServerErro
         }
         Poll::Pending
     })
-        .await
-        .change_context(ServerError)?;
+    .await
+    .change_context(ServerError)?;
 
     Ok(())
 }
@@ -114,7 +114,7 @@ async fn handle_socket(mut socket: WebSocket, params: WebSocketQueryParams) {
             &mut socket,
             &WsPacketServerbound::CriticalError(report),
         )
-            .await;
+        .await;
     }
     let _ = socket.close().await;
 }
@@ -134,14 +134,12 @@ async fn run_websocket(
                         .await
                         .change_context(RunSessionError)?;
                 }
-                WsPacketClientbound::SubscribeMessages(subscribe) => {
-                    
-                }
+                WsPacketClientbound::SubscribeMessages(subscribe) => {}
             }
         }
     })
-        .await
-        .change_context(SocketError)?;
+    .await
+    .change_context(SocketError)?;
 
     Ok(())
 }

@@ -8,32 +8,33 @@ pub struct Entity;
 
 impl EntityName for Entity {
     fn table_name(&self) -> &str {
-        "post_attatchment"
+        "channel"
     }
 }
 
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
-    pub post_id: i64,
-    pub asset_id: i64,
-    pub order: i16,
+    pub id: i64,
+    pub created_at: DateTimeWithTimeZone,
+    pub updated_at: DateTimeWithTimeZone,
+    pub data: Json,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
-    PostId,
-    AssetId,
-    Order,
+    Id,
+    CreatedAt,
+    UpdatedAt,
+    Data,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
 pub enum PrimaryKey {
-    PostId,
-    AssetId,
+    Id,
 }
 
 impl PrimaryKeyTrait for PrimaryKey {
-    type ValueType = (i64, i64);
+    type ValueType = i64;
     fn auto_increment() -> bool {
         false
     }
@@ -41,17 +42,18 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Media,
-    Post,
+    ChannelMessage,
+    GuildChannel,
 }
 
 impl ColumnTrait for Column {
     type EntityName = Entity;
     fn def(&self) -> ColumnDef {
         match self {
-            Self::PostId => ColumnType::BigInteger.def(),
-            Self::AssetId => ColumnType::BigInteger.def(),
-            Self::Order => ColumnType::SmallInteger.def(),
+            Self::Id => ColumnType::BigInteger.def(),
+            Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
+            Self::UpdatedAt => ColumnType::TimestampWithTimeZone.def(),
+            Self::Data => ColumnType::JsonBinary.def(),
         }
     }
 }
@@ -59,27 +61,21 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Media => Entity::belongs_to(super::media::Entity)
-                .from(Column::AssetId)
-                .to(super::media::Column::Id)
-                .into(),
-            Self::Post => Entity::belongs_to(super::post::Entity)
-                .from(Column::PostId)
-                .to(super::post::Column::Id)
-                .into(),
+            Self::ChannelMessage => Entity::has_many(super::channel_message::Entity).into(),
+            Self::GuildChannel => Entity::has_many(super::guild_channel::Entity).into(),
         }
     }
 }
 
-impl Related<super::media::Entity> for Entity {
+impl Related<super::channel_message::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Media.def()
+        Relation::ChannelMessage.def()
     }
 }
 
-impl Related<super::post::Entity> for Entity {
+impl Related<super::guild_channel::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Post.def()
+        Relation::GuildChannel.def()
     }
 }
 

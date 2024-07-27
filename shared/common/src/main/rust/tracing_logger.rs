@@ -1,4 +1,6 @@
 use clap::{Args, ValueEnum};
+use error_stack::ResultExt;
+use thiserror::Error;
 use tracing::dispatcher::SetGlobalDefaultError;
 use tracing::info;
 use tracing::level_filters::LevelFilter;
@@ -13,6 +15,12 @@ pub struct LoggerParams {
     #[clap(long, default_value = "compact", env = "LOG_FORMAT")]
     //#[cfg_attr(debug_assertions, clap(default_value = "pretty"))]
     pub log_format: LoggerFormat,
+
+    #[clap(long, default_value = "false", env = "LOG_SOURCE_LOCATION")]
+    pub log_source_location: bool,
+    
+    #[clap(long, default_value = "false", env = "LOG_USE_TOKIO_CONSOLE")]
+    pub with_tokio_console: bool,
 }
 
 #[derive(Debug, Clone, ValueEnum)]
@@ -27,32 +35,41 @@ pub enum LoggerFormat {
     /// Useful for automated processing of logs.
     Json,
 }
+#[derive(Error, Debug)]
+pub enum InitLoggerError{
+    #[error("cannot set logger as global default")]
+    SetGlobalDefault,
+}
 
-pub(crate) fn init_logger(logger_params: &LoggerParams) -> Result<(), SetGlobalDefaultError> {
+pub(crate) fn init_logger(logger_params: &LoggerParams) -> error_stack::Result<(), InitLoggerError> {
     LogTracer::init().expect("Failed to set logger");
 
-    let subscriber = tracing_subscriber::fmt::Subscriber::builder()
-        .with_max_level(logger_params.log_level)
-        .with_ansi(true)
-        .with_thread_ids(false)
-        .with_thread_names(true);
+    if logger_params.with_tokio_console{
+        console_subscriber::init()
+    }else {
+        let subscriber = tracing_subscriber::fmt::Subscriber::builder()
+            .with_max_level(logger_params.log_level)
+            .with_ansi(true)
+            .log_internal_errors(true)
+            .with_target(false)
+            .with_file(logger_params.log_source_location)
+            .with_line_number(logger_params.log_source_location)
+            .with_thread_ids(false)
+            .with_thread_names(true)
+            .with_level(true);
 
-    let result =  match logger_params.log_format {
-        LoggerFormat::Compact => {
-            tracing::subscriber::set_global_default(subscriber.compact().finish())
-        }
+        match logger_params.log_format {
+            LoggerFormat::Compact => {
+                tracing::subscriber::set_global_default(subscriber.compact().finish())
+            }
 
-        LoggerFormat::Pretty => {
-            tracing::subscriber::set_global_default(subscriber.pretty().finish())
-        }
+            LoggerFormat::Pretty => {
+                tracing::subscriber::set_global_default(subscriber.pretty().finish())
+            }
 
-        LoggerFormat::Json => tracing::subscriber::set_global_default(subscriber.json().finish()),
-    };
-    if let Ok(()) = result {
+            LoggerFormat::Json => tracing::subscriber::set_global_default(subscriber.json().finish()),
+        }.change_context(InitLoggerError::SetGlobalDefault)?;
         info!("Logger initialized with level: {}", logger_params.log_level);
-        Ok(())
-    } else {
-        Err(result.err().unwrap())
     }
-    
+    Ok(())
 }

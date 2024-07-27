@@ -1,16 +1,24 @@
-use std::time::Instant;
+use std::cmp::max;
+use std::time::{Duration, Instant};
 
 use clap::{Args, ValueEnum};
 use colored::Colorize;
-use sea_orm::{Database, DatabaseConnection};
+use sea_orm::{ConnectOptions, Database, DatabaseConnection, DbErr};
+pub use sea_orm;
+pub use sea_query;
+use thiserror::Error;
+use tokio::{join, try_join};
 use tracing::{debug, info, instrument, warn};
+use tracing::log::LevelFilter;
 
 use common::error_stack::ResultExt;
-use common::Error;
 use migration::{Migrator, MigratorTrait};
+pub use orm::*;
+pub use orm::prelude::*;
 
 pub mod orm;
 mod redis;
+mod batch;
 
 #[derive(Debug, Clone, Args)]
 pub struct DatabaseParams {
@@ -23,13 +31,53 @@ pub struct DatabaseParams {
     )]
     migration_strategy: MigrationStrategy,
 
-    //TODO more documentation
+    #[clap(
+        value_enum,
+        long = "database-migration-failure-strategy",
+        default_value = "error",
+        env = "DATABASE_MIGRATION_FAILURE_STRATEGY"
+    )]
+    migration_failure_strategy: MigrationFailureStrategy,
+
     /// Database URL.
     #[clap(long = "database-url", env = "DATABASE_URL")]
     database_url: String,
+
+    #[clap(
+        long = "database-min-connections",
+        env = "DATABASE_MIN_CONNECTIONS",
+        default_value = "1"
+    )]
+    database_min_connections: u32,
+
+    #[clap(
+        long = "database-max-connections",
+        env = "DATABASE_MAX_CONNECTIONS",
+        default_value = "15"
+    )]
+    database_max_connections: u32,
+
+    /// Database URL for read-only operations. if not set the default database url will be used.
+    /// The target database must be a replica of the main database.
+    #[clap(long = "replica-database-url", env = "DATABASE_URL_RO")]
+    database_url_ro: Option<String>,
+
+    #[clap(
+        long = "database-max-ro-connections",
+        env = "DATABASE_MAX_RO_CONNECTIONS",
+        default_value = "5"
+    )]
+    database_max_ro_connections: u32,
+
+    #[clap(
+        long = "database-min-ro-connections",
+        env = "DATABASE_MIN_RO_CONNECTIONS",
+        default_value = "1"
+    )]
+    database_min_ro_connections: u32,
 }
 
-#[derive(Debug, Default, Clone, ValueEnum)]
+#[derive(Debug, Default, Clone, Copy, ValueEnum)]
 pub enum MigrationStrategy {
     ///when the database is not up to date,
     ///it will be upgraded using the included migration scripts.
@@ -47,49 +95,156 @@ pub enum MigrationStrategy {
     /// DO NOT USE THIS WITH Auto Updating Applications.
     #[value(aliases = ["none", "skip", "ignore"])]
     NoOp,
+
+    /// If the database schema is not up-to-date, the application will fail to start.
+    #[value(aliases = ["fail", "error", "abort", "assert"])]
+    Fail,
+}
+
+#[derive(Debug, Default, Clone, Copy, ValueEnum)]
+pub enum MigrationFailureStrategy {
+    /// Continue without logging any warning if the database migration fails.
+    Ignore,
+    /// Continue but log a warning if the database migration fails.
+    Warn,
+    /// Fail the application startup if the database migration fails. This is the default behavior.
+    #[default]
+    Error,
 }
 
 #[derive(Debug, Error)]
 pub enum InitDatabaseError {
-    #[error("an error occured while connecting to the database")]
+    #[error("cannot connect to the database")]
     ConnectToDatabase,
-    #[error("an error occured while migrating the database")]
+    #[error("cannot migrate the database")]
     MigrateDatabase,
 }
 
-#[instrument(level = "debug", skip(params),fields(url = %params.database_url, migration = ?params.migration_strategy))]
+#[derive(Debug, Clone)]
+pub struct DatabaseInstance {
+    pub db: DatabaseConnection,
+    pub db_ro: Option<DatabaseConnection>,
+}
+
+#[instrument(level = "debug", skip(params), fields(
+    url = % params.database_url,
+    ro_url = ? params.database_url_ro,
+    migration = ? params.migration_strategy,
+))]
 pub async fn init_database(
     params: &DatabaseParams,
-) -> error_stack::Result<DatabaseConnection, InitDatabaseError> {
+) -> error_stack::Result<DatabaseInstance, InitDatabaseError> {
     debug!("database url: {}", params.database_url.bright_blue());
+
+    let min_connections = max(params.database_min_connections, 1);
+    let max_connections = max(params.database_max_connections, min_connections);
 
     info!("connecting to the database...");
     let time = Instant::now();
-    let database = Database::connect(&params.database_url)
-        .await
-        .change_context(InitDatabaseError::ConnectToDatabase)?;
+    let options = ConnectOptions::new(&params.database_url)
+        .max_connections(max_connections)
+        .min_connections(min_connections)
+        .test_before_acquire(true)
+        .sqlx_logging_level(LevelFilter::Debug)
+        .sqlx_slow_statements_logging_settings(LevelFilter::Warn, Duration::from_secs(5 * 60))
+        .to_owned();
+
+    let (database, database_ro) = if let Some(database_ro_url) = &params.database_url_ro {
+        let max_ro_connections = max(params.database_max_ro_connections, 1);
+        let min_ro_connections = max(params.database_min_ro_connections, 1);
+
+        let ro_options = ConnectOptions::new(database_ro_url)
+            .max_connections(max_ro_connections)
+            .min_connections(min_ro_connections)
+            .test_before_acquire(true)
+            .sqlx_logging_level(LevelFilter::Debug)
+            .sqlx_slow_statements_logging_settings(LevelFilter::Warn, Duration::from_secs(5 * 60))
+            .to_owned();
+        let database = Database::connect(options);
+        let database_ro = Database::connect(ro_options);
+        let join = try_join!(database, database_ro);
+        let (database, database_ro) = join
+            .change_context(InitDatabaseError::ConnectToDatabase)?;
+        (database, Some(database_ro))
+    } else {
+        let database = Database::connect(options)
+            .await
+            .change_context(InitDatabaseError::ConnectToDatabase)?;
+        (database, None)
+    };
+
     let time = time.elapsed();
     info!("database connected ({:?})", time);
 
     let time = Instant::now();
-    match params.migration_strategy {
+    let migrations_result = apply_migrations(&database, params.migration_strategy).await
+        .change_context(InitDatabaseError::MigrateDatabase);
+    if let Err(report) = migrations_result {
+        match params.migration_failure_strategy {
+            MigrationFailureStrategy::Ignore => {}
+            MigrationFailureStrategy::Warn => {
+                warn!("database migration failed: {}", report);
+            }
+            MigrationFailureStrategy::Error => {
+                return Err(report);
+            }
+        }
+    }
+    let time = time.elapsed();
+    info!("database migration complete ({:?})", time);
+
+    Ok(DatabaseInstance {
+        db: database,
+        //TODO implement read only database connection
+        db_ro: database_ro,
+    })
+}
+#[derive(Debug, Error)]
+enum DatabaseMigrationError {
+    #[error("database error: {0:?}")]
+    DbErr(#[source]
+          #[from]
+          DbErr
+    ),
+    #[error("database schema is not up to date it missing the following migrations: {missing_migrations}"
+    )]
+    NotMigrated {
+        missing_migrations: String,
+    },
+}
+
+#[instrument(skip(database))]
+async fn apply_migrations(
+    database: &DatabaseConnection,
+    migration_strategy: MigrationStrategy,
+) -> Result<(), DatabaseMigrationError> {
+    match migration_strategy {
         MigrationStrategy::Fresh => {
             warn!("database migration strategy is set to Fresh. Dropping and recreating the database...");
-            Migrator::fresh(&database)
-                .await
-                .change_context(InitDatabaseError::MigrateDatabase)?;
+            Migrator::fresh(database).await
+                .map_err(DatabaseMigrationError::from)?;
         }
         MigrationStrategy::Apply => {
-            Migrator::up(&database, None)
-                .await
-                .change_context(InitDatabaseError::MigrateDatabase)?;
+            Migrator::up(database, None).await
+                .map_err(DatabaseMigrationError::from)?;
         }
         MigrationStrategy::NoOp => {
             debug!("database migration strategy is set to NoOp. Skipping database migration.");
         }
-    }
-    let time = time.elapsed();
-    info!("database migration done ({:?})", time);
+        MigrationStrategy::Fail => {
+            let pending = Migrator::get_pending_migrations(database).await
+                .map_err(DatabaseMigrationError::from)?;
+            if !pending.is_empty() {
+                let missing_migrations = pending.iter()
+                    .map(|m| m.name())
+                    .collect::<Vec<_>>()
+                    .join(", ");
 
-    Ok(database)
+                return Err(DatabaseMigrationError::NotMigrated {
+                    missing_migrations,
+                });
+            }
+        }
+    }
+    Ok(())
 }

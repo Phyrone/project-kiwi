@@ -14,7 +14,7 @@ where
     Radix<V>: Display,
     V: num::Num + num::PrimInt + Serialize,
 {
-    let b36 = radix_fmt::radix(dt.clone(), BASE36).to_string();
+    let b36 = radix_fmt::radix(*dt, BASE36).to_string();
     serializer.serialize_str(&b36)
 }
 
@@ -45,13 +45,6 @@ where
         formatter.write_str("a base36 string")
     }
 
-    fn visit_none<E>(self) -> Result<Self::Value, E>
-    where
-        E: Error,
-    {
-        V::from_str_radix("0", BASE36 as u32).map_err(E::custom)
-    }
-
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
     where
         E: Error,
@@ -64,5 +57,12 @@ where
         E: Error,
     {
         <V as Num>::from_str_radix(&v, BASE36 as u32).map_err(E::custom)
+    }
+
+    fn visit_none<E>(self) -> Result<Self::Value, E>
+    where
+        E: Error,
+    {
+        V::from_str_radix("0", BASE36 as u32).map_err(E::custom)
     }
 }

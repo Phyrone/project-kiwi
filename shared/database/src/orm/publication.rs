@@ -8,7 +8,7 @@ pub struct Entity;
 
 impl EntityName for Entity {
     fn table_name(&self) -> &str {
-        "actor"
+        "publication"
     }
 }
 
@@ -17,11 +17,7 @@ pub struct Model {
     pub id: i64,
     pub created_at: DateTimeWithTimeZone,
     pub updated_at: DateTimeWithTimeZone,
-    pub name: String,
-    pub discriminator: Option<i16>,
-    pub display_name: Option<String>,
-    pub avatar: Option<Uuid>,
-    pub banner: Option<Uuid>,
+    pub author_id: i64,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -29,11 +25,7 @@ pub enum Column {
     Id,
     CreatedAt,
     UpdatedAt,
-    Name,
-    Discriminator,
-    DisplayName,
-    Avatar,
-    Banner,
+    AuthorId,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -50,10 +42,11 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Asset2,
-    Asset1,
-    Guild,
+    Attachment,
+    ChannelMessage,
+    ContentFlag,
     Post,
+    Profile,
 }
 
 impl ColumnTrait for Column {
@@ -63,11 +56,7 @@ impl ColumnTrait for Column {
             Self::Id => ColumnType::BigInteger.def(),
             Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
             Self::UpdatedAt => ColumnType::TimestampWithTimeZone.def(),
-            Self::Name => ColumnType::String(None).def(),
-            Self::Discriminator => ColumnType::SmallInteger.def().null(),
-            Self::DisplayName => ColumnType::String(None).def().null(),
-            Self::Avatar => ColumnType::Uuid.def().null(),
-            Self::Banner => ColumnType::Uuid.def().null(),
+            Self::AuthorId => ColumnType::BigInteger.def(),
         }
     }
 }
@@ -75,29 +64,54 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Asset2 => Entity::belongs_to(super::asset::Entity)
-                .from(Column::Avatar)
-                .to(super::asset::Column::Id)
-                .into(),
-            Self::Asset1 => Entity::belongs_to(super::asset::Entity)
-                .from(Column::Banner)
-                .to(super::asset::Column::Id)
-                .into(),
-            Self::Guild => Entity::has_many(super::guild::Entity).into(),
+            Self::Attachment => Entity::has_many(super::attachment::Entity).into(),
+            Self::ChannelMessage => Entity::has_many(super::channel_message::Entity).into(),
+            Self::ContentFlag => Entity::has_many(super::content_flag::Entity).into(),
             Self::Post => Entity::has_many(super::post::Entity).into(),
+            Self::Profile => Entity::belongs_to(super::profile::Entity)
+                .from(Column::AuthorId)
+                .to(super::profile::Column::Id)
+                .into(),
         }
     }
 }
 
-impl Related<super::guild::Entity> for Entity {
+impl Related<super::attachment::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Guild.def()
+        Relation::Attachment.def()
+    }
+}
+
+impl Related<super::channel_message::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::ChannelMessage.def()
+    }
+}
+
+impl Related<super::content_flag::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::ContentFlag.def()
     }
 }
 
 impl Related<super::post::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Post.def()
+    }
+}
+
+impl Related<super::profile::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Profile.def()
+    }
+}
+
+impl Related<super::asset::Entity> for Entity {
+    fn to() -> RelationDef {
+        super::attachment::Relation::Asset.def()
+    }
+    fn via() -> Option<RelationDef> {
+        Some(super::attachment::Relation::Publication.def().rev())
     }
 }
 

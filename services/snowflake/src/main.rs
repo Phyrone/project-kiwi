@@ -5,13 +5,13 @@ use clap::Parser;
 use clap_num::number_range;
 use error_stack::ResultExt;
 use hexafreeze::{Generator, HexaFreezeError};
-use tonic::{Request, Response, Status};
 use tonic::transport::Server;
+use tonic::{Request, Response, Status};
 use tracing::{error, info, instrument};
 
 use common::with_bootstrap;
-use proto::de::phyrone::kiwi::snowflake::{Snowflake, SnowflakesRequest, SnowflakesResponse};
 use proto::de::phyrone::kiwi::snowflake::snowflake_service_server::SnowflakeServiceServer;
+use proto::de::phyrone::kiwi::snowflake::{Snowflake, SnowflakesRequest, SnowflakesResponse};
 
 with_bootstrap!(main_inner, StartupParams);
 
@@ -85,7 +85,7 @@ impl SnowflakeServiceImpl {
 
 #[tonic::async_trait]
 impl proto::de::phyrone::kiwi::snowflake::snowflake_service_server::SnowflakeService
-for SnowflakeServiceImpl
+    for SnowflakeServiceImpl
 {
     async fn get_snowflake(&self, request: Request<()>) -> Result<Response<Snowflake>, Status> {
         let snowflake = self.generator.generate().await.map_err(|e| {

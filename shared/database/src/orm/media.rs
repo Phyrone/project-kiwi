@@ -8,7 +8,7 @@ pub struct Entity;
 
 impl EntityName for Entity {
     fn table_name(&self) -> &str {
-        "account_key"
+        "media"
     }
 }
 
@@ -16,18 +16,16 @@ impl EntityName for Entity {
 pub struct Model {
     pub id: i64,
     pub created_at: DateTimeWithTimeZone,
-    pub account_id: i64,
-    pub name: String,
-    pub data: Json,
+    pub origin: i64,
+    pub public: bool,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     Id,
     CreatedAt,
-    AccountId,
-    Name,
-    Data,
+    Origin,
+    Public,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -44,7 +42,8 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Account,
+    Attachment,
+    Profile,
 }
 
 impl ColumnTrait for Column {
@@ -53,9 +52,8 @@ impl ColumnTrait for Column {
         match self {
             Self::Id => ColumnType::BigInteger.def(),
             Self::CreatedAt => ColumnType::TimestampWithTimeZone.def(),
-            Self::AccountId => ColumnType::BigInteger.def(),
-            Self::Name => ColumnType::String(None).def(),
-            Self::Data => ColumnType::JsonBinary.def(),
+            Self::Origin => ColumnType::BigInteger.def(),
+            Self::Public => ColumnType::Boolean.def(),
         }
     }
 }
@@ -63,17 +61,33 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Account => Entity::belongs_to(super::account::Entity)
-                .from(Column::AccountId)
-                .to(super::account::Column::Id)
+            Self::Attachment => Entity::has_many(super::attachment::Entity).into(),
+            Self::Profile => Entity::belongs_to(super::profile::Entity)
+                .from(Column::Origin)
+                .to(super::profile::Column::Id)
                 .into(),
         }
     }
 }
 
-impl Related<super::account::Entity> for Entity {
+impl Related<super::attachment::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Account.def()
+        Relation::Attachment.def()
+    }
+}
+
+impl Related<super::profile::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Profile.def()
+    }
+}
+
+impl Related<super::publication::Entity> for Entity {
+    fn to() -> RelationDef {
+        super::attachment::Relation::Publication.def()
+    }
+    fn via() -> Option<RelationDef> {
+        Some(super::attachment::Relation::Media.def().rev())
     }
 }
 

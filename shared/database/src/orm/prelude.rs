@@ -2,12 +2,15 @@
 
 pub use super::account::Entity as Account;
 pub use super::account_key::Entity as AccountKey;
-pub use super::actor::Entity as Actor;
 pub use super::asset::Entity as Asset;
 pub use super::asset_processing_task::Entity as AssetProcessingTask;
+pub use super::attachment::Entity as Attachment;
+pub use super::channel::Entity as Channel;
+pub use super::channel_message::Entity as ChannelMessage;
 pub use super::configuration::Entity as Configuration;
+pub use super::content_flag::Entity as ContentFlag;
 pub use super::guild::Entity as Guild;
 pub use super::guild_channel::Entity as GuildChannel;
 pub use super::post::Entity as Post;
-pub use super::post_attatchment::Entity as PostAttatchment;
-pub use super::post_flag::Entity as PostFlag;
+pub use super::profile::Entity as Profile;
+pub use super::publication::Entity as Publication;

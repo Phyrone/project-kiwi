@@ -19,21 +19,22 @@ use tracing::instrument;
 
 use crate::params::ParamsWithRequirements;
 
+mod glide_id;
 pub mod params;
 pub mod tracing_logger;
 
 #[derive(Debug, Error)]
 pub enum BootstrapError {
-    #[error("could not initialize logger")]
+    #[error("cannot initialize logger")]
     InitLogger,
     #[error("could not create tokio runtime")]
     CreateRuntime,
-    #[error("could not close logger")]
+    #[error("cannot close logger")]
     CloseLogger,
     #[error("an error occurred while running the application")]
     RunApplication,
 }
-#[instrument(level="trace",skip(f))]
+#[instrument(level = "trace", skip(f))]
 pub fn run_bootstrap<E, F, R, PO, P>(
     app_name: &'static str,
     f: F,

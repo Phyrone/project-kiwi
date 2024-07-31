@@ -3,8 +3,10 @@ use std::time::{Duration, Instant};
 
 use clap::{Args, ValueEnum};
 use colored::Colorize;
-use sea_orm::{ConnectOptions, Database, DatabaseConnection, DbErr};
+pub use redis;
+use redis::Cmd;
 pub use sea_orm;
+use sea_orm::{ConnectOptions, Database, DatabaseConnection, DbErr};
 pub use sea_query;
 use thiserror::Error;
 use tokio::{join, try_join};
@@ -16,9 +18,8 @@ use migration::{Migrator, MigratorTrait};
 pub use orm::*;
 pub use orm::prelude::*;
 
-pub mod orm;
-mod redis;
 mod batch;
+pub mod orm;
 
 #[derive(Debug, Clone, Args)]
 pub struct DatabaseParams {
@@ -75,6 +76,12 @@ pub struct DatabaseParams {
         default_value = "1"
     )]
     database_min_ro_connections: u32,
+
+    #[clap(long = "skip-connection-test", env = "DATABASE_SKIP_CONNECTION_TEST")]
+    skip_connection_test: bool,
+
+    #[clap(long = "redis-url", env = "REDIS_URL")]
+    redis_url: String,
 }
 
 #[derive(Debug, Default, Clone, Copy, ValueEnum)]
@@ -124,6 +131,7 @@ pub enum InitDatabaseError {
 pub struct DatabaseInstance {
     pub db: DatabaseConnection,
     pub db_ro: Option<DatabaseConnection>,
+    pub redis: redis::Client,
 }
 
 #[instrument(level = "debug", skip(params), fields(
@@ -134,50 +142,40 @@ pub struct DatabaseInstance {
 pub async fn init_database(
     params: &DatabaseParams,
 ) -> error_stack::Result<DatabaseInstance, InitDatabaseError> {
-    debug!("database url: {}", params.database_url.bright_blue());
+    let (database, database_ro, redis) = try_join!(
+        init_rw_database(params),
+        init_ro_database(params),
+        init_redis(params),
+    )?;
+    
+    Ok(DatabaseInstance {
+        db: database,
+        db_ro: database_ro,
+        redis,
+    })
+}
 
+async fn init_rw_database(params: &DatabaseParams) -> error_stack::Result<DatabaseConnection, InitDatabaseError> {
+    debug!("database url: {}", params.database_url.bright_blue());
+    info!("connecting to the database...");
+    let time = Instant::now();
     let min_connections = max(params.database_min_connections, 1);
     let max_connections = max(params.database_max_connections, min_connections);
 
-    info!("connecting to the database...");
-    let time = Instant::now();
     let options = ConnectOptions::new(&params.database_url)
         .max_connections(max_connections)
         .min_connections(min_connections)
-        .test_before_acquire(true)
+        .test_before_acquire(!params.skip_connection_test)
         .sqlx_logging_level(LevelFilter::Debug)
         .sqlx_slow_statements_logging_settings(LevelFilter::Warn, Duration::from_secs(5 * 60))
         .to_owned();
-
-    let (database, database_ro) = if let Some(database_ro_url) = &params.database_url_ro {
-        let max_ro_connections = max(params.database_max_ro_connections, 1);
-        let min_ro_connections = max(params.database_min_ro_connections, 1);
-
-        let ro_options = ConnectOptions::new(database_ro_url)
-            .max_connections(max_ro_connections)
-            .min_connections(min_ro_connections)
-            .test_before_acquire(true)
-            .sqlx_logging_level(LevelFilter::Debug)
-            .sqlx_slow_statements_logging_settings(LevelFilter::Warn, Duration::from_secs(5 * 60))
-            .to_owned();
-        let database = Database::connect(options);
-        let database_ro = Database::connect(ro_options);
-        let join = try_join!(database, database_ro);
-        let (database, database_ro) = join
-            .change_context(InitDatabaseError::ConnectToDatabase)?;
-        (database, Some(database_ro))
-    } else {
-        let database = Database::connect(options)
-            .await
-            .change_context(InitDatabaseError::ConnectToDatabase)?;
-        (database, None)
-    };
-
+    let database = Database::connect(options).await.change_context(InitDatabaseError::ConnectToDatabase)?;
     let time = time.elapsed();
     info!("database connected ({:?})", time);
 
     let time = Instant::now();
-    let migrations_result = apply_migrations(&database, params.migration_strategy).await
+    let migrations_result = apply_migrations(&database, params.migration_strategy)
+        .await
         .change_context(InitDatabaseError::MigrateDatabase);
     if let Err(report) = migrations_result {
         match params.migration_failure_strategy {
@@ -190,27 +188,24 @@ pub async fn init_database(
             }
         }
     }
+
     let time = time.elapsed();
     info!("database migration complete ({:?})", time);
-
-    Ok(DatabaseInstance {
-        db: database,
-        //TODO implement read only database connection
-        db_ro: database_ro,
-    })
+    Ok(database)
 }
+
+
 #[derive(Debug, Error)]
 enum DatabaseMigrationError {
     #[error("database error: {0:?}")]
-    DbErr(#[source]
-          #[from]
-          DbErr
+    DbErr(
+        #[source]
+        #[from]
+        DbErr,
     ),
     #[error("database schema is not up to date it missing the following migrations: {missing_migrations}"
     )]
-    NotMigrated {
-        missing_migrations: String,
-    },
+    NotMigrated { missing_migrations: String },
 }
 
 #[instrument(skip(database))]
@@ -221,30 +216,77 @@ async fn apply_migrations(
     match migration_strategy {
         MigrationStrategy::Fresh => {
             warn!("database migration strategy is set to Fresh. Dropping and recreating the database...");
-            Migrator::fresh(database).await
+            Migrator::fresh(database)
+                .await
                 .map_err(DatabaseMigrationError::from)?;
         }
         MigrationStrategy::Apply => {
-            Migrator::up(database, None).await
+            Migrator::up(database, None)
+                .await
                 .map_err(DatabaseMigrationError::from)?;
         }
         MigrationStrategy::NoOp => {
             debug!("database migration strategy is set to NoOp. Skipping database migration.");
         }
         MigrationStrategy::Fail => {
-            let pending = Migrator::get_pending_migrations(database).await
+            let pending = Migrator::get_pending_migrations(database)
+                .await
                 .map_err(DatabaseMigrationError::from)?;
             if !pending.is_empty() {
-                let missing_migrations = pending.iter()
+                let missing_migrations = pending
+                    .iter()
                     .map(|m| m.name())
                     .collect::<Vec<_>>()
                     .join(", ");
 
-                return Err(DatabaseMigrationError::NotMigrated {
-                    missing_migrations,
-                });
+                return Err(DatabaseMigrationError::NotMigrated { missing_migrations });
             }
         }
     }
     Ok(())
+}
+
+
+async fn init_ro_database(params: &DatabaseParams) -> error_stack::Result<Option<DatabaseConnection>, InitDatabaseError> {
+    if let Some(database_ro_url) = &params.database_url_ro {
+        let min_ro_connections = max(params.database_min_ro_connections, 1);
+        let max_ro_connections = max(params.database_max_ro_connections, min_ro_connections);
+
+
+        let ro_options = ConnectOptions::new(database_ro_url)
+            .max_connections(max_ro_connections)
+            .min_connections(min_ro_connections)
+            .test_before_acquire(true)
+            .sqlx_logging_level(LevelFilter::Debug)
+            .sqlx_slow_statements_logging_settings(LevelFilter::Warn, Duration::from_secs(5 * 60))
+            .to_owned();
+
+        let database_ro = Database::connect(ro_options)
+            .await
+            .change_context(InitDatabaseError::ConnectToDatabase)?;
+
+        Ok(Some(database_ro))
+    } else {
+        Ok(None)
+    }
+}
+
+async fn init_redis(params: &DatabaseParams) -> error_stack::Result<redis::Client, InitDatabaseError> {
+    info!("connecting to redis or a redis compatible server...");
+    let time = Instant::now();
+    let client = redis::Client::open(params.redis_url.clone())
+        .change_context(InitDatabaseError::ConnectToDatabase)?;
+
+    if !params.skip_connection_test {
+        let mut connection = client.get_multiplexed_async_connection().await
+            .change_context(InitDatabaseError::ConnectToDatabase)?;
+        let mut ping_cmd = Cmd::new();
+        ping_cmd.arg("PING");
+        connection.send_packed_command(&ping_cmd).await
+            .change_context(InitDatabaseError::ConnectToDatabase)?;
+    }
+    let time = time.elapsed();
+    info!("redis connected ({:?})", time);
+
+    Ok(client)
 }

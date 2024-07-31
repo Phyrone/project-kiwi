@@ -10,6 +10,10 @@ pub enum ChannelType {
     Dummy,
     #[sea_orm(string_value = "feed")]
     Feed,
+    #[sea_orm(string_value = "forum")]
+    Forum,
+    #[sea_orm(string_value = "stage")]
+    Stage,
     #[sea_orm(string_value = "text")]
     Text,
     #[sea_orm(string_value = "voice")]

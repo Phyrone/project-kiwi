@@ -7,80 +7,49 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="14b7fb34-0a0f-433e-9d2d-ecd09430e637" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/services/core/src/graphql/auth.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/core/src/graphql/comment.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/core/src/graphql/context.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/core/src/graphql/guild.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/core/src/graphql/media.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/core/src/graphql/post.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/core/src/graphql/publication.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/core/src/web/404.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/assets/11L-A_a_short_staccato_U-1720457005107.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/assets/A_a_short_staccato_U (1).mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/assets/A_a_short_staccato_U (2).mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/assets/A_a_short_staccato_U (3).mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/assets/A_a_short_staccato_U (4).mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/assets/A_a_short_staccato_U (5).mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/assets/A_a_short_staccato_U.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/frontend/src/routes/(app)/~[community]/:[channel]/+page.svelte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shared/common/src/main/rust/glide_id.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shared/database/src/batch/mod.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shared/database/src/batch/post.rs" afterDir="false" />
+    <list default="true" id="14b7fb34-0a0f-433e-9d2d-ecd09430e637" name="Changes" comment="🚧 Snapshot">
+      <change afterPath="$PROJECT_DIR$/services/core/src/web/auth.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shared/web/src/session.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page/docs/999_developement/architecture.md" beforeDir="false" afterPath="$PROJECT_DIR$/page/docs/999_developement/architecture.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/page/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/core/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/graphql/auth.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/graphql/auth.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/graphql/comment.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/graphql/context.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/graphql/context.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/graphql/guild.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/graphql/media.rs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/services/core/src/graphql/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/graphql/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/graphql/post.rs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/services/core/src/graphql/profile.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/graphql/profile.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/graphql/publication.rs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/services/core/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/web/404.html" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/web/404.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/core/src/web/graphql.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/web/graphql.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/core/src/web/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/web/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/.npmrc" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/.npmrc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/build-grpc.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/grpc/auth_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/grpc/auth_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/grpc/auth_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/grpc/post_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/grpc/post_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/grpc/post_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/grpc/relay_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/grpc/relay_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/grpc/relay_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/grpc/snowflake_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/grpc/snowflake_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/grpc/snowflake_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/routes/(app)/+page.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/src/routes/(app)/+page.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/src/routes/(app)/~[community]/*[channel]/+page.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/page/docs/999_developement/glide.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/frontend/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/frontend/vite.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/gateway/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/gateway/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/snowflake/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/snowflake/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/common/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/shared/common/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/common/src/main/rust/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/common/src/main/rust/lib.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/gateway/Cargo.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/gateway/src/main.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/gateway/src/packets.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/gateway/src/session.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/gateway/src/startup.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/media/Cargo.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/media/src/main.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/worker/Cargo.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/worker/src/main.rs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/common/src/main/rust/tracing_logger.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/common/src/main/rust/tracing_logger.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/database/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/database/migration/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/migration/src/lib.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/database/migration/src/m20220101_000001_create_table.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/migration/src/m20220101_000001_create_table.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/batch/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/batch/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/batch/post.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/batch/post.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/database/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/lib.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/account.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/account_key.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/actor.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/asset.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/asset_processing_task.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/configuration.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/guild.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/guild_channel.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/post.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/post_attatchment.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/post_flag.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/prelude.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/account_key.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/account_key.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/sea_orm_active_enums.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/sea_orm_active_enums.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/redis.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/serde-juniper/Cargo.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/serde-juniper/src/lib.rs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/web/src/auth.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/web/src/auth.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/web/src/utils/serde/base36.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/web/src/utils/serde/base36.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/web/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/web/src/lib.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,6 +102,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$USER_HOME$/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-creds-0.36.0/src/credentials.rs" root0="SKIP_INSPECTION" />
     <setting file="file://$USER_HOME$/.cargo/registry/src/index.crates.io-6f17d22bba15001f/juniper-0.16.1/src/value/object.rs" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/.cargo/registry/src/index.crates.io-6f17d22bba15001f/redis-0.26.0/src/commands/mod.rs" root0="SKIP_INSPECTION" />
     <setting file="file://$USER_HOME$/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rust-s3-0.34.0/src/bucket.rs" root0="SKIP_INSPECTION" />
     <setting file="file://$USER_HOME$/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rust-s3-0.34.0/src/post_policy.rs" root0="SKIP_INSPECTION" />
   </component>
@@ -159,64 +129,65 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Cargo.Build `Test auth::test::test_jwt`.executor": "Run",
-    "Cargo.Build `Test loader::test::test_loader`.executor": "Run",
-    "Cargo.Run gateway.executor": "Run",
-    "Cargo.Run new_core.executor": "Run",
-    "Cargo.Run snowflake.executor": "Run",
-    "Cargo.Run.executor": "Run",
-    "Cargo.Test auth::test::t2.executor": "Run",
-    "Cargo.Test auth::test::test_jwt.executor": "Run",
-    "Cargo.Test glide_id::tests::test_glide_id.executor": "Run",
-    "Cargo.Test glide_id::tests::test_glide_id_from_str.executor": "Run",
-    "Cargo.Test loader::test::test_loader.executor": "Run",
-    "Cargo.Test web::test::test1.executor": "Run",
-    "Cargo.core.executor": "Run",
-    "Cargo.gateway.executor": "Run",
-    "Cargo.snowflake.executor": "Run",
-    "RunOnceActivity.OpenDatabaseViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.rust.reset.selective.auto.import": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main",
-    "js.phonegap.settings.workdir": "",
-    "kotlin-language-version-configured": "true",
-    "last.edited.regexp": "/src/locales/meta/dede.json",
-    "last_opened_file_path": "/Users/samuellaqua/git/project-kiwi/experiments",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_interpreter_path": "node",
-    "nodejs_package_manager_path": "pnpm",
-    "npm.frontend > build:grpc.executor": "Run",
-    "npm.frontend > grpc-compile.executor": "Run",
-    "npm.frontend > wasm-build.executor": "Run",
-    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
-    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
-    "org.rust.disableDetachedFileInspection/Users/samuellaqua/git/project-kiwi/services/core/src/graphql/mod.rs": "true",
-    "org.rust.first.attach.projects": "true",
-    "prettierjs.PrettierConfiguration.Package": "/Users/samuellaqua/git/project-kiwi/node_modules/prettier",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "Settings.AICodingPlugin.Configuration",
-    "show.migrate.to.gradle.popup": "false",
-    "ts.external.directory.path": "/Users/samuellaqua/git/project-kiwi/services/frontend/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Cargo.Build `Test auth::test::test_jwt`.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Build `Test loader::test::test_loader`.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Run gateway.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Run new_core.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Run snowflake.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Run.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test auth::test::t2.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test auth::test::test_jwt.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test glide_id::tests::test_glide_id.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test glide_id::tests::test_glide_id_from_str.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test loader::test::test_loader.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test web::graphql::atest.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test web::test::test1.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.core.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.gateway.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.snowflake.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenDatabaseViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;js.phonegap.settings.workdir&quot;: &quot;&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last.edited.regexp&quot;: &quot;/src/locales/meta/dede.json&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/samuellaqua/git/project-kiwi/experiments&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;npm.frontend &gt; build:grpc.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; grpc-compile.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; wasm-build.executor&quot;: &quot;Run&quot;,
+    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
+    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
+    &quot;org.rust.disableDetachedFileInspection/Users/samuellaqua/git/project-kiwi/services/core/src/graphql/mod.rs&quot;: &quot;true&quot;,
+    &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/samuellaqua/git/project-kiwi/node_modules/prettier&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.github.copilot.settings.ApplicationConfigurable&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/samuellaqua/git/project-kiwi/services/frontend/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mariadb",
-      "cassandra",
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mariadb&quot;,
+      &quot;cassandra&quot;,
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/experiments" />
@@ -237,7 +208,7 @@
     <option name="runOnTheFly" value="true" />
     <option name="tool" value="Clippy" />
   </component>
-  <component name="RunManager" selected="Cargo.Test loader::test::test_loader">
+  <component name="RunManager" selected="Cargo.Test web::graphql::atest">
     <configuration name="Test auth::test::test_jwt" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="command" value="test --package web --lib auth::test::test_jwt -- --exact" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -272,8 +243,8 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test web::test::test1" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package core --bin core web::test::test1 -- --exact" />
+    <configuration name="Test web::graphql::atest" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package core --bin core web::graphql::atest -- --exact" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <envs />
       <option name="emulateTerminal" value="true" />
@@ -362,6 +333,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Cargo.Test web::graphql::atest" />
         <item itemvalue="Cargo.Test loader::test::test_loader" />
         <item itemvalue="Cargo.Test auth::test::test_jwt" />
       </list>
@@ -484,8 +456,34 @@
       <workItem from="1721982905508" duration="13884000" />
       <workItem from="1722004027805" duration="6894000" />
       <workItem from="1722071736274" duration="74000" />
-      <workItem from="1722072442837" duration="646000" />
+      <workItem from="1722072442837" duration="3204000" />
+      <workItem from="1722076965203" duration="30122000" />
+      <workItem from="1722161073226" duration="6265000" />
+      <workItem from="1722233833857" duration="1935000" />
+      <workItem from="1722248292382" duration="4101000" />
+      <workItem from="1722254264543" duration="879000" />
+      <workItem from="1722266524399" duration="18915000" />
+      <workItem from="1722339887436" duration="11000" />
+      <workItem from="1722357763335" duration="20137000" />
+      <workItem from="1722416589342" duration="725000" />
     </task>
+    <task id="LOCAL-00001" summary="🚧 Snapshot">
+      <option name="closed" value="true" />
+      <created>1722076438266</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1722076438266</updated>
+    </task>
+    <task id="LOCAL-00002" summary="🚧 Snapshot">
+      <option name="closed" value="true" />
+      <created>1722076781583</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1722076781583</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -501,6 +499,11 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="ℹ️   Anpassungen an der Benutzeroberfläche und Aktualisierung der Logo-Grafiken." />
+    <MESSAGE value=" Snapshot" />
+    <option name="LAST_COMMIT_MESSAGE" value=" Snapshot" />
   </component>
   <component name="WfRunsListSearchHistory">{
   &quot;history&quot;: [

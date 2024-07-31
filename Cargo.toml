@@ -9,9 +9,7 @@ members = [
     # Services
     "services/relay",
     "services/snowflake",
-    "services/gateway",
     "services/core",
-    "services/media",
-    "services/worker",
-    "services/frontend/src-tauri", "shared/serde-juniper",
+    "services/frontend/src-tauri",
+    "shared/sk-embedded",
 ]

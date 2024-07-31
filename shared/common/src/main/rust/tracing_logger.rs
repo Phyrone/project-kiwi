@@ -18,7 +18,7 @@ pub struct LoggerParams {
 
     #[clap(long, default_value = "false", env = "LOG_SOURCE_LOCATION")]
     pub log_source_location: bool,
-    
+
     #[clap(long, default_value = "false", env = "LOG_USE_TOKIO_CONSOLE")]
     pub with_tokio_console: bool,
 }
@@ -36,17 +36,19 @@ pub enum LoggerFormat {
     Json,
 }
 #[derive(Error, Debug)]
-pub enum InitLoggerError{
+pub enum InitLoggerError {
     #[error("cannot set logger as global default")]
     SetGlobalDefault,
 }
 
-pub(crate) fn init_logger(logger_params: &LoggerParams) -> error_stack::Result<(), InitLoggerError> {
+pub(crate) fn init_logger(
+    logger_params: &LoggerParams,
+) -> error_stack::Result<(), InitLoggerError> {
     LogTracer::init().expect("Failed to set logger");
 
-    if logger_params.with_tokio_console{
+    if logger_params.with_tokio_console {
         console_subscriber::init()
-    }else {
+    } else {
         let subscriber = tracing_subscriber::fmt::Subscriber::builder()
             .with_max_level(logger_params.log_level)
             .with_ansi(true)
@@ -67,8 +69,11 @@ pub(crate) fn init_logger(logger_params: &LoggerParams) -> error_stack::Result<(
                 tracing::subscriber::set_global_default(subscriber.pretty().finish())
             }
 
-            LoggerFormat::Json => tracing::subscriber::set_global_default(subscriber.json().finish()),
-        }.change_context(InitLoggerError::SetGlobalDefault)?;
+            LoggerFormat::Json => {
+                tracing::subscriber::set_global_default(subscriber.json().finish())
+            }
+        }
+        .change_context(InitLoggerError::SetGlobalDefault)?;
         info!("Logger initialized with level: {}", logger_params.log_level);
     }
     Ok(())

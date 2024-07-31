@@ -4,7 +4,7 @@ use tokio::{join, try_join};
 use tokio_util::sync::CancellationToken;
 use tracing::{info, instrument};
 
-use common::{Error, with_bootstrap};
+use common::{with_bootstrap, Error};
 use database::init_database;
 
 use crate::startup::StartupParams;
@@ -42,8 +42,9 @@ async fn server_main(params: StartupParams) -> error_stack::Result<(), CoreAppEr
             _ = shutdown_token.cancelled() => {}
         }
     });
-    let web_server_task = web::run_web_server(params.web_server_params, database, shutdown_token.clone());
-    let (web_server_task, ) = join!(web_server_task);
+    let web_server_task =
+        web::run_web_server(params.web_server_params, database, shutdown_token.clone());
+    let (web_server_task,) = join!(web_server_task);
     web_server_task.change_context(CoreAppError::WebServer)?;
 
     Ok(())

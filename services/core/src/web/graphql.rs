@@ -1,166 +1,217 @@
-use std::sync::Arc;
-use std::time::Duration;
-use axum::{Extension, Json, Router};
-use axum::extract::{Query, WebSocketUpgrade};
+use async_graphql::{async_trait, Data, SDLExportOptions};
+use async_graphql::extensions::ApolloTracing;
+use async_graphql::http::{
+    ALL_WEBSOCKET_PROTOCOLS, GraphiQLSource, GraphQLPlaygroundConfig, playground_source,
+};
+use async_graphql_axum::{GraphQLBatchRequest, GraphQLProtocol, GraphQLResponse, GraphQLWebSocket};
+use axum::{Extension, RequestExt, Router};
+use axum::extract::{FromRequest, Query, Request, WebSocketUpgrade};
 use axum::http::Method;
-use axum::response::IntoResponse;
+use axum::response::{Html, IntoResponse, Response};
 use axum::routing::{get, MethodFilter, on};
 use axum_auth::AuthBearer;
-use axum_either::AxumEither;
-use juniper::DefaultScalarValue;
-use juniper_axum::{graphiql, playground};
-use juniper_axum::extract::JuniperRequest;
-use juniper_axum::response::JuniperResponse;
-use juniper_axum::subscriptions::serve_ws;
-use juniper_graphql_ws::{ConnectionConfig, Schema};
-use sea_orm::DatabaseConnection;
+use error_stack::ResultExt;
+use http::StatusCode;
+use lazy_static::lazy_static;
 use serde::Deserialize;
-use tower_http::compression::{CompressionLayer, Predicate};
-use tower_http::compression::predicate::{NotForContentType, SizeAbove};
-use tower_http::CompressionLevel;
-use tower_http::cors::{AllowHeaders, AllowMethods, AllowOrigin, CorsLayer, MaxAge};
-use tower_http::follow_redirect::FollowRedirectLayer;
-use tower_http::request_id::PropagateRequestIdLayer;
 use tracing::instrument;
+use webauthn_rs::Webauthn;
 
-use common::Error;
 use database::DatabaseInstance;
 
 use crate::graphql::{
-    GraphQLSchema, GraphQlTransport, KiwiService, KiwiServiceMutable, KiwiServiceSubscription,
+    AuthToken, GraphQLSchema, GraphQlTransport, KiwiQuery, KiwiQueryMut, KiwiSubscription,
 };
-use crate::graphql::context::GraphqlContext;
+use crate::graphql::context::GQLRequestContext;
 
 const GRAPHQL_PATH: &str = "/graphql";
 const GRAPHIQL_PATH: &str = "/graphiql";
-const PLAYGROUND_PATH: &str = "/playground";
-const SUBSCRIPTIONS_PATH: &str = "/subscriptions";
+const SCHEMA_PATH: &str = "/schema";
 
-#[derive(Debug, Clone)]
-pub struct WebRequestContext {
-    db: DatabaseConnection,
-    db_ro: Option<DatabaseConnection>,
-    schema: Arc<GraphQLSchema>,
+pub const MAX_QUERY_COMPLEXITY: usize = 128;
+
+
+fn build_schema(with_tracing: bool) -> GraphQLSchema {
+    let builder = GraphQLSchema::build(
+        KiwiQuery::default(),
+        KiwiQueryMut::default(),
+        KiwiSubscription::default(),
+    )
+        .with_sorted_fields()
+        .with_sorted_enums()
+        .limit_complexity(MAX_QUERY_COMPLEXITY);
+    let builder = if with_tracing {
+        builder.extension(ApolloTracing)
+    } else {
+        builder
+    };
+    builder.finish()
+}
+lazy_static! {
+    static ref SCHEMA: GraphQLSchema = build_schema(false);
+    static ref SCHEMA_WITH_TRACING: GraphQLSchema = build_schema(true);
 }
 
-pub fn graphql_endpoint(
-    database_connection: DatabaseInstance
-) -> Router<()> {
-    let DatabaseInstance {
-        db: database_connection,
-        db_ro: database_connection_ro,
-    } = database_connection;
-    let schema = GraphQLSchema::new(
-        KiwiService {},
-        KiwiServiceMutable {},
-        KiwiServiceSubscription {},
-    );
-    let ctx = WebRequestContext {
-        db: database_connection,
-        db_ro: database_connection_ro,
-        schema: Arc::new(schema),
+#[derive(Clone)]
+pub struct WebContext {
+    pub webauthn: Webauthn,
+    pub db: DatabaseInstance,
+}
+
+pub fn graphql_endpoint(database_instance: DatabaseInstance, webauthn: Webauthn) -> Router<()> {
+    let ctx = WebContext {
+        webauthn,
+        db: database_instance,
     };
 
-
     Router::new()
-        .route(SUBSCRIPTIONS_PATH, get(graphql_handle_ws))
-        .route(GRAPHQL_PATH, on(MethodFilter::GET.or(MethodFilter::POST), graphql_handle_http))
         .route(
-            GRAPHIQL_PATH,
-            get(graphiql(GRAPHQL_PATH, SUBSCRIPTIONS_PATH)),
+            GRAPHQL_PATH,
+            on(MethodFilter::GET.or(MethodFilter::POST), graphql_handle),
         )
-        .route(
-            PLAYGROUND_PATH,
-            get(playground(GRAPHQL_PATH, SUBSCRIPTIONS_PATH)),
-        )
+        .route(GRAPHIQL_PATH, get(graphiql))
+        .route(SCHEMA_PATH, get(graphql_schema_export))
         .layer(Extension(ctx))
-        .layer(CompressionLayer::new())
-        .layer(
-            CompressionLayer::new()
-                .br(true)
-                .zstd(true)
-                .gzip(true)
-                .deflate(true)
-                .quality(CompressionLevel::Default)
-                .compress_when(
-                    SizeAbove::new(512)
-                        .and(NotForContentType::GRPC)
-                        .and(NotForContentType::IMAGES)
-                        .and(NotForContentType::SSE),
-                ),
-        )
-        .layer(CorsLayer::new()
-            .allow_methods(AllowMethods::list(vec![Method::GET, Method::POST]))
-            .allow_origin(AllowOrigin::mirror_request())
-            .allow_headers(AllowHeaders::mirror_request())
-            .allow_credentials(false)
-            .max_age(MaxAge::exact(Duration::from_secs(60)))
-        ).layer(PropagateRequestIdLayer::x_request_id())
 }
 
-#[cfg_attr(text, axum::debug_handler)]
-#[instrument(level = "debug")]
-pub async fn graphql_handle_http(
-    token: Option<AuthBearer>,
-    Extension(ctx): Extension<WebRequestContext>,
-    JuniperRequest(req): JuniperRequest<DefaultScalarValue>,
-) -> JuniperResponse<DefaultScalarValue> {
-    let token = token.map(|t| t.0);
-
-    let context = GraphqlContext::new(GraphQlTransport::Http, token, ctx.db, ctx.db_ro, None).await;
-    let response = req.execute(ctx.schema.root_node(), &context).await;
-    JuniperResponse(response)
+enum MultiGraphQlExtractor {
+    Http(GraphQLBatchRequest),
+    WebSocket((WebSocketUpgrade, GraphQLProtocol)),
 }
-
-
-#[derive(Debug, Clone, Deserialize)]
-pub struct GraphQlSubscriptionQueryStrings {
-    pub token: Option<String>,
-}
-
-#[cfg_attr(text, axum::debug_handler)]
-#[instrument(level = "debug")]
-pub async fn graphql_handle_hybrid(
-    request: axum_either::AxumEither<WebSocketUpgrade, Json<()>>,
-    token: Option<AuthBearer>,
-    Query(query): Query<GraphQlSubscriptionQueryStrings>,
-    Extension(ctx): Extension<WebRequestContext>,
-) -> Box<dyn IntoResponse> {
-    let token = token.map(|t| t.0).or(query.token);
-    let context = GraphqlContext::new(GraphQlTransport::Websocket, token, ctx.db, ctx.db_ro, None).await;
-
-    let config = ConnectionConfig::new(context);
-    match request {
-        AxumEither::Left(ws) => {
-            Box::new(ws.protocols(["graphql-transport-ws", "graphql-ws"])
-                .max_frame_size(1024)
-                .max_message_size(1024)
-                .on_upgrade(|socket| serve_ws(socket, ctx.schema, config)))
-        }
-        AxumEither::Right(tower_http) => {
-            todo!()
+impl MultiGraphQlExtractor {
+    fn transport(&self) -> GraphQlTransport {
+        match self {
+            MultiGraphQlExtractor::Http(_) => GraphQlTransport::Http,
+            MultiGraphQlExtractor::WebSocket(_) => GraphQlTransport::WebSocket,
         }
     }
 }
 
-#[cfg_attr(text, axum::debug_handler)]
-#[instrument(level = "debug")]
-pub async fn graphql_handle_ws(
-    ws: WebSocketUpgrade,
-    token: Option<AuthBearer>,
-    Query(query): Query<GraphQlSubscriptionQueryStrings>,
-    Extension(ctx): Extension<WebRequestContext>,
-) -> impl IntoResponse {
-    let token = token.map(|t| t.0).or(query.token);
-    let context = GraphqlContext::new(GraphQlTransport::Websocket, token, ctx.db, ctx.db_ro, None).await;
+#[async_trait::async_trait]
+impl<S> FromRequest<S> for MultiGraphQlExtractor
+where
+    S: Send + Sync,
+{
+    type Rejection = Response;
 
-    let config = ConnectionConfig::new(context);
-    ws.protocols(["graphql-transport-ws", "graphql-ws"])
-        .max_frame_size(1024)
-        .max_message_size(1024)
-        .on_upgrade(|socket| serve_ws(socket, ctx.schema, config))
+    async fn from_request(mut req: Request, state: &S) -> Result<Self, Self::Rejection> {
+        if req.method() == Method::GET {
+            let maybe_upgrade = req
+                .extract_parts_with_state::<WebSocketUpgrade, S>(state)
+                .await;
+            let protocol = req
+                .extract_parts_with_state::<GraphQLProtocol, S>(state)
+                .await;
+            if let Ok(upgrade) = maybe_upgrade {
+                if let Ok(protocol) = protocol {
+                    return Ok(MultiGraphQlExtractor::WebSocket((upgrade, protocol)));
+                }
+            }
+            let no_query = req
+                .uri()
+                .query()
+                .map(|q| q.trim().is_empty())
+                .unwrap_or(true);
+            if no_query {
+                return Err(Html(playground_source(
+                    GraphQLPlaygroundConfig::new(GRAPHQL_PATH)
+                        .subscription_endpoint(GRAPHQL_PATH)
+                        .title("Playground for Project Kiwi"),
+                ))
+                    .into_response());
+            }
+        }
+        GraphQLBatchRequest::from_request(req, state)
+            .await
+            .map(MultiGraphQlExtractor::Http)
+            .map_err(IntoResponse::into_response)
+    }
 }
 
-#[derive(Debug, Error)]
-#[error("Failed to initialize subscription context")]
-pub struct InitSubscriptionContextError;
+enum GraphQlMultiResponse {
+    Http(GraphQLResponse),
+    WebSocket(Response),
+}
+impl IntoResponse for GraphQlMultiResponse {
+    fn into_response(self) -> Response {
+        match self {
+            GraphQlMultiResponse::Http(response) => response.into_response(),
+            GraphQlMultiResponse::WebSocket(upgrade) => upgrade,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct GraphQlQueryStrings {
+    pub token: Option<String>,
+}
+
+#[derive(thiserror::Error, Debug)]
+pub enum GraphQLQueryError {
+    #[error("cannot create context")]
+    CreateContextError,
+}
+
+#[instrument(level = "debug", skip(ctx, req))]
+pub async fn graphql_handle(
+    token: Option<AuthBearer>,
+    Query(query): Query<GraphQlQueryStrings>,
+    Extension(ctx): Extension<WebContext>,
+    req: MultiGraphQlExtractor,
+) -> Result<GraphQlMultiResponse, impl IntoResponse> {
+    let token = token.map(|t| t.0).or(query.token);
+    let transport = req.transport();
+    let context = GQLRequestContext::new(ctx).await;
+    match context {
+        Ok(context) => {
+            match req {
+                MultiGraphQlExtractor::Http(request) => {
+                    let transport = GraphQlTransport::Http;
+
+                    let req = request.into_inner()
+                        .data(transport)
+                        .data(AuthToken(token))
+                        .data(context);
+
+                    let response = SCHEMA.execute_batch(req).await.into();
+                    Ok(GraphQlMultiResponse::Http(response))
+                }
+                MultiGraphQlExtractor::WebSocket((ws, protocol)) => {
+                    let mut data = Data::default();
+                    data.insert(transport);
+                    data.insert(AuthToken(token));
+                    data.insert(context);
+                    let upgrade = ws
+                        .protocols(ALL_WEBSOCKET_PROTOCOLS)
+                        .on_upgrade(move |socket| {
+                            GraphQLWebSocket::new(socket, SCHEMA.clone(), protocol)
+                                .with_data(data)
+                                .serve()
+                        });
+                    Ok(GraphQlMultiResponse::WebSocket(upgrade))
+                }
+            }
+        }
+        Err(report) => {
+            tracing::error!("Error creating context: \n{:?}", report);
+            Err(StatusCode::INTERNAL_SERVER_ERROR)
+        }
+    }
+}
+
+async fn graphql_schema_export() -> String {
+    SCHEMA.sdl_with_options(
+        SDLExportOptions::new()
+            .include_specified_by()
+            .prefer_single_line_descriptions(),
+    )
+}
+
+async fn graphiql() -> Html<String> {
+    Html(
+        GraphiQLSource::build()
+            .endpoint(GRAPHQL_PATH)
+            .subscription_endpoint(GRAPHQL_PATH)
+            .finish(),
+    )
+}

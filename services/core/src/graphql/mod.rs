@@ -1,115 +1,97 @@
-use std::fmt::Display;
-use std::ops::{Deref, DerefMut};
-use std::pin::Pin;
+use std::time::Duration;
 
-use context::GraphqlContext;
-use futures::Stream;
-use juniper::{
-    graphql_object, graphql_subscription, Context, FieldError, GraphQLEnum, RootNode, ID,
-};
-use sea_orm::{ConnectionTrait, TransactionTrait};
+use async_graphql::{async_stream, Context, DataContext, Enum, ID, MergedObject, MergedSubscription, Object, scalar, ScalarType, Schema};
+use async_graphql::futures_util::Stream;
+use serde::{Deserialize, Serialize};
+use tokio::time::sleep;
 
-use crate::graphql::profile::{Profile, ProfileMut};
+use crate::graphql::auth::{AuthRoot, AuthRootMut};
 
-pub mod comment;
-pub mod context;
-pub mod guild;
-pub mod media;
-pub mod post;
-pub mod profile;
-pub mod publication;
 mod auth;
+mod profile;
+pub mod context;
 
-pub type GraphQLSchema =
-    RootNode<'static, KiwiService, KiwiServiceMutable, KiwiServiceSubscription>;
+#[derive(Debug, Clone)]
+pub struct AuthToken(pub Option<String>);
 
-/// The transport used to communicate with the server.
-#[derive(Clone, Debug, GraphQLEnum)]
-#[graphql(name = "Transport")]
+/// A simple rate limiter which prohibits calling a function more than once per query call.
+/// f.e. you cannot create more than one webauthn challenge per query call.
+pub struct QueryCallLimiter {}
+
+
+#[derive(Debug, Default, Clone, Copy, Serialize, Deserialize)]
+pub struct Unit;
+scalar!(Unit, "Unit");
+
+#[derive(Clone)]
+pub struct RequestData {
+    pub transport: GraphQlTransport,
+    pub token: Option<String>,
+}
+
+#[derive(Enum, Copy, Clone, Eq, PartialEq)]
 pub enum GraphQlTransport {
-    /// The transport is using HTTP.
     Http,
-    /// The transport is using Websockets.
-    Websocket,
+    WebSocket,
 }
 
-#[derive(Clone, Debug)]
-pub struct KiwiService {}
+pub(crate) type GraphQLSchema = Schema<KiwiQuery, KiwiQueryMut, KiwiSubscription>;
 
-#[derive(Clone, Debug)]
-pub struct KiwiServiceMutable {}
+#[derive(MergedObject, Default)]
+#[graphql(name = "Query")]
+pub struct KiwiQuery(KiwiBase, AuthRoot, profile::ProfileQueryRoot);
 
-#[graphql_object]
-#[graphql(context = GraphqlContext)]
-impl KiwiService {
-    async fn number(#[graphql(context)] ctx: &GraphqlContext) -> i32 {
-        42
-    }
+#[derive(MergedObject, Default)]
+#[graphql(name = "Mutation")]
+pub struct KiwiQueryMut(AuthRootMut);
 
-    /// Returns the transport used to communicate with the server.
-    /// the value only represetns the transport used between the actual core and a peer.
-    /// f.e. when some node inbetween maps the transport to another one, the value will represent the one used between the core and the node.
-    /// Its not realy useful and more for debugging purposes.
-    fn transport(&self, context: &GraphqlContext) -> GraphQlTransport {
-        context.transport.clone()
-    }
+#[derive(MergedSubscription, Default)]
+#[graphql(name = "Subscription")]
+pub struct KiwiSubscription(SubscriptionsTest);
 
-    /// Returns the baerer token used to authenticate the request. Only for testing purposes. Not existent in release builds.
-    #[cfg(debug_assertions)]
-    #[graphql(
-        name = "token",
-        deprecated = "unsafe only for testing, use 'me' instead!"
-    )]
-    async fn token(&self, context: &GraphqlContext) -> Option<String> {
-        let token = &context.token;
+#[derive(Default)]
+pub struct KiwiBase;
 
-        token.clone()
-    }
-
-    /// Returns the current user profile if authenticated. Otherwise null.
-    /// This is the prefered way to get the current user profile.
-    async fn me() -> Option<Profile> {
-        None
-    }
-    async fn profile(id: Option<ID>, name: Option<String>) -> Option<Profile> {
-        None
-    }
-
-    async fn profiles(
-        #[graphql(desc = "The number of profiles to return")] limit: Option<i32>,
-        #[graphql(desc = "The offset to start from")] offset: Option<i32>,
-    ) -> Vec<Profile> {
-        vec![]
+#[async_graphql::Object]
+impl KiwiBase {
+    async fn transport<'a>(&self, ctx: &Context<'a>) -> &'a GraphQlTransport {
+        ctx.data_unchecked::<GraphQlTransport>()
     }
 }
 
-#[graphql_object]
-#[graphql(context = GraphqlContext)]
-impl KiwiServiceMutable {
-    
-    async fn auth() -> auth::KiwiAuthentication {
-        auth::KiwiAuthentication::new()
-    }
-    
-    async fn edit_profile(profile_id: ID, domain: Option<String>) -> Option<ProfileMut> {
-        None
+#[derive(Default)]
+pub struct SubscriptionsTest;
+
+#[async_graphql::Subscription]
+impl SubscriptionsTest {
+    pub async fn test(
+        &self,
+        #[graphql(
+            desc = "The step size between each number",
+            default = 1,
+            validator(minimum = 1)
+        )]
+        step_size: i64,
+    ) -> impl Stream<Item=TestObject> {
+        async_stream::stream! {
+            for i in 0..1024_i64 {
+                sleep(Duration::from_secs(1)).await;
+                let test_object = TestObject { id: (i*step_size) };
+                yield  test_object;
+            }
+        }
     }
 }
+pub struct TestObject {
+    pub id: i64,
+}
 
-#[derive(Clone, Debug)]
-pub struct KiwiServiceSubscription {}
-
-type StringStream = Pin<Box<dyn Stream<Item = Result<String, FieldError>> + Send>>;
-
-#[graphql_subscription]
-#[graphql(context = GraphqlContext)]
-impl KiwiServiceSubscription {
-    async fn hello_world() -> StringStream {
-        let stream = futures::stream::iter([Ok(String::from("Hello")), Ok(String::from("World!"))]);
-        Box::pin(stream)
+#[Object]
+impl TestObject {
+    async fn id(&self) -> ID {
+        ID::from(base36::encode(&self.id.to_be_bytes()))
     }
-    async fn hello_world2() -> StringStream {
-        let stream = futures::stream::iter([Ok(String::from("Hello")), Ok(String::from("World!"))]);
-        Box::pin(stream)
+    async fn id_i64(&self) -> i64 {
+        self.id
     }
 }

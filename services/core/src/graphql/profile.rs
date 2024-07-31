@@ -1,77 +1,33 @@
-use std::collections::HashMap;
+use async_graphql::ID;
 
-use juniper::{graphql_object, ID};
-use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
+#[derive(Default)]
+pub struct ProfileQueryRoot {}
 
-use database::orm::profile::Column as ProfileColumn;
-use database::orm::profile::Entity as ProfileEntity;
-use database::orm::profile::Model as ProfileModel;
-
-use crate::graphql::context::GraphqlContext;
-use crate::graphql::media::MediaImage;
-use crate::graphql::post::{Post, PostMut};
-
-struct ProfileLoader {}
-
-impl dataloader::BatchFn<ID, ProfileModel> for ProfileLoader {
-    async fn load(&mut self, keys: &[ID]) -> HashMap<ID, ProfileModel> {
-        todo!()
+#[async_graphql::Object]
+impl ProfileQueryRoot {
+    async fn profile(&self) -> ProfileQuery {
+        ProfileQuery {}
     }
 }
 
-#[derive(Clone, Debug)]
-pub struct Profile {
-    id: i64,
-}
+pub struct ProfileQuery {}
 
-#[graphql_object]
-#[graphql(context = GraphqlContext)]
-impl Profile {
+#[async_graphql::Object(name = "Profile")]
+impl ProfileQuery {
     async fn id(&self) -> ID {
-        radix_fmt::radix_36(self.id).to_string().into()
-    }
-
-    async fn avatar(&self) -> Option<MediaImage> {
-        None
+        ID::from("id")
     }
 
     async fn name(&self) -> String {
-        todo!()
-    }
-
-    async fn post(&self, id: ID) -> Option<Post> {
-        todo!()
-    }
-
-    async fn posts(
-        &self,
-        #[graphql(desc = "The number of posts to return")] limit: Option<i32>,
-        #[graphql(desc = "The offset to start from")] offset: Option<i32>,
-    ) -> Vec<Post> {
-        vec![]
+        "name".to_string()
     }
 }
 
-pub struct ProfileMut {
-    id: i64,
-}
+pub struct ProfileMutation {}
 
-#[graphql_object]
-#[graphql(context = GraphqlContext)]
-impl ProfileMut {
-    async fn id(&self) -> ID {
-        radix_fmt::radix_36(self.id).to_string().into()
-    }
-
-    async fn name(&self) -> String {
-        todo!()
-    }
-
-    async fn post(&self, id: ID) -> Option<PostMut> {
-        todo!()
-    }
-
+#[async_graphql::Object(name = "ProfileMut")]
+impl ProfileMutation {
     async fn set_name(&self, name: String) -> String {
-        todo!()
+        name
     }
 }

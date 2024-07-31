@@ -64,7 +64,7 @@ impl MigrationTrait for Migration {
             .create_table(
                 Table::create()
                     .table(AccountKey::Table)
-                    .col(ColumnDef::new(AccountKey::Id).big_integer().primary_key())
+                    .col(ColumnDef::new(AccountKey::Id).uuid().primary_key())
                     .col(
                         ColumnDef::new(AccountKey::CreatedAt)
                             .timestamp_with_time_zone()
@@ -605,12 +605,14 @@ impl MigrationTrait for Migration {
             .await?;
 
         // Drop profiles and accounts
-        manager.drop_foreign_key(
-            ForeignKey::drop()
-                .table(Asset::Table)
-                .name(Asset::FkMediaOriginProfileId.to_string())
-                .to_owned(),
-        ).await?;
+        manager
+            .drop_foreign_key(
+                ForeignKey::drop()
+                    .table(Asset::Table)
+                    .name(Asset::FkMediaOriginProfileId.to_string())
+                    .to_owned(),
+            )
+            .await?;
 
         manager
             .drop_table(Table::drop().table(Profile::Table).if_exists().to_owned())
@@ -680,14 +682,6 @@ enum AccountKey {
     FkAccountKeyAccountId,
 }
 
-enum WebAuthNChallenge {
-    Table,
-    Id,
-    AccountId,
-    CreatedAt,
-    Challenge,
-}
-
 #[derive(DeriveIden)]
 enum Asset {
     Table,
@@ -731,6 +725,7 @@ enum Profile {
 
 #[derive(DeriveIden)]
 enum Guild {
+    #[sea_orm(iden = "guild")]
     Table,
     Id,
     CreatedAt,
@@ -747,8 +742,8 @@ enum ChannelTypeEnum {
     Text,
     Voice,
     Feed,
-    //Forum,
-    //Stage,
+    Forum,
+    Stage,
 }
 
 #[derive(DeriveIden)]

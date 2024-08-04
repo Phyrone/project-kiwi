@@ -1,35 +1,27 @@
 [package]
 name = "proto"
-version = "0.1.0"
-edition = "2021"
+version.workspace = true
+edition.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = { version = "1.37.0", features = ["full"] }
-tonic = { version = "0.11.0", features = ["codegen", "channel", "zstd", "prost"], default-features = false }
-prost = { version = "0.12.6" }
-log = "0.4.21"
-h3 = { version = "0.0.5", optional = true }
-http = { version = "1.1.0", optional = true }
-h3-quinn = { version = "0.0.6", optional = true }
-quinn = { version = "0.11.1", optional = true }
-thiserror = "1.0.61"
-error-stack = "0.4.1"
-bytes = "1.6.0"
+tokio.workspace = true
+tonic.workspace = true
+tonic-types.workspace = true
+prost.workspace = true
+http.workspace = true
+thiserror.workspace = true
+error-stack.workspace = true
+bytes.workspace = true
 bytemuck = { version = "1.16.0", features = ["must_cast"] }
 zerocopy = { version = "0.7.34", features = ["derive"] }
 futures = "0.3.30"
-tonic-types = "0.11.0"
+
 
 [build-dependencies]
-prost-build = "0.12.6"
-tonic-build = "0.11.0"
+prost-build = "0.13.1"
+tonic-build = "0.12.1"
 
 [features]
-default = ["transport-all"]
-transport-all = ["transport-h2",]
-transport-h2 = ["tonic/transport"]
-## Comming soon
-#transport-local = []
-#transport-h3 = ["dep:h3", "dep:http"]
+default = []

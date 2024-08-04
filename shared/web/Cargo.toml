@@ -1,7 +1,7 @@
 [package]
 name = "web"
-version = "0.1.0"
-edition = "2021"
+version.workspace = true
+edition.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -9,39 +9,22 @@ edition = "2021"
 common = { path = "../common" }
 database = { path = "../database" }
 hmac = { version = "0.12.1", features = ["std", "reset"] }
-image = "0.25.1"
-img_hash = "3.2.0"
+#image = "0.25.1"
+#img_hash = "3.2.0"
 problem_details = { version = "0.6.0", features = ["axum", "xml"] }
-sea-orm = { version = "0.12.15", features = [
-    "runtime-tokio",
-    "sqlx-postgres",
-    "sqlx-mysql",
-    "runtime-tokio-rustls",
-    "postgres-array",
-    "macros",
-    "with-json",
-    "with-chrono",
-    "with-uuid",
-    "with-bigdecimal"
-] }
-sha3 = { version = "0.10.8", features = ["reset", "asm"] }
-tokio = { version = "1.37.0", features = ["full"] }
-serde = { version = "1.0.200", features = ["derive", "rc", "alloc"] }
-chrono = { version = "0.4.38", features = ["serde"] }
+sea-orm.workspace = true
+tokio.workspace = true
+serde.workspace = true
+chrono.workspace = true
 rmp-serde = "1.3.0"
-base64 = "0.22.1"
-digest = { version = "0.10.7", features = ["mac", "std"] }
-bincode = "1.3.3"
-clap = { version = "4.5.4", features = ["env", "derive", "string", "unicode", "cargo"] }
+base64.workspace = true
+clap.workspace = true
 axum = { version = "0.7.5", features = ["ws", "http2"] }
 schemars = { version = "0.8.19", features = ["uuid", "url", "semver", "chrono"] }
 url = { version = "2.5.0", features = ["serde"] }
 serde_json = { version = "1.0.116", features = ["alloc", "preserve_order"] }
-mime = "0.3.17"
-aide = { version = "0.13.4", features = ["axum", "http", "axum-ws", "serde_qs"] }
-indexmap = { version = "2.2.6", features = ["rayon", "serde"] }
 axum-auth = "0.7.0"
 jsonwebtoken = "9.3.0"
-radix_fmt = "1.0.0"
-num = { version = "0.4.3", features = ["serde"] }
+radix_fmt.workspace = true
+num.workspace = true
 

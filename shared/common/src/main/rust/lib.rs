@@ -95,7 +95,7 @@ fn print_startup_banner() {
     let banner_printed = print_banner("Proj.-Kiwi", Color::Cyan);
     if banner_printed && sysinfo::IS_SUPPORTED_SYSTEM {
         let mut sys_info = System::new_all();
-        sys_info.refresh_cpu();
+        sys_info.refresh_cpu_all();
         println!("  OS: {}", os_info::get());
         if let Some(kernel_version) = System::kernel_version() {
             println!("    Kernel: {}", kernel_version);

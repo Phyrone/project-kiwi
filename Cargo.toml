@@ -11,5 +11,59 @@ members = [
     "services/snowflake",
     "services/core",
     "services/frontend/src-tauri",
-    "shared/sk-embedded",
 ]
+
+[workspace.package]
+version = "0.0.1"
+edition = "2021"
+authors = ["Phyrone <phyrone@phyrone.de>"]
+
+[workspace.dependencies]
+# Essential
+uuid = { version = "1.10.0", features = ["v4", "zerocopy"] }
+serde = { version = "1.0.204", features = ["std", "rc", "alloc", "derive"] }
+regex = { version = "1.10.5", features = ["logging"] }
+radix_fmt = { version = "1.0.0", features = [] }
+base64 = "0.22.1"
+rand = { version = "0.8.5", features = ["std", "serde"] }
+url = { version = "2.5.2", features = ["default", "serde"] }
+lazy_static = { version = "1.5.0" }
+chrono = { version = "0.4.38", features = ["std", "alloc", "serde"] }
+bytes = { version = "1.7.1", features = ["std", "serde"] }
+num = "0.4.3"
+
+# Tokio Runtime/Utilities and Other Async Stuff
+tokio = { version = "1.39.2", features = ["full", "tracing"] }
+tokio-util = { version = "0.7.11", features = ["tracing"] }
+
+
+# Error Handling, Logging and CLI
+error-stack = { version = "0.5.0", features = ["serde", "std", "anyhow", "backtrace"] }
+anyhow = { version = "1.0.86", features = ["backtrace", "std"] }
+thiserror = "1.0.63"
+tracing = { version = "0.1.40", features = ["log"] }
+clap = { version = "4.5.4", features = ["derive", "string", "env", "unicode", "cargo", "color", "suggestions", "wrap_help"] }
+colored = { version = "2.1.0", features = [] }
+
+# Database
+sea-orm = { version = "1.0.0", features = ["sqlx-postgres"] }
+sea-query = { version = "0.31.0", features = [] }
+sqlx = { version = "0.8.0", features = ["postgres"] }
+dataloader = { version = "0.17.0", features = ["tokio", "runtime-tokio"], default-features = false }
+redis = { version = "0.26.0", features = ["tokio-comp", "tokio-rustls-comp", "serde"] }
+
+# Web
+http = { version = "1.1.0", features = ["std"] }
+axum = { version = "0.7.5", features = ["http2", "tracing"] }
+tower-http = { version = "0.5.2", features = ["full"] }
+problem_details = { version = "0.6.0", features = ["axum", "xml"] }
+
+# GraphQL
+async-graphql = { version = "7.0.7", features = ["dataloader", "apollo_tracing", "tokio", "tempfile", "string_number", "fast_chemail", "tracing", "schemars", "cbor", "password-strength-validator", "uuid"] }
+
+# GRPC
+prost = { version = "0.13.1", features = ["std", "derive"] }
+tonic = { version = "0.12.1", features = ["codegen", "channel", "zstd", "prost", "transport"] }
+tonic-types = "0.12.1"
+
+# Misc

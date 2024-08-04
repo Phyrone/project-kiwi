@@ -1,4 +1,5 @@
 use async_graphql::ID;
+use radix_fmt::Radix;
 
 #[derive(Default)]
 pub struct ProfileQueryRoot {}
@@ -15,6 +16,7 @@ pub struct ProfileQuery {}
 #[async_graphql::Object(name = "Profile")]
 impl ProfileQuery {
     async fn id(&self) -> ID {
+        
         ID::from("id")
     }
 

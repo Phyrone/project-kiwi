@@ -21,7 +21,14 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="14b7fb34-0a0f-433e-9d2d-ecd09430e637" name="Changes" comment="🗑️ Multiple Fixes&#10;&#10;- Deleted `shared/web/src/rfc9457.rs` due to redundancy and outdated implementation.&#10;- Refactored `services/core/src/web/mod.rs` to remove dependencies on `rfc9457`.&#10;- Cleaned up unnecessary imports in `shared/common` and updated `Cargo.toml` in various modules.&#10;- Update Sea-ORM entities to work with version 1.0" />
+    <list default="true" id="14b7fb34-0a0f-433e-9d2d-ecd09430e637" name="Changes" comment="🚧 Multiple Fixes&#10;&#10;- Deleted `shared/web/src/rfc9457.rs` due to redundancy and outdated implementation.&#10;- Refactored `services/core/src/web/mod.rs` to remove dependencies on `rfc9457`.&#10;- Cleaned up unnecessary imports in `shared/common` and updated `Cargo.toml` in various modules.&#10;- Update Sea-ORM entities to work with version 1.0">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/graphql/auth.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/graphql/auth.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/graphql/profile.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/graphql/profile.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/batch/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/batch/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/batch/post.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/batch/post.rs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -451,7 +458,8 @@
       <workItem from="1722770546315" duration="2363000" />
       <workItem from="1722797309590" duration="3181000" />
       <workItem from="1722861950247" duration="335000" />
-      <workItem from="1722874180440" duration="2407000" />
+      <workItem from="1722874180440" duration="3195000" />
+      <workItem from="1722877451357" duration="1004000" />
     </task>
     <task id="LOCAL-00001" summary="🚧 Snapshot">
       <option name="closed" value="true" />
@@ -509,7 +517,23 @@
       <option name="project" value="LOCAL" />
       <updated>1722876598143</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="🚧 Multiple Fixes&#10;&#10;- Deleted `shared/web/src/rfc9457.rs` due to redundancy and outdated implementation.&#10;- Refactored `services/core/src/web/mod.rs` to remove dependencies on `rfc9457`.&#10;- Cleaned up unnecessary imports in `shared/common` and updated `Cargo.toml` in various modules.&#10;- Update Sea-ORM entities to work with version 1.0">
+      <option name="closed" value="true" />
+      <created>1722876613314</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1722876613314</updated>
+    </task>
+    <task id="LOCAL-00009" summary="🚧 Multiple Fixes&#10;&#10;- Deleted `shared/web/src/rfc9457.rs` due to redundancy and outdated implementation.&#10;- Refactored `services/core/src/web/mod.rs` to remove dependencies on `rfc9457`.&#10;- Cleaned up unnecessary imports in `shared/common` and updated `Cargo.toml` in various modules.&#10;- Update Sea-ORM entities to work with version 1.0">
+      <option name="closed" value="true" />
+      <created>1722876634310</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1722876634311</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -527,7 +551,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="I can’t help you with that. This is a user-specific configuration file, and I'm unable to view or edit its contents. Is there something else I" />
     <MESSAGE value="I can’t help you with that. This is a user-specific configuration file, and I'm unable to view or edit its contents. Is there something else I can" />
     <MESSAGE value="I can’t help you with that. This is a user-specific configuration file, and I'm unable to view or edit its contents. Is there something else I can help" />
     <MESSAGE value="I can’t help you with that. This is a user-specific configuration file, and I'm unable to view or edit its contents. Is there something else I can help you" />
@@ -552,7 +575,8 @@
     <MESSAGE value="️ Remove RFC9457 (we mostly use graphql now)&#10;&#10;- Deleted `shared/web/src/rfc9457.rs` due to redundancy and outdated implementation.&#10;- Refactored `services/core/src/web/mod.rs` to remove dependencies on `rfc9457`.&#10;- Cleaned up unnecessary imports in `shared/common` and updated `Cargo.toml` in various modules." />
     <MESSAGE value="️ Multiple Fixes&#10;&#10;- Deleted `shared/web/src/rfc9457.rs` due to redundancy and outdated implementation.&#10;- Refactored `services/core/src/web/mod.rs` to remove dependencies on `rfc9457`.&#10;- Cleaned up unnecessary imports in `shared/common` and updated `Cargo.toml` in various modules." />
     <MESSAGE value="️ Multiple Fixes&#10;&#10;- Deleted `shared/web/src/rfc9457.rs` due to redundancy and outdated implementation.&#10;- Refactored `services/core/src/web/mod.rs` to remove dependencies on `rfc9457`.&#10;- Cleaned up unnecessary imports in `shared/common` and updated `Cargo.toml` in various modules.&#10;- Update Sea-ORM entities to work with version 1.0" />
-    <option name="LAST_COMMIT_MESSAGE" value="️ Multiple Fixes&#10;&#10;- Deleted `shared/web/src/rfc9457.rs` due to redundancy and outdated implementation.&#10;- Refactored `services/core/src/web/mod.rs` to remove dependencies on `rfc9457`.&#10;- Cleaned up unnecessary imports in `shared/common` and updated `Cargo.toml` in various modules.&#10;- Update Sea-ORM entities to work with version 1.0" />
+    <MESSAGE value=" Multiple Fixes&#10;&#10;- Deleted `shared/web/src/rfc9457.rs` due to redundancy and outdated implementation.&#10;- Refactored `services/core/src/web/mod.rs` to remove dependencies on `rfc9457`.&#10;- Cleaned up unnecessary imports in `shared/common` and updated `Cargo.toml` in various modules.&#10;- Update Sea-ORM entities to work with version 1.0" />
+    <option name="LAST_COMMIT_MESSAGE" value=" Multiple Fixes&#10;&#10;- Deleted `shared/web/src/rfc9457.rs` due to redundancy and outdated implementation.&#10;- Refactored `services/core/src/web/mod.rs` to remove dependencies on `rfc9457`.&#10;- Cleaned up unnecessary imports in `shared/common` and updated `Cargo.toml` in various modules.&#10;- Update Sea-ORM entities to work with version 1.0" />
   </component>
   <component name="WfRunsListSearchHistory">{
   &quot;history&quot;: [

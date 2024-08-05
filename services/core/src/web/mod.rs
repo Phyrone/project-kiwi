@@ -2,8 +2,6 @@ use std::future::{Future, IntoFuture, poll_fn};
 use std::net::SocketAddr;
 use std::task::Poll;
 use std::time::Duration;
-
-use argon2::{Algorithm, Argon2, Params, ParamsBuilder, Version};
 use axum::{Extension, Json, Router, ServiceExt};
 use axum::extract::State;
 use axum::http::{HeaderName, Method, StatusCode};
@@ -11,13 +9,11 @@ use axum::response::{Html, IntoResponse, Redirect};
 use axum::routing::get;
 use clap::Args;
 use error_stack::ResultExt as ErrorStackResultExt;
-use futures_lite::FutureExt;
 use lazy_static::lazy_static;
 use schemars::JsonSchema;
 use sea_orm::{ConnectionTrait, DatabaseConnection};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use sqlx::Database;
 use tokio::net::TcpListener;
 use tokio::task::JoinSet;
 use tokio_util::sync::CancellationToken;
@@ -34,7 +30,6 @@ use webauthn_rs::{Webauthn, WebauthnBuilder};
 use common::error_object;
 use database::DatabaseInstance;
 use web::auth::WEBAUTHN_CHALLENGE_TIMEOUT;
-use web::rfc9457::{IntoProblemResultExt as ProblemResultExt, ProblemDescription};
 
 use crate::web::graphql::graphql_endpoint;
 

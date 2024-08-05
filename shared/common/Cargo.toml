@@ -16,7 +16,6 @@ humansize = "2.1.3"
 is-root = "0.1.3"
 itertools = "0.13.0"
 jemallocator = "0.5.4"
-log = { version = "0.4.21", features = ["std", "serde"] }
 num_cpus = "1.16.0"
 os_info = "3.8.2"
 sysinfo = "0.31.2"
@@ -29,7 +28,7 @@ tracing-log = "0.2.0"
 tracing-subscriber = { version = "0.3.18", features = ["serde", "time", "serde_json", "json", "regex"] }
 radix_fmt = "1.0.0"
 serde.workspace = true
-regex = { version = "1.10.5", features = ["logging"] }
+regex.workspace = true
 regex-macro = "0.2.0"
 once_cell = "1.19.0"
 console-subscriber = "0.4.0"

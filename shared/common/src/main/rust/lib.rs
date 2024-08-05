@@ -12,10 +12,9 @@ use figlet_rs::FIGfont;
 use human_panic::Metadata;
 use is_root::is_root;
 use itertools::Itertools;
-use log::info;
 use sysinfo::System;
 pub use thiserror::Error;
-use tracing::instrument;
+use tracing::{info, instrument};
 
 use crate::params::ParamsWithRequirements;
 

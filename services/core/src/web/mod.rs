@@ -1,12 +1,8 @@
-use std::future::{Future, IntoFuture, poll_fn};
-use std::net::SocketAddr;
-use std::task::Poll;
-use std::time::Duration;
-use axum::{Extension, Json, Router, ServiceExt};
 use axum::extract::State;
 use axum::http::{HeaderName, Method, StatusCode};
 use axum::response::{Html, IntoResponse, Redirect};
 use axum::routing::get;
+use axum::{Extension, Json, Router, ServiceExt};
 use clap::Args;
 use error_stack::ResultExt as ErrorStackResultExt;
 use lazy_static::lazy_static;
@@ -14,15 +10,19 @@ use schemars::JsonSchema;
 use sea_orm::{ConnectionTrait, DatabaseConnection};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::future::{poll_fn, Future, IntoFuture};
+use std::net::SocketAddr;
+use std::task::Poll;
+use std::time::Duration;
 use tokio::net::TcpListener;
 use tokio::task::JoinSet;
 use tokio_util::sync::CancellationToken;
-use tower_http::compression::{CompressionLayer, Predicate};
 use tower_http::compression::predicate::{NotForContentType, SizeAbove};
-use tower_http::CompressionLevel;
+use tower_http::compression::{CompressionLayer, Predicate};
 use tower_http::cors::{AllowHeaders, AllowMethods, AllowOrigin, CorsLayer, MaxAge};
 use tower_http::request_id::PropagateRequestIdLayer;
 use tower_http::timeout::TimeoutLayer;
+use tower_http::CompressionLevel;
 use tracing::{info, instrument, warn};
 use url::Url;
 use webauthn_rs::{Webauthn, WebauthnBuilder};
@@ -33,8 +33,8 @@ use web::auth::WEBAUTHN_CHALLENGE_TIMEOUT;
 
 use crate::web::graphql::graphql_endpoint;
 
-pub mod graphql;
 mod auth;
+pub mod graphql;
 
 #[derive(Debug, Clone, Args)]
 pub struct WebServerParams {
@@ -43,7 +43,7 @@ pub struct WebServerParams {
 
     #[clap(long, env = "WEBAUTHN_RP_ID")]
     pub webauthn_rp_id: String,
-    
+
     #[clap(long, env = "WEBAUTHN_RP_ORIGIN")]
     pub webauthn_rp_origin: Url,
 
@@ -51,16 +51,15 @@ pub struct WebServerParams {
     pub webauthn_rp_name: String,
 }
 
-
 #[derive(Debug, thiserror::Error)]
-pub enum RunWebServerError{
+pub enum RunWebServerError {
     #[error("webauthn setup failed")]
     SetupWebauthn,
-    
+
     #[error("failed to open socket")]
     OpenSocket,
     #[error("failed to start/run server")]
-    ServeAxum
+    ServeAxum,
 }
 
 #[instrument(level = "debug", skip(params, database))]
@@ -69,20 +68,18 @@ pub async fn run_web_server(
     database: DatabaseInstance,
     shutdown_token: CancellationToken,
 ) -> error_stack::Result<(), RunWebServerError> {
-   let origin = Url::parse(params.webauthn_rp_origin.as_ref())
-       .change_context(RunWebServerError::SetupWebauthn)?;
-    
-    let webauthn = WebauthnBuilder::new(
-        &params.webauthn_rp_id,
-        &origin,
-    ).change_context(RunWebServerError::SetupWebauthn)?
+    let origin = Url::parse(params.webauthn_rp_origin.as_ref())
+        .change_context(RunWebServerError::SetupWebauthn)?;
+
+    let webauthn = WebauthnBuilder::new(&params.webauthn_rp_id, &origin)
+        .change_context(RunWebServerError::SetupWebauthn)?
         .timeout(WEBAUTHN_CHALLENGE_TIMEOUT)
         .build()
         .change_context(RunWebServerError::SetupWebauthn)?;
-    
+
     let router = Router::new()
         .fallback(get(not_found))
-        .merge(graphql_endpoint(database.clone(),webauthn))
+        .merge(graphql_endpoint(database.clone(), webauthn))
         //.layer(TimeoutLayer::new(Duration::from_secs(10)))
         .layer(CompressionLayer::new())
         .layer(

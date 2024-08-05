@@ -10,13 +10,13 @@ use sea_orm::{ConnectOptions, Database, DatabaseConnection, DbErr};
 pub use sea_query;
 use thiserror::Error;
 use tokio::{join, try_join};
-use tracing::{debug, info, instrument, warn};
 use tracing::log::LevelFilter;
+use tracing::{debug, info, instrument, warn};
 
 use common::error_stack::ResultExt;
 use migration::{Migrator, MigratorTrait};
-pub use orm::*;
 pub use orm::prelude::*;
+pub use orm::*;
 
 mod batch;
 pub mod orm;
@@ -147,7 +147,7 @@ pub async fn init_database(
         init_ro_database(params),
         init_redis(params),
     )?;
-    
+
     Ok(DatabaseInstance {
         db: database,
         db_ro: database_ro,
@@ -155,7 +155,9 @@ pub async fn init_database(
     })
 }
 
-async fn init_rw_database(params: &DatabaseParams) -> error_stack::Result<DatabaseConnection, InitDatabaseError> {
+async fn init_rw_database(
+    params: &DatabaseParams,
+) -> error_stack::Result<DatabaseConnection, InitDatabaseError> {
     debug!("database url: {}", params.database_url.bright_blue());
     info!("connecting to the database...");
     let time = Instant::now();
@@ -169,7 +171,9 @@ async fn init_rw_database(params: &DatabaseParams) -> error_stack::Result<Databa
         .sqlx_logging_level(LevelFilter::Debug)
         .sqlx_slow_statements_logging_settings(LevelFilter::Warn, Duration::from_secs(5 * 60))
         .to_owned();
-    let database = Database::connect(options).await.change_context(InitDatabaseError::ConnectToDatabase)?;
+    let database = Database::connect(options)
+        .await
+        .change_context(InitDatabaseError::ConnectToDatabase)?;
     let time = time.elapsed();
     info!("database connected ({:?})", time);
 
@@ -193,7 +197,6 @@ async fn init_rw_database(params: &DatabaseParams) -> error_stack::Result<Databa
     info!("database migration complete ({:?})", time);
     Ok(database)
 }
-
 
 #[derive(Debug, Error)]
 enum DatabaseMigrationError {
@@ -246,12 +249,12 @@ async fn apply_migrations(
     Ok(())
 }
 
-
-async fn init_ro_database(params: &DatabaseParams) -> error_stack::Result<Option<DatabaseConnection>, InitDatabaseError> {
+async fn init_ro_database(
+    params: &DatabaseParams,
+) -> error_stack::Result<Option<DatabaseConnection>, InitDatabaseError> {
     if let Some(database_ro_url) = &params.database_url_ro {
         let min_ro_connections = max(params.database_min_ro_connections, 1);
         let max_ro_connections = max(params.database_max_ro_connections, min_ro_connections);
-
 
         let ro_options = ConnectOptions::new(database_ro_url)
             .max_connections(max_ro_connections)
@@ -271,18 +274,24 @@ async fn init_ro_database(params: &DatabaseParams) -> error_stack::Result<Option
     }
 }
 
-async fn init_redis(params: &DatabaseParams) -> error_stack::Result<redis::Client, InitDatabaseError> {
+async fn init_redis(
+    params: &DatabaseParams,
+) -> error_stack::Result<redis::Client, InitDatabaseError> {
     info!("connecting to redis or a redis compatible server...");
     let time = Instant::now();
     let client = redis::Client::open(params.redis_url.clone())
         .change_context(InitDatabaseError::ConnectToDatabase)?;
 
     if !params.skip_connection_test {
-        let mut connection = client.get_multiplexed_async_connection().await
+        let mut connection = client
+            .get_multiplexed_async_connection()
+            .await
             .change_context(InitDatabaseError::ConnectToDatabase)?;
         let mut ping_cmd = Cmd::new();
         ping_cmd.arg("PING");
-        connection.send_packed_command(&ping_cmd).await
+        connection
+            .send_packed_command(&ping_cmd)
+            .await
             .change_context(InitDatabaseError::ConnectToDatabase)?;
     }
     let time = time.elapsed();

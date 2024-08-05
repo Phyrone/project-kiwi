@@ -1,15 +1,18 @@
 use std::time::Duration;
 
-use async_graphql::{async_stream, Context, DataContext, Enum, ID, MergedObject, MergedSubscription, Object, scalar, ScalarType, Schema};
 use async_graphql::futures_util::Stream;
+use async_graphql::{
+    async_stream, scalar, Context, DataContext, Enum, MergedObject, MergedSubscription, Object,
+    ScalarType, Schema, ID,
+};
 use serde::{Deserialize, Serialize};
 use tokio::time::sleep;
 
 use crate::graphql::auth::{AuthRoot, AuthRootMut};
 
 mod auth;
-mod profile;
 pub mod context;
+mod profile;
 
 #[derive(Debug, Clone)]
 pub struct AuthToken(pub Option<String>);
@@ -17,7 +20,6 @@ pub struct AuthToken(pub Option<String>);
 /// A simple rate limiter which prohibits calling a function more than once per query call.
 /// f.e. you cannot create more than one webauthn challenge per query call.
 pub struct QueryCallLimiter {}
-
 
 #[derive(Debug, Default, Clone, Copy, Serialize, Deserialize)]
 pub struct Unit;
@@ -72,7 +74,7 @@ impl SubscriptionsTest {
             validator(minimum = 1)
         )]
         step_size: i64,
-    ) -> impl Stream<Item=TestObject> {
+    ) -> impl Stream<Item = TestObject> {
         async_stream::stream! {
             for i in 0..1024_i64 {
                 sleep(Duration::from_secs(1)).await;

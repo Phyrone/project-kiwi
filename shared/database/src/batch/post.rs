@@ -5,17 +5,11 @@ use dataloader::cached::Loader;
 use dataloader::BatchFn;
 use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
 
-use crate::batch::BatchLoadError;
+use crate::batch::{BatchContext, BatchLoadError};
 use crate::orm::post::*;
 use crate::Post;
 
-type PostLoader<'db> = Loader<i64, Model, PostBatcher<'db>>;
-
-pub struct PostBatcher<'db> {
-    pub database_connection: &'db DatabaseConnection,
-}
-
-impl BatchFn<i64, error_stack::Result<Model, BatchLoadError>> for PostBatcher<'_> {
+impl BatchFn<i64, error_stack::Result<Model, BatchLoadError>> for BatchContext {
     async fn load(
         &mut self,
         keys: &[i64],

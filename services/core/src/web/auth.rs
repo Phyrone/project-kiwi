@@ -7,7 +7,7 @@ use webauthn_rs::prelude::RequestChallengeResponse;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum WebAuthNChallengeData {
-    LoginChallengeResponse(RequestChallengeResponse)
+    LoginChallengeResponse(RequestChallengeResponse),
 }
 
 pub struct AuthManagerBatcher {
@@ -16,7 +16,6 @@ pub struct AuthManagerBatcher {
 }
 impl BatchFn<u64, database::account::Model> for AuthManagerBatcher {
     async fn load(&mut self, keys: &[u64]) -> HashMap<u64, database::account::Model> {
-        
         todo!()
     }
 }
@@ -25,10 +24,6 @@ pub struct AuthManager {
     client: redis::Client,
 }
 
-
 impl AuthManager {
-    fn a() {
-        
-    }
+    fn a() {}
 }
-

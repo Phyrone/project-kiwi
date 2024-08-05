@@ -1,14 +1,14 @@
-use async_graphql::{async_trait, Data, SDLExportOptions};
 use async_graphql::extensions::ApolloTracing;
 use async_graphql::http::{
-    ALL_WEBSOCKET_PROTOCOLS, GraphiQLSource, GraphQLPlaygroundConfig, playground_source,
+    playground_source, GraphQLPlaygroundConfig, GraphiQLSource, ALL_WEBSOCKET_PROTOCOLS,
 };
+use async_graphql::{async_trait, Data, SDLExportOptions};
 use async_graphql_axum::{GraphQLBatchRequest, GraphQLProtocol, GraphQLResponse, GraphQLWebSocket};
-use axum::{Extension, RequestExt, Router};
 use axum::extract::{FromRequest, Query, Request, WebSocketUpgrade};
 use axum::http::Method;
 use axum::response::{Html, IntoResponse, Response};
-use axum::routing::{get, MethodFilter, on};
+use axum::routing::{get, on, MethodFilter};
+use axum::{Extension, RequestExt, Router};
 use axum_auth::AuthBearer;
 use error_stack::ResultExt;
 use http::StatusCode;
@@ -19,10 +19,10 @@ use webauthn_rs::Webauthn;
 
 use database::DatabaseInstance;
 
+use crate::graphql::context::GQLRequestContext;
 use crate::graphql::{
     AuthToken, GraphQLSchema, GraphQlTransport, KiwiQuery, KiwiQueryMut, KiwiSubscription,
 };
-use crate::graphql::context::GQLRequestContext;
 
 const GRAPHQL_PATH: &str = "/graphql";
 const GRAPHIQL_PATH: &str = "/graphiql";
@@ -30,16 +30,15 @@ const SCHEMA_PATH: &str = "/schema";
 
 pub const MAX_QUERY_COMPLEXITY: usize = 128;
 
-
 fn build_schema(with_tracing: bool) -> GraphQLSchema {
     let builder = GraphQLSchema::build(
         KiwiQuery::default(),
         KiwiQueryMut::default(),
         KiwiSubscription::default(),
     )
-        .with_sorted_fields()
-        .with_sorted_enums()
-        .limit_complexity(MAX_QUERY_COMPLEXITY);
+    .with_sorted_fields()
+    .with_sorted_enums()
+    .limit_complexity(MAX_QUERY_COMPLEXITY);
     let builder = if with_tracing {
         builder.extension(ApolloTracing)
     } else {
@@ -118,7 +117,7 @@ where
                         .subscription_endpoint(GRAPHQL_PATH)
                         .title("Playground for Project Kiwi"),
                 ))
-                    .into_response());
+                .into_response());
             }
         }
         GraphQLBatchRequest::from_request(req, state)
@@ -163,35 +162,34 @@ pub async fn graphql_handle(
     let transport = req.transport();
     let context = GQLRequestContext::new(ctx).await;
     match context {
-        Ok(context) => {
-            match req {
-                MultiGraphQlExtractor::Http(request) => {
-                    let transport = GraphQlTransport::Http;
+        Ok(context) => match req {
+            MultiGraphQlExtractor::Http(request) => {
+                let transport = GraphQlTransport::Http;
 
-                    let req = request.into_inner()
-                        .data(transport)
-                        .data(AuthToken(token))
-                        .data(context);
+                let req = request
+                    .into_inner()
+                    .data(transport)
+                    .data(AuthToken(token))
+                    .data(context);
 
-                    let response = SCHEMA.execute_batch(req).await.into();
-                    Ok(GraphQlMultiResponse::Http(response))
-                }
-                MultiGraphQlExtractor::WebSocket((ws, protocol)) => {
-                    let mut data = Data::default();
-                    data.insert(transport);
-                    data.insert(AuthToken(token));
-                    data.insert(context);
-                    let upgrade = ws
-                        .protocols(ALL_WEBSOCKET_PROTOCOLS)
-                        .on_upgrade(move |socket| {
-                            GraphQLWebSocket::new(socket, SCHEMA.clone(), protocol)
-                                .with_data(data)
-                                .serve()
-                        });
-                    Ok(GraphQlMultiResponse::WebSocket(upgrade))
-                }
+                let response = SCHEMA.execute_batch(req).await.into();
+                Ok(GraphQlMultiResponse::Http(response))
             }
-        }
+            MultiGraphQlExtractor::WebSocket((ws, protocol)) => {
+                let mut data = Data::default();
+                data.insert(transport);
+                data.insert(AuthToken(token));
+                data.insert(context);
+                let upgrade = ws
+                    .protocols(ALL_WEBSOCKET_PROTOCOLS)
+                    .on_upgrade(move |socket| {
+                        GraphQLWebSocket::new(socket, SCHEMA.clone(), protocol)
+                            .with_data(data)
+                            .serve()
+                    });
+                Ok(GraphQlMultiResponse::WebSocket(upgrade))
+            }
+        },
         Err(report) => {
             tracing::error!("Error creating context: \n{:?}", report);
             Err(StatusCode::INTERNAL_SERVER_ERROR)

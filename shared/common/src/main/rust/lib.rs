@@ -21,6 +21,7 @@ use crate::params::ParamsWithRequirements;
 mod glide_id;
 pub mod params;
 pub mod tracing_logger;
+pub mod utils;
 
 #[derive(Debug, Error)]
 pub enum BootstrapError {

@@ -62,7 +62,7 @@ pub enum RunWebServerError {
     ServeAxum,
 }
 
-#[instrument(level = "debug", skip(params, database))]
+#[instrument(level = "debug", skip(params, database, shutdown_token))]
 pub async fn run_web_server(
     params: WebServerParams,
     database: DatabaseInstance,

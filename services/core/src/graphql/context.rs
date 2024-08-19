@@ -7,9 +7,7 @@ use sea_orm::{
     AccessMode, ColumnTrait, DatabaseConnection, DatabaseTransaction, EntityTrait, IsolationLevel,
     QueryFilter, TransactionTrait,
 };
-
-use database::Profile;
-
+use database::prelude::Profile;
 use crate::web::graphql::WebContext;
 
 #[derive(thiserror::Error, Debug)]
@@ -43,17 +41,10 @@ impl GQLRequestContext {
             .await
             .change_context(CreateGQLRequestContextError::CreateReadTransactionError)?;
 
-        todo!()
-    }
-}
-
-impl BatchFn<u64, database::orm::profile::Model> for GQLRequestContext {
-    async fn load(&mut self, keys: &[u64]) -> HashMap<u64, database::orm::profile::Model> {
-        let profiles = Profile::find()
-            .filter(database::orm::profile::Column::Id.is_in(keys.iter().copied()))
-            .all(&self.database_ro)
-            .await;
-
-        todo!()
+        Ok(Self {
+            database,
+            database_ro,
+            txn_ro: Arc::new(txn_ro),
+        })
     }
 }

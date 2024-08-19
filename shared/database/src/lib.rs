@@ -15,7 +15,6 @@ use tracing::{debug, info, instrument, warn};
 
 use common::error_stack::ResultExt;
 use migration::{Migrator, MigratorTrait};
-pub use orm::prelude::*;
 pub use orm::*;
 
 mod batch;

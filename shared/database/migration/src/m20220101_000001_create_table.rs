@@ -56,6 +56,11 @@ impl MigrationTrait for Migration {
                             .string_len(320)
                             .not_null(),
                     )
+                    .col(
+                        ColumnDef::new(Account::Password)
+                            .text()
+                            .null()
+                    )
                     .to_owned(),
             )
             .await?;
@@ -654,6 +659,7 @@ impl MigrationTrait for Migration {
     }
 }
 
+
 #[derive(DeriveIden)]
 enum Configuration {
     Table,
@@ -669,6 +675,7 @@ enum Account {
     UpdatedAt,
     SessionSecret,
     Email,
+    Password,
 }
 
 #[derive(DeriveIden)]
@@ -802,6 +809,8 @@ enum ContentFlagEnum {
     NsfwXXX,
     FakeNews,
     AiGenerated,
+    //basicaly bot generated content
+    Automated,
 }
 
 #[derive(DeriveIden)]

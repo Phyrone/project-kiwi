@@ -21,17 +21,34 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="14b7fb34-0a0f-433e-9d2d-ecd09430e637" name="Changes" comment="🎨 Format Code">
+    <list default="true" id="14b7fb34-0a0f-433e-9d2d-ecd09430e637" name="Changes" comment="🎨 Format Code&#10;&#10;- Remove unused imports in batch/post.rs.&#10;- Simplify error management in batch/mod.rs.&#10;- Add new utility module in shared/common/src/main/rust/utils.rs.&#10;- Clean up redundant workspace configuration in .idea/workspace.xml.&#10;- Ensure consistent formatting and improve readability across files.">
       <change afterPath="$PROJECT_DIR$/shared/common/src/main/rust/utils.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shared/database/src/batch/post_read.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/graphql/auth.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/graphql/auth.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/graphql/context.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/graphql/context.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/web/graphql.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/web/graphql.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/core/src/web/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/services/core/src/web/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/common/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/shared/common/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/common/src/main/rust/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/common/src/main/rust/lib.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/migration/src/m20220101_000001_create_table.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/migration/src/m20220101_000001_create_table.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/database/src/batch/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/batch/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/database/src/batch/post.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/batch/post.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/batch/post.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/lib.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/database/src/orm/account.rs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/database/src/orm/account.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+    </option>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -132,7 +149,7 @@
     &quot;js.phonegap.settings.workdir&quot;: &quot;&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last.edited.regexp&quot;: &quot;/src/locales/meta/dede.json&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/samuellaqua/git/project-kiwi/experiments&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/slaqua/git/project-kiwi/shared/database/src/batch&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -167,11 +184,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/shared/database/src/batch" />
       <recent name="$PROJECT_DIR$/experiments" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/services/frontend/src/routes/api/assets/dicebear/thumbs/[[seed]]" />
       <recent name="$PROJECT_DIR$/services/frontend/src/components/dice" />
-      <recent name="$PROJECT_DIR$/services/frontend/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/services/frontend/static" />
@@ -324,8 +341,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.18034.62" />
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.18034.62" />
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.20224.387" />
+        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-IU-242.20224.387" />
       </set>
     </attachedChunks>
   </component>
@@ -460,6 +477,22 @@
       <workItem from="1722874180440" duration="3195000" />
       <workItem from="1722877451357" duration="2553000" />
       <workItem from="1722880898826" duration="8000" />
+      <workItem from="1723009760019" duration="1561000" />
+      <workItem from="1723051683393" duration="780000" />
+      <workItem from="1723101574083" duration="14000" />
+      <workItem from="1723208309655" duration="17043000" />
+      <workItem from="1723282887797" duration="188000" />
+      <workItem from="1723299641767" duration="9270000" />
+      <workItem from="1723460075152" duration="231000" />
+      <workItem from="1723460962366" duration="1613000" />
+      <workItem from="1723477370079" duration="764000" />
+      <workItem from="1723537423752" duration="772000" />
+      <workItem from="1723541970162" duration="5523000" />
+      <workItem from="1723556155280" duration="6390000" />
+      <workItem from="1723716466765" duration="1039000" />
+      <workItem from="1723737050746" duration="600000" />
+      <workItem from="1723886588909" duration="835000" />
+      <workItem from="1723898988704" duration="166000" />
     </task>
     <task id="LOCAL-00001" summary="🚧 Snapshot">
       <option name="closed" value="true" />
@@ -583,7 +616,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value=" Update .idea/workspace.xml for better AI assistant instructions&#10;&#10;- Added AIAssistantCustomInstructionsStorage component.&#10;- Removed excessive comments and path changes in ChangeListManager.&#10;- Improved PropertiesComponent CDATA structure.&#10;- Updated work item durations and added new work items.&#10;- Cleared previous commit messages in VcsManagerConfiguration.&#10;" />
     <MESSAGE value="✨ Add database integration to AuthManager&#10;&#10;- Imported `Loader` from dataloader for future use.&#10;- Imported `DatabaseInstance` for database operations.&#10;- Added `db` field to `AuthManager` struct.&#10;- Initiated empty `impl` block for `AuthManager` to extend functionalities later." />
     <MESSAGE value="✨ Integrate database instance with AuthManager&#10;&#10;- Add `DatabaseInstance` import to `auth.rs`.&#10;- Introduce `db` field of type `DatabaseInstance` in `AuthManager`.&#10;- Include basic implementation block for `AuthManager`." />
     <MESSAGE value="&#10;:tada: Add AI assistant instructions and database integration&#10;&#10;- Introduced `AIAssistantCustomInstructionsStorage` to `.idea/workspace.xml`.&#10;- Added detailed instructions for generating commit messages.&#10;- Updated `web/auth.rs` to integrate `DatabaseInstance`.&#10;- Implemented `BatchFn` trait for `AuthManager`.&#10;- Added basic `get_account` function in `AuthManager`.&#10;" />
@@ -607,6 +639,7 @@
     <MESSAGE value="️ Update .gitignore to allow workspace.xml&#10;&#10;- Removed .idea, kept workspace.xml to save custom configurations.&#10;- Ensured .gradle and build/ directories remain ignored." />
     <MESSAGE value=" Update IDEA workspace configuration" />
     <MESSAGE value="&#10;:hammer: Refactor GraphQL profile resolver and batch context&#10;&#10;- Return a vector of `ProfileQuery` in `profile` resolver.&#10;- Integrate `BatchContext` with database transactions in batch module.&#10;- Move and optimize imports across multiple modules.&#10;- Add, remove, and reorganize code across various sections for readability and maintainability.&#10;- Ensure consistent formatting and add missing trailing newlines.&#10;&#10;These changes improve overall code structure, readability, and maintainability. Adding vector return type in the profile ensures scalability. Integrating `BatchContext` facilitates efficient database transaction handling." />
+    <MESSAGE value=" Format Code" />
     <MESSAGE value=" Format Code" />
     <option name="LAST_COMMIT_MESSAGE" value=" Format Code" />
   </component>

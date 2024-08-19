@@ -1,14 +1,11 @@
+use std::ops::{Deref, DerefMut};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 
-pub struct CloneWrapper<T>(T) where T: Serialize + DeserializeOwned;
-
-impl<T> Clone for CloneWrapper<T>
+#[inline]
+pub fn ser_clone<T>(t: &T) -> T
 where
     T: Serialize + DeserializeOwned,
 {
-    fn clone(&self) -> Self {
-        
-        todo!()
-    }
+    bincode::deserialize(&bincode::serialize(t).unwrap()).unwrap()
 }

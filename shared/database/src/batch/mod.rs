@@ -1,45 +1,93 @@
+use std::collections::HashMap;
+use std::hash::Hash;
+use std::ops::DerefMut;
 use std::sync::Arc;
-
-use dataloader::cached::Loader;
-use sea_orm::{DatabaseConnection, DatabaseTransaction, DbErr};
+use std::time::Duration;
+use dataloader::non_cached::Loader;
+use error_stack::Report;
+use moka::future::{Cache, CacheBuilder};
+use moka::policy::EvictionPolicy;
+use sea_orm::{DatabaseConnection, TransactionTrait};
+use serde::{Deserialize, Serialize};
 use thiserror::Error;
-use tokio::sync::{Mutex, MutexGuard, RwLock, RwLockReadGuard};
 
-use common::utils::CloneWrapper;
+mod post_read;
 
-mod post;
+pub type BatchResult<T> = Result<T, Arc<Report<BatchLoadError>>>;
 
-pub type BatchResult<T> = CloneWrapper<error_stack::Result<T, BatchLoadError>>;
-
-#[derive(Debug, Clone, Error)]
+#[derive(Debug, Clone, Error, Serialize, Deserialize)]
 pub enum BatchLoadError {
     #[error("database operation failed")]
     DatabaseError,
+
+    #[error("internal error")]
+    InternalError,
+
+    #[error("not found")]
+    NotFound,
 }
 
+#[derive(Clone)]
 pub struct EntityBatcher {
-
+    account_read_cache: Cache<i64, BatchResult<crate::orm::account::Model>>,
+    profile_read_cache: Cache<i64, BatchResult<crate::orm::profile::Model>>,
+    post_read_cache: Cache<i64, BatchResult<crate::orm::post::Model>>,
+    post_read_loader: Loader<i64, BatchResult<crate::orm::post::Model>, BatchContext>,
 }
 
 impl EntityBatcher {
-    pub fn load_post(
-        &self,
-    ) {}
+    pub fn new(
+        database: DatabaseConnection,
+        database_ro: Option<DatabaseConnection>,
+    ) -> Self {
+        
+        let post_read_cache = CacheBuilder::new(16 * 1024)
+            .initial_capacity(128)
+            .eviction_policy(EvictionPolicy::tiny_lfu())
+            .time_to_live(Duration::from_secs(500))
+            .time_to_idle(Duration::from_secs(30))
+            .name("post_read_cache")
+            .build();
+        
+        
+        let context = BatchContext {
+            database_ro: database_ro.unwrap_or_else(|| database.clone()),
+            database,
+            post_read_cache: post_read_cache.clone(),
+        };
+        let post_read_loader = Loader::new(context.clone());
+
+        
+        Self {
+            post_read_cache,
+            post_read_loader,
+        }
+    }
+
+    pub async fn post_read(&self, id: i64) -> BatchResult<crate::orm::post::Model> {
+        let cache = &self.post_read_cache;
+        let loader = &self.post_read_loader;
+        //TODO look ahead
+        cache.get_with(id, loader.load(id)).await
+    }
 }
 
 #[derive(Clone)]
 pub struct BatchContext {
-    database_connection_rw: DatabaseConnection,
-    database_connection_ro: Option<DatabaseConnection>,
-    txn_rw: Arc<Mutex<Option<DatabaseTransaction>>>,
-    txn_ro: Arc<RwLock<Option<DatabaseTransaction>>>,
+    pub database: DatabaseConnection,
+    pub database_ro: DatabaseConnection,
+    pub post_read_cache: Cache<i64, BatchResult<crate::orm::post::Model>>,
 }
 
 impl BatchContext {
-    pub async fn txn_rw(&mut self) -> Result<MutexGuard<DatabaseTransaction>, DbErr> {
-        todo!()
-    }
-    pub async fn txn_ro(&mut self) -> Result<RwLockReadGuard<DatabaseTransaction>, DbErr> {
-        todo!()
+    #[inline]
+    pub fn err<K, V>(keys: &[K], err: error_stack::Report<BatchLoadError>) -> HashMap<K, BatchResult<V>>
+    where
+        K: Hash + Eq + Clone,
+    {
+        let err_ref = Arc::new(err);
+        keys.iter()
+            .map(|k| (k.clone(), Err(err_ref.clone())))
+            .collect()
     }
 }

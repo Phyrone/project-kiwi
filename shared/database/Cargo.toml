@@ -21,3 +21,4 @@ tokio.workspace = true
 thiserror.workspace = true
 dataloader.workspace = true
 redis.workspace = true
+moka.workspace = true

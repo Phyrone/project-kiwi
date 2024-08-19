@@ -17,10 +17,12 @@ pub struct AuthRootMut;
 
 #[async_graphql::Object]
 impl AuthRootMut {
+    
     async fn webautn_login_start(
         &self,
         ctx: &Context<'_>,
     ) -> async_graphql::Result<Json<RequestChallengeResponse>> {
+        
         todo!()
     }
 

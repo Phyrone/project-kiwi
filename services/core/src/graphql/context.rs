@@ -1,14 +1,14 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
+use crate::web::graphql::WebContext;
+use database::prelude::Profile;
 use dataloader::BatchFn;
 use error_stack::ResultExt;
 use sea_orm::{
     AccessMode, ColumnTrait, DatabaseConnection, DatabaseTransaction, EntityTrait, IsolationLevel,
     QueryFilter, TransactionTrait,
 };
-use database::prelude::Profile;
-use crate::web::graphql::WebContext;
 
 #[derive(thiserror::Error, Debug)]
 pub enum CreateGQLRequestContextError {

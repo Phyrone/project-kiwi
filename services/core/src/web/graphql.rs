@@ -36,9 +36,9 @@ fn build_schema(with_tracing: bool) -> GraphQLSchema {
         KiwiQueryMut::default(),
         KiwiSubscription::default(),
     )
-        .limit_complexity(MAX_QUERY_COMPLEXITY)
-        .with_sorted_fields()
-        .with_sorted_enums();
+    .limit_complexity(MAX_QUERY_COMPLEXITY)
+    .with_sorted_fields()
+    .with_sorted_enums();
     let builder = if with_tracing {
         builder.extension(ApolloTracing)
     } else {
@@ -117,7 +117,7 @@ where
                         .subscription_endpoint(GRAPHQL_PATH)
                         .title("Playground for Project Kiwi"),
                 ))
-                    .into_response());
+                .into_response());
             }
         }
         GraphQLBatchRequest::from_request(req, state)

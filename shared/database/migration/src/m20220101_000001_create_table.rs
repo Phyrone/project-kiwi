@@ -56,11 +56,7 @@ impl MigrationTrait for Migration {
                             .string_len(320)
                             .not_null(),
                     )
-                    .col(
-                        ColumnDef::new(Account::Password)
-                            .text()
-                            .null()
-                    )
+                    .col(ColumnDef::new(Account::Password).text().null())
                     .to_owned(),
             )
             .await?;
@@ -658,7 +654,6 @@ impl MigrationTrait for Migration {
         Ok(())
     }
 }
-
 
 #[derive(DeriveIden)]
 enum Configuration {

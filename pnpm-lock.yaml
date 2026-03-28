@@ -167,7 +167,7 @@ importers:
         version: 5.0.8
       '@types/accept-language-parser':
         specifier: ^1.5.6
-        version: 1.5.6
+        version: 1.5.8
       '@types/eslint':
         specifier: ^8.56.10
         version: 8.56.10
@@ -2098,8 +2098,8 @@ packages:
   '@tsconfig/svelte@5.0.8':
     resolution: {integrity: sha512-UkNnw1/oFEfecR8ypyHIQuWYdkPvHiwcQ78sh+ymIiYoF+uc5H1UBetbjyqT+vgGJ3qQN6nhucJviX6HesWtKQ==}
 
-  '@types/accept-language-parser@1.5.6':
-    resolution: {integrity: sha512-lhSQUsAhAtbKjYgaw3f0c4EQKNQHFXhX87+OXUIqDHMkycvHGaqGskSRtnzysIUiqHPqNJ4BqI5SE++drsxx6A==}
+  '@types/accept-language-parser@1.5.8':
+    resolution: {integrity: sha512-6+dKdh9q/I8xDBnKQKddCBKaWBWLmJ97HTiSbAXVpL7LEgDfOkKF98UVCaZ5KJrtdN5Wa5ndXUiqD3XR9XGqWQ==}
 
   '@types/acorn@4.0.6':
     resolution: {integrity: sha512-veQTnWP+1D/xbxVrPC3zHnCZRjSrKfhbMUlEA43iMZLu7EsnTtkJklIuwrCPbOi8YkvDQAiW05VQQFvvz9oieQ==}
@@ -10327,7 +10327,7 @@ snapshots:
 
   '@tsconfig/svelte@5.0.8': {}
 
-  '@types/accept-language-parser@1.5.6': {}
+  '@types/accept-language-parser@1.5.8': {}
 
   '@types/acorn@4.0.6':
     dependencies:

@@ -82,7 +82,7 @@ importers:
         version: 2.0.0-beta.4
       '@threlte/core':
         specifier: ^7.3.0
-        version: 7.3.0(svelte@5.55.0)(three@0.164.1)
+        version: 7.3.2(svelte@5.55.0)(three@0.164.1)
       '@unly/universal-language-detector':
         specifier: ^2.0.3
         version: 2.0.3
@@ -2085,8 +2085,8 @@ packages:
   '@tauri-apps/plugin-shell@2.0.0-beta.4':
     resolution: {integrity: sha512-y9APB3ZLtkY4IM6syE+dn/R4XR2UTHBcAI/n9L5PgnvOjJAuuEzVYURn10G51nKnLw+sFbxO7LW4VW66Uoaa9g==}
 
-  '@threlte/core@7.3.0':
-    resolution: {integrity: sha512-yedstu5kcjV1/V1W0xNjkFQmL8A+n57NzjxBK+cPC1fdUtOvBtmOPxvOZ0b/TlhTyZM8XkEv4BiKrGibOrBzyA==}
+  '@threlte/core@7.3.2':
+    resolution: {integrity: sha512-yDktfsoZOCKx8AIbfgfzmvOdzvaOuWybgFGn+4MxBhI21euS80KZQAoy7RXXoOP1o/THmFxPt0y05tzVRPuufA==}
     peerDependencies:
       svelte: '>=4'
       three: '>=0.152'
@@ -10317,7 +10317,7 @@ snapshots:
     dependencies:
       '@tauri-apps/api': 2.0.0-beta.11
 
-  '@threlte/core@7.3.0(svelte@5.55.0)(three@0.164.1)':
+  '@threlte/core@7.3.2(svelte@5.55.0)(three@0.164.1)':
     dependencies:
       mitt: 3.0.1
       svelte: 5.55.0

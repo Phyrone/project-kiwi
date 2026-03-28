@@ -179,7 +179,7 @@ importers:
         version: 1.5.5
       '@types/hammerjs':
         specifier: ^2.0.45
-        version: 2.0.45
+        version: 2.0.46
       '@types/ms':
         specifier: ^0.7.34
         version: 0.7.34
@@ -2167,8 +2167,8 @@ packages:
   '@types/gtag.js@0.0.12':
     resolution: {integrity: sha512-YQV9bUsemkzG81Ea295/nF/5GijnD2Af7QhEofh7xu+kvCN6RdodgNwwGWXB5GMI3NoyvQo0odNctoH/qLMIpg==}
 
-  '@types/hammerjs@2.0.45':
-    resolution: {integrity: sha512-qkcUlZmX6c4J8q45taBKTL3p+LbITgyx7qhlPYOdOHZB7B31K0mXbP5YA7i7SgDeEGuI9MnumiKPEMrxg8j3KQ==}
+  '@types/hammerjs@2.0.46':
+    resolution: {integrity: sha512-ynRvcq6wvqexJ9brDMS4BnBLzmr0e14d6ZJTEShTBWKymQiHwlAyGu0ZPEFI2Fh1U53F7tN9ufClWM5KvqkKOw==}
 
   '@types/hast@2.3.10':
     resolution: {integrity: sha512-McWspRw8xx8J9HurkVBfYj0xKoE25tOFlHGdx4MJ5xORQrMGZNqJhVQWaIbm6Oyla5kYOXtDiopzKRJzEOkwJw==}
@@ -10423,7 +10423,7 @@ snapshots:
 
   '@types/gtag.js@0.0.12': {}
 
-  '@types/hammerjs@2.0.45': {}
+  '@types/hammerjs@2.0.46': {}
 
   '@types/hast@2.3.10':
     dependencies:

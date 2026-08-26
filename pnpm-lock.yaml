@@ -64,7 +64,7 @@ importers:
         version: 8.0.3(sharp@0.32.6)
       '@dicebear/initials':
         specifier: ^8.0.2
-        version: 8.0.2(@dicebear/core@8.0.3(sharp@0.32.6))
+        version: 8.0.3(@dicebear/core@8.0.3(sharp@0.32.6))
       '@dicebear/thumbs':
         specifier: ^8.0.2
         version: 8.0.2(@dicebear/core@8.0.3(sharp@0.32.6))
@@ -1026,8 +1026,8 @@ packages:
     resolution: {integrity: sha512-Dh0pUFE2ufx/AvN+RUtNIadPiu1kEZ4MG92UmlnZoA9esgPQLAy0r1hJdKXODKKZfuNPTCV3bgzsdelRys7kBA==}
     engines: {node: '>=16.0.0'}
 
-  '@dicebear/initials@8.0.2':
-    resolution: {integrity: sha512-wVknmFQiCdpNgM/a0Szh3LLOJU4zK5xyzIRHejJ2KyBx2WtDfiNZjgeDM9kjg/QGWk3t3cql4ZLlzqn2DHVcEA==}
+  '@dicebear/initials@8.0.3':
+    resolution: {integrity: sha512-CE0rfFOh5kC4JlQ8gBudzBm6pfF0Wv+zGzYwM6QdCC8IY1AcC0rT3gy2ylVH5XaTUtaayR2iozFgOgxDtP4fLA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@dicebear/core': ^8.0.0
@@ -4726,8 +4726,8 @@ packages:
     resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
     hasBin: true
 
-  js-yaml@4.3.1:
-    resolution: {integrity: sha512-CY6crGq313MX8GkwvB7tzgp99vjQxY1++5y10/BKN/GUfHqWaOGQMNZkBvqSzsZKWk/ijwHlWzzkLulsGHhjWQ==}
+  js-yaml@4.3.2:
+    resolution: {integrity: sha512-SFNOvSJ+Dgf/9An904Yx+CgSlIPCkIpao4qo51lpee25TIRejdH3rhR4EZMGoNx3/TP3O+wzWuiTFl4sqbltzA==}
     hasBin: true
 
   jsesc@0.5.0:
@@ -8508,7 +8508,7 @@ snapshots:
       - exiftool-vendored
       - sharp
 
-  '@dicebear/initials@8.0.2(@dicebear/core@8.0.3(sharp@0.32.6))':
+  '@dicebear/initials@8.0.3(@dicebear/core@8.0.3(sharp@0.32.6))':
     dependencies:
       '@dicebear/core': 8.0.3(sharp@0.32.6)
 
@@ -9587,7 +9587,7 @@ snapshots:
       globals: 14.0.0
       ignore: 5.3.2
       import-fresh: 3.3.1
-      js-yaml: 4.3.1
+      js-yaml: 4.3.2
       minimatch: 3.1.5
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
@@ -13457,7 +13457,7 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  js-yaml@4.3.1:
+  js-yaml@4.3.2:
     dependencies:
       argparse: 2.0.1
     optional: true

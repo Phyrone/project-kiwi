@@ -61,7 +61,7 @@
     "vite-plugin-rsw": "^2.0.11",
     "vite-plugin-tailwind-purgecss": "^0.3.3",
     "vite-plugin-top-level-await": "^1.4.1",
-    "vitest": "^1.6.0"
+    "vitest": "^3.0.0"
   },
   "dependencies": {
     "@dicebear/core": "^8.0.2",

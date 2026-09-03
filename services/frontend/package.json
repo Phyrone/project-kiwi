@@ -64,7 +64,7 @@
     "vitest": "^3.0.0"
   },
   "dependencies": {
-    "@dicebear/core": "^8.0.2",
+    "@dicebear/core": "^9.0.0",
     "@dicebear/initials": "^8.0.2",
     "@dicebear/thumbs": "^8.0.2",
     "@neoconfetti/svelte": "^2.2.1",

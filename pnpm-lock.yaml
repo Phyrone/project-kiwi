@@ -60,14 +60,14 @@ importers:
   services/frontend:
     dependencies:
       '@dicebear/core':
-        specifier: ^8.0.2
-        version: 8.0.3(sharp@0.32.6)
+        specifier: ^9.0.0
+        version: 9.4.3
       '@dicebear/initials':
         specifier: ^8.0.2
-        version: 8.0.3(@dicebear/core@8.0.3(sharp@0.32.6))
+        version: 8.0.3(@dicebear/core@9.4.3)
       '@dicebear/thumbs':
         specifier: ^8.0.2
-        version: 8.0.2(@dicebear/core@8.0.3(sharp@0.32.6))
+        version: 8.0.2(@dicebear/core@9.4.3)
       '@neoconfetti/svelte':
         specifier: ^2.2.1
         version: 2.2.2(svelte@5.55.7(@typescript-eslint/types@8.57.2))
@@ -1007,24 +1007,9 @@ packages:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
 
-  '@dicebear/converter@8.0.3':
-    resolution: {integrity: sha512-GRC9Yzmsw8PNlEEvWHEiRYZY20y2y7aQF0AafYMY5AtgO0ctVvATH2Q/vG7BYYzFqXbRhP0PJtCG6Z74YlstxQ==}
-    engines: {node: '>=16.0.0'}
-    peerDependencies:
-      '@resvg/resvg-js': ^2.4.1
-      exiftool-vendored: ^23.0.0
-      sharp: ^0.32.6
-    peerDependenciesMeta:
-      '@resvg/resvg-js':
-        optional: true
-      exiftool-vendored:
-        optional: true
-      sharp:
-        optional: true
-
-  '@dicebear/core@8.0.3':
-    resolution: {integrity: sha512-Dh0pUFE2ufx/AvN+RUtNIadPiu1kEZ4MG92UmlnZoA9esgPQLAy0r1hJdKXODKKZfuNPTCV3bgzsdelRys7kBA==}
-    engines: {node: '>=16.0.0'}
+  '@dicebear/core@9.4.3':
+    resolution: {integrity: sha512-9ITrQI57k3p5hKuU8HZJ1d0kPdrmTKEJDOdlKQ8CpaChbtmnD1R+dtWmNz5IesYThXM8F64pJ0ZvJ2rsY8Hciw==}
+    engines: {node: '>=18.0.0'}
 
   '@dicebear/initials@8.0.3':
     resolution: {integrity: sha512-CE0rfFOh5kC4JlQ8gBudzBm6pfF0Wv+zGzYwM6QdCC8IY1AcC0rT3gy2ylVH5XaTUtaayR2iozFgOgxDtP4fLA==}
@@ -6992,13 +6977,6 @@ packages:
     resolution: {integrity: sha512-azl+t0z7pw/z958Gy9svOTuzqIk6xq+NSheJzn5MMWtWTFywIacg2wUlzKFGtt3cthx0r2SxMK0yzJOR0IES7Q==}
     engines: {node: '>=14.0.0'}
 
-  tmp-promise@3.0.3:
-    resolution: {integrity: sha512-RwM7MoPojPxsOBYnyd2hy0bxtIlVrihNs9pj5SUvY8Zz1sQcQG2tG1hSr8PDxfgEB8RNKDhqbIlroIarSNDNsQ==}
-
-  tmp@0.2.7:
-    resolution: {integrity: sha512-e0votIpp4Uo2AJYSzVHV6xCcawuiez3DzqDAbrTc3YxBkplN6e+dM13ZeIcZnDg/QpSuU2zfZ3rzwY8ukEnaXw==}
-    engines: {node: '>=14.14'}
-
   to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
     engines: {node: '>=4'}
@@ -8475,29 +8453,17 @@ snapshots:
   '@colors/colors@1.5.0':
     optional: true
 
-  '@dicebear/converter@8.0.3(sharp@0.32.6)':
+  '@dicebear/core@9.4.3':
     dependencies:
       '@types/json-schema': 7.0.15
-      tmp-promise: 3.0.3
-    optionalDependencies:
-      sharp: 0.32.6
 
-  '@dicebear/core@8.0.3(sharp@0.32.6)':
+  '@dicebear/initials@8.0.3(@dicebear/core@9.4.3)':
     dependencies:
-      '@dicebear/converter': 8.0.3(sharp@0.32.6)
-      '@types/json-schema': 7.0.15
-    transitivePeerDependencies:
-      - '@resvg/resvg-js'
-      - exiftool-vendored
-      - sharp
+      '@dicebear/core': 9.4.3
 
-  '@dicebear/initials@8.0.3(@dicebear/core@8.0.3(sharp@0.32.6))':
+  '@dicebear/thumbs@8.0.2(@dicebear/core@9.4.3)':
     dependencies:
-      '@dicebear/core': 8.0.3(sharp@0.32.6)
-
-  '@dicebear/thumbs@8.0.2(@dicebear/core@8.0.3(sharp@0.32.6))':
-    dependencies:
-      '@dicebear/core': 8.0.3(sharp@0.32.6)
+      '@dicebear/core': 9.4.3
 
   '@discoveryjs/json-ext@0.5.7': {}
 
@@ -16250,12 +16216,6 @@ snapshots:
   tinyrainbow@2.0.0: {}
 
   tinyspy@4.0.4: {}
-
-  tmp-promise@3.0.3:
-    dependencies:
-      tmp: 0.2.7
-
-  tmp@0.2.7: {}
 
   to-fast-properties@2.0.0: {}
 

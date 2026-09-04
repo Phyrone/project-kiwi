@@ -106,7 +106,7 @@ importers:
         version: 23.11.5
       i18next-resources-to-backend:
         specifier: ^1.2.1
-        version: 1.2.1
+        version: 1.2.3
       lucide-svelte:
         specifier: ^0.378.0
         version: 0.378.0(svelte@5.55.7(@typescript-eslint/types@8.57.2))
@@ -983,6 +983,10 @@ packages:
 
   '@babel/runtime@7.24.7':
     resolution: {integrity: sha512-UwgBRMjJP+xv857DCngvqXI3Iq6J4v0wXmwc6sapg+zyhbwmQX67LUEFrkK5tbyJ30jGuG3ZvWpBiB9LCy1kWw==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.29.7':
+    resolution: {integrity: sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.24.0':
@@ -4403,8 +4407,8 @@ packages:
   i18next-browser-languagedetector@4.0.1:
     resolution: {integrity: sha512-RxSoX6mB8cab0CTIQ+klCS764vYRj+Jk621cnFVsINvcdlb/cdi3vQFyrPwmnowB7ReUadjHovgZX+RPIzHVQQ==}
 
-  i18next-resources-to-backend@1.2.1:
-    resolution: {integrity: sha512-okHbVA+HZ7n1/76MsfhPqDou0fptl2dAlhRDu2ideXloRRduzHsqDOznJBef+R3DFZnbvWoBW+KxJ7fnFjd6Yw==}
+  i18next-resources-to-backend@1.2.3:
+    resolution: {integrity: sha512-8Y/LLAm5fqZc2ckQxtTWbu75ndjNLzF7mcYl6rhc4g+WBopIsG3YhdYqF5qhJy64tlYhlU2KSSnEgW3gGHLqwg==}
 
   i18next@19.0.2:
     resolution: {integrity: sha512-fBa43Ann2udP1CQAz3IQpOZ1dGAkmi3mMfzisOhH17igneSRbvZ7P2RNbL+L1iRYKMufBmVwnC7G3gqcyviZ9g==}
@@ -8421,6 +8425,8 @@ snapshots:
   '@babel/runtime@7.24.7':
     dependencies:
       regenerator-runtime: 0.14.1
+
+  '@babel/runtime@7.29.7': {}
 
   '@babel/template@7.24.0':
     dependencies:
@@ -13131,15 +13137,15 @@ snapshots:
 
   i18next-browser-languagedetector@4.0.1:
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.29.7
 
-  i18next-resources-to-backend@1.2.1:
+  i18next-resources-to-backend@1.2.3:
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.29.7
 
   i18next@19.0.2:
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.29.7
 
   i18next@23.11.5:
     dependencies:
@@ -15203,7 +15209,7 @@ snapshots:
 
   react-syntax-highlighter@15.5.0(react@18.3.1):
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.29.7
       highlight.js: 10.7.3
       lowlight: 1.20.0
       prismjs: 1.29.0

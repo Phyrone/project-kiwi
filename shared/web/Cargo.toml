@@ -24,7 +24,7 @@ schemars = { version = "0.8.19", features = ["uuid", "url", "semver", "chrono"] 
 url = { version = "2.5.0", features = ["serde"] }
 serde_json = { version = "1.0.116", features = ["alloc", "preserve_order"] }
 axum-auth = "0.7.0"
-jsonwebtoken = "9.3.0"
+jsonwebtoken = "10.0.0"
 radix_fmt.workspace = true
 num.workspace = true
 sha3.workspace = true

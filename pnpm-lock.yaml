@@ -149,7 +149,7 @@ importers:
         version: 1.44.1
       '@sveltejs/adapter-static':
         specifier: ^3.0.2
-        version: 3.0.10(@sveltejs/kit@3.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.55.7(@typescript-eslint/types@8.57.2))(vite@6.4.5(@types/node@20.14.8)(jiti@1.21.7)(sass@1.77.6)(terser@5.31.0)(yaml@2.4.5)))(svelte@5.55.7(@typescript-eslint/types@8.57.2))(typescript@5.5.2)(vite@6.4.5(@types/node@20.14.8)(jiti@1.21.7)(sass@1.77.6)(terser@5.31.0)(yaml@2.4.5)))
+        version: 3.0.11(@sveltejs/kit@3.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.55.7(@typescript-eslint/types@8.57.2))(vite@6.4.5(@types/node@20.14.8)(jiti@1.21.7)(sass@1.77.6)(terser@5.31.0)(yaml@2.4.5)))(svelte@5.55.7(@typescript-eslint/types@8.57.2))(typescript@5.5.2)(vite@6.4.5(@types/node@20.14.8)(jiti@1.21.7)(sass@1.77.6)(terser@5.31.0)(yaml@2.4.5)))
       '@sveltejs/kit':
         specifier: ^3.0.0
         version: 3.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.55.7(@typescript-eslint/types@8.57.2))(vite@6.4.5(@types/node@20.14.8)(jiti@1.21.7)(sass@1.77.6)(terser@5.31.0)(yaml@2.4.5)))(svelte@5.55.7(@typescript-eslint/types@8.57.2))(typescript@5.5.2)(vite@6.4.5(@types/node@20.14.8)(jiti@1.21.7)(sass@1.77.6)(terser@5.31.0)(yaml@2.4.5))
@@ -1426,6 +1426,10 @@ packages:
     resolution: {integrity: sha512-EriSTlt5OC9/7SXkRSCAhfSxxoSUgBm33OH+IkwbdpgoqsSsUg7y3uh+IICI/Qg4BBWr3U2i39RpmycbxMq4ew==}
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
 
+  '@eslint-community/regexpp@4.12.3':
+    resolution: {integrity: sha512-R76UKbvsqI68DJJVTVyqFKqU98CN4+B+acxNfEA2IFarSzP0SjtKf/3+fFiXzTyv5Fj3PxLkGHe2wnVWWMxobQ==}
+    engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
+
   '@eslint/eslintrc@2.1.4':
     resolution: {integrity: sha512-269Z39MS6wVJtsoUl10L60WdkhJVdPG24Q4eZTH3nnF6lpvSShEK3wQjDX9JRWAUPvPh7COouPpU9IrqaZFvtQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -1766,8 +1770,8 @@ packages:
     peerDependencies:
       acorn: ^8.9.0
 
-  '@sveltejs/adapter-static@3.0.10':
-    resolution: {integrity: sha512-7D9lYFWJmB7zxZyTE/qxjksvMqzMuYrrsyh1f4AlZqeZeACPRySjbC3aFiY55wb1tWUaKOQG9PVbm74JcN2Iew==}
+  '@sveltejs/adapter-static@3.0.11':
+    resolution: {integrity: sha512-DyX1bWx9uiPxzq7Mr+jnxqY+w3UhE3pYy5D1LcfdS++2KZTHSZBD60BoP44LjVgtGILfeOQCF8ESqzmLVrz4Ng==}
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
 
@@ -4820,8 +4824,8 @@ packages:
     resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
     engines: {node: '>=14'}
 
-  lilconfig@3.1.4:
-    resolution: {integrity: sha512-zJZyBmQhArDRefuWTypZxwDpFDIYmrj8ypSBvwGD5P13Y95s6DjzKgu4DVdGbeQa5PDEsAOCAPNk4X+QOR006w==}
+  lilconfig@3.1.5:
+    resolution: {integrity: sha512-aRAOI9Ia43ygL4o1EOmC/sc/0OFxrm7qcQngiIyWaqVnSnz932ybJ07zyCcgMNGSDP8Yxaf88Xj1zHEXmvQ4SA==}
     engines: {node: '>=14'}
 
   lines-and-columns@1.2.4:
@@ -5349,6 +5353,7 @@ packages:
 
   node-abort-controller@3.1.1:
     resolution: {integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==}
+    deprecated: This package is no longer needed on supported Node.js versions. Node.js 16+ includes AbortController and AbortSignal as built-in globals. All Node.js versions requiring this polyfill are end-of-life. Use the built-in globals instead.
 
   node-addon-api@6.1.0:
     resolution: {integrity: sha512-+eawOlIgy680F0kBzPUNFhMZGtJ1YmqM6l4+Crf4IkImjYrO/mqPwRMh352g23uIaQKFItcQ64I7KMaJxHgAVA==}
@@ -9540,6 +9545,9 @@ snapshots:
 
   '@eslint-community/regexpp@4.12.2': {}
 
+  '@eslint-community/regexpp@4.12.3':
+    optional: true
+
   '@eslint/eslintrc@2.1.4':
     dependencies:
       ajv: 6.14.0
@@ -9878,7 +9886,7 @@ snapshots:
     dependencies:
       acorn: 8.18.0
 
-  '@sveltejs/adapter-static@3.0.10(@sveltejs/kit@3.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.55.7(@typescript-eslint/types@8.57.2))(vite@6.4.5(@types/node@20.14.8)(jiti@1.21.7)(sass@1.77.6)(terser@5.31.0)(yaml@2.4.5)))(svelte@5.55.7(@typescript-eslint/types@8.57.2))(typescript@5.5.2)(vite@6.4.5(@types/node@20.14.8)(jiti@1.21.7)(sass@1.77.6)(terser@5.31.0)(yaml@2.4.5)))':
+  '@sveltejs/adapter-static@3.0.11(@sveltejs/kit@3.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.55.7(@typescript-eslint/types@8.57.2))(vite@6.4.5(@types/node@20.14.8)(jiti@1.21.7)(sass@1.77.6)(terser@5.31.0)(yaml@2.4.5)))(svelte@5.55.7(@typescript-eslint/types@8.57.2))(typescript@5.5.2)(vite@6.4.5(@types/node@20.14.8)(jiti@1.21.7)(sass@1.77.6)(terser@5.31.0)(yaml@2.4.5)))':
     dependencies:
       '@sveltejs/kit': 3.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.55.7(@typescript-eslint/types@8.57.2))(vite@6.4.5(@types/node@20.14.8)(jiti@1.21.7)(sass@1.77.6)(terser@5.31.0)(yaml@2.4.5)))(svelte@5.55.7(@typescript-eslint/types@8.57.2))(typescript@5.5.2)(vite@6.4.5(@types/node@20.14.8)(jiti@1.21.7)(sass@1.77.6)(terser@5.31.0)(yaml@2.4.5))
 
@@ -12332,7 +12340,7 @@ snapshots:
   eslint@9.0.0:
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@9.0.0)
-      '@eslint-community/regexpp': 4.12.2
+      '@eslint-community/regexpp': 4.12.3
       '@eslint/eslintrc': 3.3.7
       '@eslint/js': 9.0.0
       '@humanwhocodes/config-array': 0.12.3
@@ -13478,7 +13486,7 @@ snapshots:
 
   lilconfig@3.1.3: {}
 
-  lilconfig@3.1.4:
+  lilconfig@3.1.5:
     optional: true
 
   lines-and-columns@1.2.4: {}
@@ -14710,7 +14718,7 @@ snapshots:
 
   postcss-load-config@4.0.2(postcss@8.5.28):
     dependencies:
-      lilconfig: 3.1.4
+      lilconfig: 3.1.5
       yaml: 2.4.5
     optionalDependencies:
       postcss: 8.5.28

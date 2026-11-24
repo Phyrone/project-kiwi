@@ -102,8 +102,8 @@ importers:
         specifier: ^1.5.13
         version: 1.5.13
       i18next:
-        specifier: ^23.11.5
-        version: 23.11.5
+        specifier: ^26.0.0
+        version: 26.7.2(typescript@5.5.2)
       i18next-resources-to-backend:
         specifier: ^1.2.1
         version: 1.2.3
@@ -4423,8 +4423,13 @@ packages:
   i18next@19.0.2:
     resolution: {integrity: sha512-fBa43Ann2udP1CQAz3IQpOZ1dGAkmi3mMfzisOhH17igneSRbvZ7P2RNbL+L1iRYKMufBmVwnC7G3gqcyviZ9g==}
 
-  i18next@23.11.5:
-    resolution: {integrity: sha512-41pvpVbW9rhZPk5xjCX2TPJi2861LEig/YRhUkY+1FQ2IQPS0bKUDYnEqY8XPPbB48h1uIwLnP9iiEfuSl20CA==}
+  i18next@26.7.2:
+    resolution: {integrity: sha512-RsOY3BeaCDdkk52NeJSFAXELQ2rQXBO/tOub6L8ue2ICPfR/FRDWDOfEDg4xMPd1SqO5goVYQ6i72qWEUB/PPw==}
+    peerDependencies:
+      typescript: ^5 || ^6 || ^7
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
@@ -13165,9 +13170,9 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.7
 
-  i18next@23.11.5:
-    dependencies:
-      '@babel/runtime': 7.24.7
+  i18next@26.7.2(typescript@5.5.2):
+    optionalDependencies:
+      typescript: 5.5.2
 
   iconv-lite@0.4.24:
     dependencies:

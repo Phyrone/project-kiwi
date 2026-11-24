@@ -78,7 +78,7 @@
     "globalize": "^1.7.0",
     "hammerjs": "^2.0.8",
     "hls.js": "^1.5.13",
-    "i18next": "^23.11.5",
+    "i18next": "^26.0.0",
     "i18next-resources-to-backend": "^1.2.1",
     "lucide-svelte": "^0.378.0",
     "ms": "^2.1.3",
